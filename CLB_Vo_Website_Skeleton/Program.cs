@@ -1,8 +1,14 @@
 var builder = WebApplication.CreateBuilder(args);
 
+// Render cấp port qua biến PORT
+var port = Environment.GetEnvironmentVariable("PORT") ?? "10000";
+builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
+
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
+
+// ... phần còn lại giữ nguyên
 
 if (!app.Environment.IsDevelopment())
 {
