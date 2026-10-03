@@ -107,3 +107,16 @@ document.querySelectorAll('form[data-confirm]').forEach(form => {
         if (!confirm(form.dataset.confirm)) e.preventDefault();
     });
 });
+
+// ==================== Admin sidebar active state ====================
+(function () {
+    const path = window.location.pathname.toLowerCase();
+    document.querySelectorAll('.admin-nav-item').forEach(item => {
+        const href = item.getAttribute('href');
+        if (!href || href === '#') return;
+        const hrefClean = href.toLowerCase();
+        if (hrefClean !== '/' && path.startsWith(hrefClean)) {
+            item.classList.add('active');
+        }
+    });
+})();

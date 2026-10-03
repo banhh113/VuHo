@@ -1,20 +1,121 @@
+@model CLBVo.ViewModels.AdminDashboardViewModel
 @{
-    ViewData["Title"] = "Admin Dashboard";
+    ViewData["Title"] = "Dashboard";
+    Layout = "_AdminLayout";
 }
 
-<section class="admin-page">
-    <div class="container">
-        <p class="eyebrow">🔐 ADMIN</p>
-        <h1>Dashboard CLB Võ</h1>
-        <p>Đây là sườn trang quản trị. Bạn sẽ nối các chức năng CRUD vào đây.</p>
+<div class="admin-page-header">
+    <div>
+        <h1>📊 Dashboard</h1>
+        <p class="admin-subtitle">Tổng quan hoạt động của CLB Vũ Hổ</p>
+    </div>
+    <a asp-controller="Home" asp-action="Index" target="_blank" class="btn btn-outline">
+        🌐 Xem trang chủ
+    </a>
+</div>
 
-        <div class="admin-grid">
-            <a href="#" class="admin-card">📝<span>Quản lý bài viết</span></a>
-            <a href="#" class="admin-card">👥<span>Quản lý thành viên</span></a>
-            <a href="#" class="admin-card">📅<span>Quản lý sự kiện</span></a>
-            <a href="#" class="admin-card">🖼️<span>Quản lý thư viện</span></a>
-            <a href="#" class="admin-card">🏆<span>Quản lý thành tích</span></a>
-            <a href="#" class="admin-card">⚙️<span>Thông tin CLB</span></a>
+<!-- Stats cards -->
+<div class="stats-grid">
+    <a asp-controller="AdminPosts" asp-action="Index" class="stat-card">
+        <div class="stat-icon">📝</div>
+        <div class="stat-info">
+            <strong>@Model.PostCount</strong>
+            <span>Bài viết</span>
+        </div>
+    </a>
+
+    <div class="stat-card">
+        <div class="stat-icon">👥</div>
+        <div class="stat-info">
+            <strong>@Model.MemberCount</strong>
+            <span>Thành viên</span>
         </div>
     </div>
-</section>
+
+    <div class="stat-card">
+        <div class="stat-icon">📅</div>
+        <div class="stat-info">
+            <strong>@Model.EventCount</strong>
+            <span>Sự kiện</span>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-icon">🖼️</div>
+        <div class="stat-info">
+            <strong>@Model.GalleryCount</strong>
+            <span>Ảnh thư viện</span>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-icon">🏆</div>
+        <div class="stat-info">
+            <strong>@Model.AchievementCount</strong>
+            <span>Thành tích</span>
+        </div>
+    </div>
+</div>
+
+<!-- Two column section -->
+<div class="admin-two-col">
+
+    <!-- Recent posts -->
+    <div class="admin-panel">
+        <div class="panel-header">
+            <h2>BÀI VIẾT GẦN ĐÂY</h2>
+            <a asp-controller="AdminPosts" asp-action="Index">Xem tất cả →</a>
+        </div>
+
+        @if (Model.RecentPosts.Any())
+        {
+            <ul class="panel-list">
+                @foreach (var p in Model.RecentPosts)
+                {
+                    <li>
+                        <div style="flex:1;min-width:0">
+                            <div class="list-title">@p.Title</div>
+                            <div class="list-meta">@p.CreatedAt.ToString("dd/MM/yyyy HH:mm")</div>
+                        </div>
+                        <a asp-controller="AdminPosts" asp-action="Edit" asp-route-id="@p.Id" class="list-action">Sửa</a>
+                    </li>
+                }
+            </ul>
+        }
+        else
+        {
+            <p class="empty-state">Chưa có bài viết nào.</p>
+        }
+    </div>
+
+    <!-- Upcoming events -->
+    <div class="admin-panel">
+        <div class="panel-header">
+            <h2>SỰ KIỆN SẮP TỚI</h2>
+        </div>
+
+        @if (Model.UpcomingEvents.Any())
+        {
+            <ul class="panel-list">
+                @foreach (var e in Model.UpcomingEvents)
+                {
+                    <li>
+                        <div class="event-date-badge">
+                            <strong>@e.EventDate.Day</strong>
+                            <span>T@(e.EventDate.Month)</span>
+                        </div>
+                        <div style="flex:1;min-width:0">
+                            <div class="list-title">@e.Title</div>
+                            <div class="list-meta">@e.Location</div>
+                        </div>
+                    </li>
+                }
+            </ul>
+        }
+        else
+        {
+            <p class="empty-state">Chưa có sự kiện nào sắp diễn ra.</p>
+        }
+    </div>
+
+</div>
