@@ -1,0 +1,46 @@
+@model CLBVo.Models.Post
+@{
+    ViewData["Title"] = "Sửa bài viết";
+    Layout = "_AdminLayout";
+}
+
+<div class="admin-page-header">
+    <h1>✏️ Sửa bài viết</h1>
+    <a asp-action="Index" class="btn btn-secondary">← Quay lại</a>
+</div>
+
+<form asp-action="Edit" asp-route-id="@Model.Id" method="post" enctype="multipart/form-data" class="admin-form">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="Id" />
+    <input type="hidden" asp-for="ImageUrl" />
+    <input type="hidden" asp-for="CreatedAt" />
+    <div asp-validation-summary="ModelOnly" class="alert alert-error"></div>
+
+    <div class="form-group">
+        <label>Tiêu đề *</label>
+        <input asp-for="Title" required maxlength="255" />
+    </div>
+
+    <div class="form-group">
+        <label>Nội dung *</label>
+        <textarea asp-for="Content" rows="10" required></textarea>
+    </div>
+
+    @if (!string.IsNullOrEmpty(Model.ImageUrl))
+    {
+        <div class="form-group">
+            <label>Ảnh hiện tại</label>
+            <img src="@Model.ImageUrl" alt="" style="max-width:200px;border-radius:8px" />
+        </div>
+    }
+
+    <div class="form-group">
+        <label>Thay ảnh mới (để trống nếu giữ ảnh cũ)</label>
+        <input type="file" name="imageFile" accept="image/*" />
+    </div>
+
+    <div class="form-actions">
+        <button type="submit" class="btn btn-primary">💾 Cập nhật</button>
+        <a asp-action="Index" class="btn btn-secondary">Hủy</a>
+    </div>
+</form>

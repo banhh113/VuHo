@@ -1,0 +1,60 @@
+@model List<CLBVo.Models.Post>
+@{
+    ViewData["Title"] = "Quản lý bài viết";
+    Layout = "_AdminLayout";
+}
+
+<div class="admin-page-header">
+    <h1>📝 Quản lý bài viết</h1>
+    <a asp-action="Create" class="btn btn-primary">+ Thêm bài viết</a>
+</div>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
+
+<table class="admin-table">
+    <thead>
+        <tr>
+            <th style="width:80px">Ảnh</th>
+            <th>Tiêu đề</th>
+            <th style="width:160px">Ngày tạo</th>
+            <th style="width:180px">Hành động</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (!Model.Any())
+        {
+            <tr><td colspan="4" class="empty">Chưa có bài viết nào. Bấm "Thêm bài viết" để bắt đầu.</td></tr>
+        }
+        @foreach (var p in Model)
+        {
+            <tr>
+                <td>
+                    @if (!string.IsNullOrEmpty(p.ImageUrl))
+                    {
+                        <img src="@p.ImageUrl" alt="" class="thumb" />
+                    }
+                    else
+                    {
+                        <div class="thumb thumb-empty">—</div>
+                    }
+                </td>
+                <td>
+                    <strong>@p.Title</strong><br />
+                    <small>@(p.Content.Length > 80 ? p.Content.Substring(0, 80) + "..." : p.Content)</small>
+                </td>
+                <td>@p.CreatedAt.ToString("dd/MM/yyyy HH:mm")</td>
+                <td class="actions">
+                    <a asp-action="Edit" asp-route-id="@p.Id" class="btn-sm btn-edit">Sửa</a>
+                    <form asp-action="Delete" asp-route-id="@p.Id" method="post" style="display:inline"
+                          onsubmit="return confirm('Xóa bài viết này?');">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn-sm btn-delete">Xóa</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -3,16 +3,23 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - CLB Võ</title>
+    <title>@ViewData["Title"] - CLB Vũ Hổ</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="icon" type="image/png" href="~/images/logo.png" />
 </head>
 <body>
     <header class="site-header">
         <div class="container nav-wrapper">
-            <a class="logo" asp-controller="Home" asp-action="Index">🥋 CLB VÕ</a>
+            <a class="logo" asp-controller="Home" asp-action="Index">
+                <img src="~/images/logo.png" alt="CLB Vũ Hổ" class="logo-img" />
+                <span>CLB VŨ HỔ</span>
+            </a>
 
             <nav>
-                <a asp-controller="Home" asp-action="Index">Trang chủ</a>
                 <a href="/#about">Giới thiệu</a>
                 <a href="/#news">Tin tức</a>
                 <a href="/#events">Sự kiện</a>
@@ -31,13 +38,16 @@
 
     <footer id="contact" class="footer">
         <div class="container">
-            <h3>🥋 Câu lạc bộ Võ</h3>
+            <h3>
+                <img src="~/images/logo.png" alt="Logo" class="footer-logo" />
+                CLB Vũ Hổ
+            </h3>
             <p>Rèn luyện • Kỷ luật • Bản lĩnh</p>
-            <p>© @DateTime.Now.Year CLB Võ. All rights reserved.</p>
+            <p>© @DateTime.Now.Year CLB Vũ Hổ. All rights reserved.</p>
         </div>
     </footer>
 
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
-</html> 
+</html>

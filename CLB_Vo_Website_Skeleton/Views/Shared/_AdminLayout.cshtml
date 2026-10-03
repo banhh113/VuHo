@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Admin CLB Vũ Hổ</title>
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body class="admin-body">
+    <aside class="admin-sidebar">
+        <div class="admin-brand">
+            <img src="~/images/logo.png" alt="Logo" />
+            <span>VŨ HỔ</span>
+        </div>
+        <nav class="admin-nav">
+            <a asp-controller="Admin" asp-action="Index">📊 Dashboard</a>
+            <a asp-controller="AdminPosts" asp-action="Index">📝 Bài viết</a>
+            <a href="#" class="disabled">👥 Thành viên (sắp có)</a>
+            <a href="#" class="disabled">📅 Sự kiện (sắp có)</a>
+            <a href="#" class="disabled">🖼️ Thư viện (sắp có)</a>
+            <a href="#" class="disabled">🏆 Thành tích (sắp có)</a>
+        </nav>
+        <form asp-controller="Account" asp-action="Logout" method="post" class="admin-logout">
+            @Html.AntiForgeryToken()
+            <button type="submit">🚪 Đăng xuất</button>
+        </form>
+    </aside>
+
+    <main class="admin-main">
+        @RenderBody()
+    </main>
+</body>
+</html>

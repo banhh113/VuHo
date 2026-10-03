@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\baoan\\Desktop\\edit VH\\CLB_Vo_Website_Skeleton\\CLBVo.csproj": {}
+    "C:\\Users\\baoan\\Desktop\\edit VH\\VuHo123\\CLB_Vo_Website_Skeleton\\CLBVo.csproj": {}
   },
   "projects": {
-    "C:\\Users\\baoan\\Desktop\\edit VH\\CLB_Vo_Website_Skeleton\\CLBVo.csproj": {
+    "C:\\Users\\baoan\\Desktop\\edit VH\\VuHo123\\CLB_Vo_Website_Skeleton\\CLBVo.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\baoan\\Desktop\\edit VH\\CLB_Vo_Website_Skeleton\\CLBVo.csproj",
+        "projectUniqueName": "C:\\Users\\baoan\\Desktop\\edit VH\\VuHo123\\CLB_Vo_Website_Skeleton\\CLBVo.csproj",
         "projectName": "CLBVo",
-        "projectPath": "C:\\Users\\baoan\\Desktop\\edit VH\\CLB_Vo_Website_Skeleton\\CLBVo.csproj",
+        "projectPath": "C:\\Users\\baoan\\Desktop\\edit VH\\VuHo123\\CLB_Vo_Website_Skeleton\\CLBVo.csproj",
         "packagesPath": "C:\\Users\\baoan\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\baoan\\Desktop\\edit VH\\CLB_Vo_Website_Skeleton\\obj\\",
+        "outputPath": "C:\\Users\\baoan\\Desktop\\edit VH\\VuHo123\\CLB_Vo_Website_Skeleton\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\baoan\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -48,17 +48,27 @@
           "dependencies": {
             "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
               "target": "Package",
-              "version": "[10.0.0, )"
+              "version": "[10.0.12, )"
+            },
+            "Microsoft.AspNetCore.Identity.UI": {
+              "target": "Package",
+              "version": "[10.0.12, )"
+            },
+            "Microsoft.EntityFrameworkCore.Design": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[10.0.12, )"
             },
             "Microsoft.EntityFrameworkCore.SqlServer": {
               "target": "Package",
-              "version": "[10.0.0, )"
+              "version": "[10.0.12, )"
             },
             "Microsoft.EntityFrameworkCore.Tools": {
               "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
               "suppressParent": "All",
               "target": "Package",
-              "version": "[10.0.0, )"
+              "version": "[10.0.12, )"
             }
           },
           "imports": [
