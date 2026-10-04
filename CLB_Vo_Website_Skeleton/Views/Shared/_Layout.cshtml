@@ -38,12 +38,24 @@
 
     <footer id="contact" class="footer">
         <div class="container">
-            <h3>
-                <img src="~/images/logo.png" alt="Logo" class="footer-logo" />
-                CLB Vũ Hổ
-            </h3>
-            <p>Rèn luyện • Kỷ luật • Bản lĩnh</p>
-            <p>© @DateTime.Now.Year CLB Vũ Hổ. All rights reserved.</p>
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h3>
+                        <img src="~/images/logo.png" alt="Logo" class="footer-logo" />
+                        CLB Vũ Hổ
+                    </h3>
+                    <p>Rèn luyện • Kỷ luật • Bản lĩnh</p>
+                    <p class="footer-tagline">
+                        Nơi hun đúc tinh thần võ thuật cho thế hệ trẻ
+                    </p>
+                </div>
+
+                @await Component.InvokeAsync("ClubInfo")
+            </div>
+
+            <div class="footer-bottom">
+                <p>© @DateTime.Now.Year CLB Vũ Hổ. All rights reserved.</p>
+            </div>
         </div>
     </footer>
 

@@ -2333,3 +2333,137 @@ body.admin-body {
     .quick-actions-grid { grid-template-columns: 1fr; }
     .system-status { grid-template-columns: 1fr; }
 }
+
+/* ============================================================
+   FOOTER — Grid 3 cột với thông tin liên hệ
+   ============================================================ */
+
+.footer-grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr;   /* Logo rộng hơn */
+    gap: 40px;
+    text-align: left;
+    margin-bottom: 40px;
+}
+
+.footer-col h3 {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 1.3rem;
+    color: var(--gold);
+    margin-bottom: 14px;
+    justify-content: flex-start;
+}
+
+.footer-col h4 {
+    font-size: .82rem;
+    color: var(--gold);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    position: relative;
+    padding-bottom: 10px;
+}
+
+.footer-col h4::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0;
+    width: 30px; height: 2px;
+    background: var(--red);
+}
+
+.footer-col p {
+    color: var(--gray);
+    font-size: .9rem;
+    margin-bottom: 6px;
+}
+
+.footer-tagline {
+    color: #888 !important;
+    font-style: italic;
+    font-size: .85rem !important;
+    margin-top: 10px;
+}
+
+.footer-contact,
+.footer-hours {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer-contact li {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 12px;
+    color: var(--gray);
+    font-size: .9rem;
+    line-height: 1.5;
+}
+
+.footer-contact .contact-icon {
+    font-size: 1.1rem;
+    flex-shrink: 0;
+    width: 22px;
+    text-align: center;
+}
+
+.footer-contact a {
+    color: var(--gray);
+    transition: color .2s;
+}
+
+.footer-contact a:hover {
+    color: var(--gold);
+}
+
+.footer-hours li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+    color: var(--gray);
+    font-size: .85rem;
+}
+
+.footer-hours strong {
+    color: var(--white);
+    font-size: .82rem;
+    letter-spacing: .5px;
+}
+
+.footer-bottom {
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+    text-align: center;
+}
+
+.footer-bottom p {
+    color: #666;
+    font-size: .82rem;
+    margin: 0;
+}
+
+@media (max-width: 900px) {
+    .footer-grid {
+        grid-template-columns: 1fr;
+        gap: 30px;
+        text-align: center;
+    }
+    .footer-col h3 { justify-content: center; }
+    .footer-col h4::after {
+        left: 50%;
+        transform: translateX(-50%);
+    }
+    .footer-contact li {
+        justify-content: center;
+    }
+    .footer-hours li {
+        justify-content: center;
+        gap: 20px;
+    }
+}

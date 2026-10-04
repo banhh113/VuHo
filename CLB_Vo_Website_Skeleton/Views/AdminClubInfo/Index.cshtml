@@ -73,6 +73,13 @@
                placeholder="VD: lienhe@vuhoclb.vn" />
     </div>
 
+    <div class="form-group">
+        <label>Giờ tập</label>
+        <textarea asp-for="OpeningHours" rows="4"
+                placeholder="Mỗi dòng 1 khung giờ, ví dụ:&#10;Thứ 2 - Thứ 6: 18:00 - 21:00&#10;Thứ 7 - CN: 08:00 - 11:00"></textarea>
+        <small>Mỗi dòng là 1 khung giờ, hiển thị ở footer trang chủ.</small>
+    </div>
+
     <div class="form-actions">
         <button type="submit" class="btn">💾 Lưu thông tin</button>
         <a asp-controller="Admin" asp-action="Index" class="btn btn-secondary">Hủy</a>

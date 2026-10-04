@@ -229,4 +229,4 @@ C:\Users\baoan\Desktop\edit VH\VuHo123\CLB_Vo_Website_Skeleton\obj\Debug\net10.0
 C:\Users\baoan\Desktop\edit VH\VuHo123\CLB_Vo_Website_Skeleton\obj\Debug\net10.0\CLBVo.pdb
 C:\Users\baoan\Desktop\edit VH\VuHo123\CLB_Vo_Website_Skeleton\obj\Debug\net10.0\CLBVo.genruntimeconfig.cache
 C:\Users\baoan\Desktop\edit VH\VuHo123\CLB_Vo_Website_Skeleton\obj\Debug\net10.0\ref\CLBVo.dll
-C:\Users\baoan\Desktop\edit VH\VuHo123\CLB_Vo_Website_Skeleton\obj\Debug\net10.0\compressed\nzafh3skiv-{0}-n7fx8p19a0-n7fx8p19a0.gz
+C:\Users\baoan\Desktop\edit VH\VuHo123\CLB_Vo_Website_Skeleton\obj\Debug\net10.0\compressed\nzafh3skiv-{0}-ebp3ulln4s-ebp3ulln4s.gz

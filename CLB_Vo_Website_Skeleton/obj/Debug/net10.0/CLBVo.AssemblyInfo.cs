@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("CLBVo")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+425cc4ba37d7eb3ba44290dfd22c5dd67bd51ee4")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d3da083b3b7762f274b3e2c55409586d75e2c6db")]
 [assembly: System.Reflection.AssemblyProductAttribute("CLBVo")]
 [assembly: System.Reflection.AssemblyTitleAttribute("CLBVo")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

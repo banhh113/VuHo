@@ -49,6 +49,7 @@ public class AdminClubInfoController : Controller
         info.Address = model.Address ?? "";
         info.Phone = model.Phone ?? "";
         info.Email = model.Email ?? "";
+        info.OpeningHours = model.OpeningHours ?? "";   // ← thêm dòng này
 
         // Upload ảnh mới nếu có
         if (imageFile != null && imageFile.Length > 0)
