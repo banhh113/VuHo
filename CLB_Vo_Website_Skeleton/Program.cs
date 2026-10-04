@@ -1,6 +1,7 @@
 using CLBVo.Data;
 using CLBVo.Services;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,7 +10,13 @@ var builder = WebApplication.CreateBuilder(args);
 var port = Environment.GetEnvironmentVariable("PORT") ?? "10000";
 builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
 
-builder.Services.AddControllersWithViews();
+// ⚠️ QUAN TRỌNG: tắt implicit required cho nullable reference types
+// Không có dòng này, mọi property string non-nullable sẽ bị coi là [Required]
+builder.Services.AddControllersWithViews(options =>
+{
+    options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true;
+});
+
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<FileUploadService>();
 
@@ -46,7 +53,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 
-app.UseAuthentication();   // ← BẮT BUỘC, phải trước UseAuthorization
+app.UseAuthentication();   // BẮT BUỘC, phải trước UseAuthorization
 app.UseAuthorization();
 
 app.MapControllerRoute(

@@ -4,66 +4,110 @@
     Layout = "_AdminLayout";
 }
 
-<div class="admin-page-header">
-    <div>
-        <h1>📊 Dashboard</h1>
-        <p class="admin-subtitle">Tổng quan hoạt động của CLB Vũ Hổ</p>
+<!-- WELCOME BANNER -->
+<div class="welcome-banner">
+    <div class="welcome-text">
+        <h1>👋 Xin chào, @Model.AdminName!</h1>
+        <p>@Model.CurrentDate • Chúc bạn một ngày làm việc hiệu quả</p>
     </div>
     <a asp-controller="Home" asp-action="Index" target="_blank" class="btn btn-outline">
         🌐 Xem trang chủ
     </a>
 </div>
 
-<!-- Stats cards -->
+<!-- STATS CARDS -->
 <div class="stats-grid">
-    <a asp-controller="AdminPosts" asp-action="Index" class="stat-card">
+    <div class="stat-card stat-card-blue">
         <div class="stat-icon">📝</div>
         <div class="stat-info">
-            <strong>@Model.PostCount</strong>
+            <strong data-count="@Model.PostCount">0</strong>
             <span>Bài viết</span>
         </div>
-    </a>
+    </div>
 
-    <div class="stat-card">
+    <div class="stat-card stat-card-green">
         <div class="stat-icon">👥</div>
         <div class="stat-info">
-            <strong>@Model.MemberCount</strong>
+            <strong data-count="@Model.MemberCount">0</strong>
             <span>Thành viên</span>
         </div>
     </div>
 
-    <div class="stat-card">
+    <div class="stat-card stat-card-red">
         <div class="stat-icon">📅</div>
         <div class="stat-info">
-            <strong>@Model.EventCount</strong>
+            <strong data-count="@Model.EventCount">0</strong>
             <span>Sự kiện</span>
         </div>
     </div>
 
-    <div class="stat-card">
+    <div class="stat-card stat-card-purple">
         <div class="stat-icon">🖼️</div>
         <div class="stat-info">
-            <strong>@Model.GalleryCount</strong>
+            <strong data-count="@Model.GalleryCount">0</strong>
             <span>Ảnh thư viện</span>
         </div>
     </div>
 
-    <div class="stat-card">
+    <div class="stat-card stat-card-gold">
         <div class="stat-icon">🏆</div>
         <div class="stat-info">
-            <strong>@Model.AchievementCount</strong>
+            <strong data-count="@Model.AchievementCount">0</strong>
             <span>Thành tích</span>
         </div>
     </div>
 </div>
 
-<!-- Two column section -->
-<div class="admin-two-col">
+<!-- QUICK ACTIONS -->
+<div class="quick-actions">
+    <h3>⚡ Thao tác nhanh</h3>
+    <div class="quick-actions-grid">
+        <a asp-controller="AdminPosts" asp-action="Create" class="quick-action">
+            <div class="quick-action-icon">📝</div>
+            <div>
+                <strong>Thêm bài viết</strong>
+                <small>Đăng tin tức mới</small>
+            </div>
+        </a>
 
-    <!-- Recent posts -->
+        <a asp-controller="AdminMembers" asp-action="Create" class="quick-action">
+            <div class="quick-action-icon">👥</div>
+            <div>
+                <strong>Thêm thành viên</strong>
+                <small>Bổ sung HLV / võ sinh</small>
+            </div>
+        </a>
+
+        <a asp-controller="AdminEvents" asp-action="Create" class="quick-action">
+            <div class="quick-action-icon">📅</div>
+            <div>
+                <strong>Thêm sự kiện</strong>
+                <small>Tạo giải đấu / buổi tập</small>
+            </div>
+        </a>
+
+        <a asp-controller="AdminGallery" asp-action="Create" class="quick-action">
+            <div class="quick-action-icon">🖼️</div>
+            <div>
+                <strong>Upload ảnh</strong>
+                <small>Bổ sung thư viện</small>
+            </div>
+        </a>
+    </div>
+</div>
+
+<!-- 2 COLUMN: CHART + RECENT POSTS -->
+<div class="admin-two-col">
     <div class="admin-panel">
         <div class="panel-header">
-            <h2>BÀI VIẾT GẦN ĐÂY</h2>
+            <h2>📊 Bài viết 6 tháng gần đây</h2>
+        </div>
+        <canvas id="postsChart" style="max-height:280px"></canvas>
+    </div>
+
+    <div class="admin-panel">
+        <div class="panel-header">
+            <h2>📝 Bài viết gần đây</h2>
             <a asp-controller="AdminPosts" asp-action="Index">Xem tất cả →</a>
         </div>
 
@@ -77,7 +121,8 @@
                             <div class="list-title">@p.Title</div>
                             <div class="list-meta">@p.CreatedAt.ToString("dd/MM/yyyy HH:mm")</div>
                         </div>
-                        <a asp-controller="AdminPosts" asp-action="Edit" asp-route-id="@p.Id" class="list-action">Sửa</a>
+                        <a asp-controller="AdminPosts" asp-action="Edit"
+                           asp-route-id="@p.Id" class="list-action">Sửa</a>
                     </li>
                 }
             </ul>
@@ -87,11 +132,14 @@
             <p class="empty-state">Chưa có bài viết nào.</p>
         }
     </div>
+</div>
 
-    <!-- Upcoming events -->
+<!-- 2 COLUMN: UPCOMING EVENTS + RECENT MEMBERS -->
+<div class="admin-two-col">
     <div class="admin-panel">
         <div class="panel-header">
-            <h2>SỰ KIỆN SẮP TỚI</h2>
+            <h2>📅 Sự kiện sắp tới</h2>
+            <a asp-controller="AdminEvents" asp-action="Index">Xem tất cả →</a>
         </div>
 
         @if (Model.UpcomingEvents.Any())
@@ -118,4 +166,125 @@
         }
     </div>
 
+    <div class="admin-panel">
+        <div class="panel-header">
+            <h2>👥 Thành viên mới</h2>
+            <a asp-controller="AdminMembers" asp-action="Index">Xem tất cả →</a>
+        </div>
+
+        @if (Model.RecentMembers.Any())
+        {
+            <ul class="panel-list">
+                @foreach (var m in Model.RecentMembers)
+                {
+                    <li>
+                        @if (!string.IsNullOrEmpty(m.AvatarUrl))
+                        {
+                            <img src="@m.AvatarUrl" alt="@m.FullName"
+                                 style="width:40px;height:40px;border-radius:50%;
+                                        object-fit:cover;border:2px solid rgba(255,255,255,0.1)" />
+                        }
+                        else
+                        {
+                            <div style="width:40px;height:40px;border-radius:50%;
+                                        background:linear-gradient(135deg,#c8102e,#f5c518);
+                                        display:grid;place-items:center;font-size:1rem">👤</div>
+                        }
+                        <div style="flex:1;min-width:0">
+                            <div class="list-title">@m.FullName</div>
+                            <div class="list-meta">@m.Role</div>
+                        </div>
+                    </li>
+                }
+            </ul>
+        }
+        else
+        {
+            <p class="empty-state">Chưa có thành viên nào.</p>
+        }
+    </div>
 </div>
+
+<!-- SYSTEM STATUS -->
+<div class="system-status">
+    <div class="status-item">
+        <span class="status-dot status-online"></span>
+        <span>Cơ sở dữ liệu</span>
+        <strong>Online</strong>
+    </div>
+    <div class="status-item">
+        <span class="status-dot status-online"></span>
+        <span>Server</span>
+        <strong>Hoạt động</strong>
+    </div>
+    <div class="status-item">
+        <span class="status-dot status-online"></span>
+        <span>Thời gian</span>
+        <strong>@DateTime.Now.ToString("HH:mm:ss")</strong>
+    </div>
+    <div class="status-item">
+        <span class="status-dot status-online"></span>
+        <span>Phiên bản</span>
+        <strong>v1.0</strong>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script>
+        // ===== Counter animation =====
+        document.querySelectorAll('.stat-info strong[data-count]').forEach(el => {
+            const target = parseInt(el.dataset.count, 10);
+            if (target === 0) { el.textContent = '0'; return; }
+            let current = 0;
+            const step = Math.max(1, Math.ceil(target / 40));
+            const timer = setInterval(() => {
+                current += step;
+                if (current >= target) {
+                    el.textContent = target;
+                    clearInterval(timer);
+                } else {
+                    el.textContent = current;
+                }
+            }, 25);
+        });
+
+        // ===== Chart =====
+        const ctx = document.getElementById('postsChart');
+        if (ctx) {
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.ChartMonths)),
+                    datasets: [{
+                        label: 'Số bài viết',
+                        data: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.ChartPostCounts)),
+                        backgroundColor: 'rgba(245, 197, 24, 0.6)',
+                        borderColor: '#f5c518',
+                        borderWidth: 2,
+                        borderRadius: 8,
+                        hoverBackgroundColor: '#f5c518'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: { color: '#a0a0a0', stepSize: 1, precision: 0 },
+                            grid: { color: 'rgba(255,255,255,0.05)' }
+                        },
+                        x: {
+                            ticks: { color: '#a0a0a0' },
+                            grid: { display: false }
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+}

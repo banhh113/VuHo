@@ -1,0 +1,71 @@
+@model List<CLBVo.Models.Achievement>
+@{
+    ViewData["Title"] = "Quản lý thành tích";
+    Layout = "_AdminLayout";
+}
+
+<div class="admin-page-header">
+    <div>
+        <h1>🏆 Quản lý thành tích</h1>
+        <p class="admin-subtitle">Huy chương, giải thưởng của CLB Vũ Hổ</p>
+    </div>
+    <a asp-action="Create" class="btn">+ Thêm thành tích</a>
+</div>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
+
+<table class="admin-table">
+    <thead>
+        <tr>
+            <th style="width:80px">Năm</th>
+            <th>Tiêu đề</th>
+            <th style="width:240px">Cuộc thi</th>
+            <th style="width:180px">Huy chương</th>
+            <th style="width:180px">Hành động</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (!Model.Any())
+        {
+            <tr>
+                <td colspan="5" class="empty">
+                    Chưa có thành tích nào. Bấm "+ Thêm thành tích" để bắt đầu.
+                </td>
+            </tr>
+        }
+        @foreach (var a in Model)
+        {
+            <tr>
+                <td>
+                    <span class="achievement-year">@a.Year</span>
+                </td>
+                <td>
+                    <strong>@a.Title</strong>
+                </td>
+                <td>
+                    <small style="color:#a0a0a0;font-size:.85rem">@a.Competition</small>
+                </td>
+                <td>
+                    <span class="achievement-medal">@a.Medal</span>
+                </td>
+                <td class="actions">
+                    <a asp-action="Edit" asp-route-id="@a.Id" class="btn-sm btn-edit">
+                        <span class="icon">✏️</span>
+                        <span>Sửa</span>
+                    </a>
+                    <form asp-action="Delete" asp-route-id="@a.Id" method="post"
+                          onsubmit="return confirm('Xóa thành tích này?');">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn-sm btn-delete">
+                            <span class="icon">🗑️</span>
+                            <span>Xóa</span>
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

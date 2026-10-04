@@ -1,0 +1,83 @@
+@model List<CLBVo.Models.Member>
+@{
+    ViewData["Title"] = "Quản lý thành viên";
+    Layout = "_AdminLayout";
+}
+
+<div class="admin-page-header">
+    <div>
+        <h1>👥 Quản lý thành viên</h1>
+        <p class="admin-subtitle">HLV và võ sinh của CLB Vũ Hổ</p>
+    </div>
+    <a asp-action="Create" class="btn">+ Thêm thành viên</a>
+</div>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
+
+<table class="admin-table">
+    <thead>
+        <tr>
+            <th style="width:100px">Ảnh</th>
+            <th>Họ tên</th>
+            <th style="width:180px">Vai trò</th>
+            <th>Mô tả</th>
+            <th style="width:180px">Hành động</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (!Model.Any())
+        {
+            <tr>
+                <td colspan="5" class="empty">
+                    Chưa có thành viên nào. Bấm "+ Thêm thành viên" để bắt đầu.
+                </td>
+            </tr>
+        }
+        @foreach (var m in Model)
+        {
+            <tr>
+                <td>
+                    @if (!string.IsNullOrEmpty(m.AvatarUrl))
+                    {
+                        <img src="@m.AvatarUrl" alt="@m.FullName"
+                             class="thumb" style="border-radius:50%" />
+                    }
+                    else
+                    {
+                        <div class="thumb-empty" style="border-radius:50%">—</div>
+                    }
+                </td>
+                <td><strong>@m.FullName</strong></td>
+                <td>
+                    <span style="color:#f5c518;font-weight:600;font-size:.85rem;letter-spacing:1px">
+                        @m.Role
+                    </span>
+                </td>
+                <td>
+                    <small style="color:#a0a0a0;font-size:.85rem">
+                        @(m.Description.Length > 80
+                            ? m.Description.Substring(0, 80) + "..."
+                            : m.Description)
+                    </small>
+                </td>
+                <td class="actions">
+                    <a asp-action="Edit" asp-route-id="@m.Id" class="btn-sm btn-edit">
+                        <span class="icon">✏️</span>
+                        <span>Sửa</span>
+                    </a>
+                    <form asp-action="Delete" asp-route-id="@m.Id" method="post"
+                          onsubmit="return confirm('Xóa thành viên này?');">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn-sm btn-delete">
+                            <span class="icon">🗑️</span>
+                            <span>Xóa</span>
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

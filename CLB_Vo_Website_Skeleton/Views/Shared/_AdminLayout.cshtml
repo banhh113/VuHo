@@ -38,44 +38,39 @@
                 <span class="nav-label">Bài viết</span>
             </a>
 
-            <a href="#" class="admin-nav-item disabled"
-               data-tooltip="Sắp có"
-               onclick="return false;">
+            <a asp-controller="AdminMembers" asp-action="Index"
+               class="admin-nav-item"
+               data-tooltip="Thành viên">
                 <span class="nav-icon">👥</span>
                 <span class="nav-label">Thành viên</span>
-                <span class="nav-badge">sắp có</span>
             </a>
 
-            <a href="#" class="admin-nav-item disabled"
-               data-tooltip="Sắp có"
-               onclick="return false;">
+            <a asp-controller="AdminEvents" asp-action="Index"
+               class="admin-nav-item"
+               data-tooltip="Sự kiện">
                 <span class="nav-icon">📅</span>
                 <span class="nav-label">Sự kiện</span>
-                <span class="nav-badge">sắp có</span>
             </a>
 
-            <a href="#" class="admin-nav-item disabled"
-               data-tooltip="Sắp có"
-               onclick="return false;">
+            <a asp-controller="AdminGallery" asp-action="Index"
+               class="admin-nav-item"
+               data-tooltip="Thư viện">
                 <span class="nav-icon">🖼️</span>
                 <span class="nav-label">Thư viện</span>
-                <span class="nav-badge">sắp có</span>
             </a>
 
-            <a href="#" class="admin-nav-item disabled"
-               data-tooltip="Sắp có"
-               onclick="return false;">
+            <a asp-controller="AdminAchievements" asp-action="Index"
+               class="admin-nav-item"
+               data-tooltip="Thành tích">
                 <span class="nav-icon">🏆</span>
                 <span class="nav-label">Thành tích</span>
-                <span class="nav-badge">sắp có</span>
             </a>
 
-            <a href="#" class="admin-nav-item disabled"
-               data-tooltip="Sắp có"
-               onclick="return false;">
+            <a asp-controller="AdminClubInfo" asp-action="Index"
+               class="admin-nav-item"
+               data-tooltip="Thông tin CLB">
                 <span class="nav-icon">⚙️</span>
                 <span class="nav-label">Thông tin CLB</span>
-                <span class="nav-badge">sắp có</span>
             </a>
         </nav>
 
@@ -88,7 +83,16 @@
                 </div>
             </div>
 
-            <form asp-controller="Account" asp-action="Logout" method="post">
+            <!-- Nút đổi mật khẩu — NGOÀI form logout -->
+            <a asp-controller="Account" asp-action="ChangePassword"
+               class="btn-logout"
+               style="text-decoration:none;justify-content:center;margin-bottom:10px">
+                <span class="logout-icon">🔑</span>
+                <span class="logout-label">Đổi mật khẩu</span>
+            </a>
+
+            <!-- Form đăng xuất -->
+            <form asp-controller="Account" asp-action="Logout" method="post" style="margin:0">
                 @Html.AntiForgeryToken()
                 <button type="submit" class="btn-logout">
                     <span class="logout-icon">🚪</span>
@@ -112,5 +116,7 @@
         </main>
     </div>
 
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

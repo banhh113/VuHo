@@ -110,13 +110,30 @@ document.querySelectorAll('form[data-confirm]').forEach(form => {
 
 // ==================== Admin sidebar active state ====================
 (function () {
-    const path = window.location.pathname.toLowerCase();
-    document.querySelectorAll('.admin-nav-item').forEach(item => {
+    const path = window.location.pathname.toLowerCase().replace(/\/$/, '') || '/';
+    const items = [...document.querySelectorAll('.admin-nav-item')];
+
+    // Xóa active cũ (phòng trường hợp đã có sẵn trong HTML)
+    items.forEach(i => i.classList.remove('active'));
+
+    // Tìm item khớp dài nhất
+    let bestMatch = null;
+    let bestLen = 0;
+
+    items.forEach(item => {
         const href = item.getAttribute('href');
         if (!href || href === '#') return;
-        const hrefClean = href.toLowerCase();
-        if (hrefClean !== '/' && path.startsWith(hrefClean)) {
-            item.classList.add('active');
+
+        const clean = href.toLowerCase().replace(/\/$/, '') || '/';
+
+        // Khớp khi path bằng chính xác, hoặc bắt đầu bằng clean + '/'
+        const isMatch = path === clean || path.startsWith(clean + '/');
+
+        if (isMatch && clean.length > bestLen) {
+            bestMatch = item;
+            bestLen = clean.length;
         }
     });
+
+    if (bestMatch) bestMatch.classList.add('active');
 })();

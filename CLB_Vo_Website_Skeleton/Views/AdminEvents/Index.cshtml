@@ -1,0 +1,88 @@
+@model List<CLBVo.Models.ClubEvent>
+@{
+    ViewData["Title"] = "Quản lý sự kiện";
+    Layout = "_AdminLayout";
+}
+
+<div class="admin-page-header">
+    <div>
+        <h1>📅 Quản lý sự kiện</h1>
+        <p class="admin-subtitle">Sự kiện, giải đấu, buổi tập của CLB Vũ Hổ</p>
+    </div>
+    <a asp-action="Create" class="btn">+ Thêm sự kiện</a>
+</div>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
+
+<table class="admin-table">
+    <thead>
+        <tr>
+            <th style="width:100px">Ảnh</th>
+            <th>Tiêu đề</th>
+            <th style="width:140px">Ngày</th>
+            <th style="width:200px">Địa điểm</th>
+            <th>Mô tả</th>
+            <th style="width:180px">Hành động</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (!Model.Any())
+        {
+            <tr>
+                <td colspan="6" class="empty">
+                    Chưa có sự kiện nào. Bấm "+ Thêm sự kiện" để bắt đầu.
+                </td>
+            </tr>
+        }
+        @foreach (var ev in Model)
+        {
+            <tr>
+                <td>
+                    @if (!string.IsNullOrEmpty(ev.ImageUrl))
+                    {
+                        <img src="@ev.ImageUrl" alt="@ev.Title" class="thumb" />
+                    }
+                    else
+                    {
+                        <div class="thumb-empty">—</div>
+                    }
+                </td>
+                <td>
+                    <strong>@ev.Title</strong>
+                </td>
+                <td>
+                    <span style="color:#f5c518;font-weight:600;font-size:.85rem">
+                        @ev.EventDate.ToString("dd/MM/yyyy")
+                    </span>
+                </td>
+                <td>
+                    <small style="color:#a0a0a0;font-size:.85rem">@ev.Location</small>
+                </td>
+                <td>
+                    <small style="color:#a0a0a0;font-size:.85rem">
+                        @(ev.Description.Length > 60
+                            ? ev.Description.Substring(0, 60) + "..."
+                            : ev.Description)
+                    </small>
+                </td>
+                <td class="actions">
+                    <a asp-action="Edit" asp-route-id="@ev.Id" class="btn-sm btn-edit">
+                        <span class="icon">✏️</span>
+                        <span>Sửa</span>
+                    </a>
+                    <form asp-action="Delete" asp-route-id="@ev.Id" method="post"
+                          onsubmit="return confirm('Xóa sự kiện này?');">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn-sm btn-delete">
+                            <span class="icon">🗑️</span>
+                            <span>Xóa</span>
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,44 @@
+@model CLBVo.Models.Achievement
+@{
+    ViewData["Title"] = "Sửa thành tích";
+    Layout = "_AdminLayout";
+}
+
+<div class="admin-page-header">
+    <div>
+        <h1>✏️ Sửa thành tích</h1>
+        <p class="admin-subtitle">@Model.Title</p>
+    </div>
+    <a asp-action="Index" class="btn btn-secondary">← Quay lại</a>
+</div>
+
+<form asp-action="Edit" asp-route-id="@Model.Id" method="post" class="admin-form">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="Id" />
+    <div asp-validation-summary="ModelOnly" class="alert alert-error"></div>
+
+    <div class="form-group">
+        <label>Tiêu đề *</label>
+        <input asp-for="Title" required maxlength="255" />
+    </div>
+
+    <div class="form-group">
+        <label>Cuộc thi *</label>
+        <input asp-for="Competition" required maxlength="255" />
+    </div>
+
+    <div class="form-group">
+        <label>Huy chương *</label>
+        <input asp-for="Medal" required maxlength="50" />
+    </div>
+
+    <div class="form-group">
+        <label>Năm *</label>
+        <input asp-for="Year" type="number" required min="1950" max="2100" />
+    </div>
+
+    <div class="form-actions">
+        <button type="submit" class="btn">💾 Cập nhật</button>
+        <a asp-action="Index" class="btn btn-secondary">Hủy</a>
+    </div>
+</form>

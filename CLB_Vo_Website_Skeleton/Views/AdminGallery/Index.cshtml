@@ -1,0 +1,58 @@
+@model List<CLBVo.Models.GalleryImage>
+@{
+    ViewData["Title"] = "Quản lý thư viện";
+    Layout = "_AdminLayout";
+}
+
+<div class="admin-page-header">
+    <div>
+        <h1>🖼️ Quản lý thư viện ảnh</h1>
+        <p class="admin-subtitle">Hình ảnh hoạt động, giải đấu của CLB Vũ Hổ</p>
+    </div>
+    <a asp-action="Create" class="btn">+ Thêm ảnh</a>
+</div>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
+
+@if (!Model.Any())
+{
+    <div class="admin-panel" style="text-align:center;padding:60px 20px">
+        <p style="color:#666;font-style:italic;margin-bottom:20px">
+            Chưa có ảnh nào trong thư viện.
+        </p>
+        <a asp-action="Create" class="btn">+ Thêm ảnh đầu tiên</a>
+    </div>
+}
+else
+{
+    <div class="gallery-admin-grid">
+        @foreach (var img in Model)
+        {
+            <div class="gallery-admin-card">
+                <div class="gallery-admin-thumb">
+                    <img src="@img.ImageUrl" alt="@img.Title" loading="lazy" />
+                    <div class="gallery-admin-overlay">
+                        <a asp-action="Edit" asp-route-id="@img.Id" class="gallery-admin-btn gallery-admin-edit" title="Sửa">
+                            ✏️
+                        </a>
+                        <form asp-action="Delete" asp-route-id="@img.Id" method="post"
+                              style="display:inline"
+                              onsubmit="return confirm('Xóa ảnh này?');">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="gallery-admin-btn gallery-admin-delete" title="Xóa">
+                                🗑️
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                <div class="gallery-admin-info">
+                    <div class="gallery-admin-title">@img.Title</div>
+                    <div class="gallery-admin-date">@img.CreatedAt.ToString("dd/MM/yyyy HH:mm")</div>
+                </div>
+            </div>
+        }
+    </div>
+}

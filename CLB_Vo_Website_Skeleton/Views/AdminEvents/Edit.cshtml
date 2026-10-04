@@ -1,0 +1,62 @@
+@model CLBVo.Models.ClubEvent
+@{
+    ViewData["Title"] = "Sửa sự kiện";
+    Layout = "_AdminLayout";
+}
+
+<div class="admin-page-header">
+    <div>
+        <h1>✏️ Sửa sự kiện</h1>
+        <p class="admin-subtitle">@Model.Title</p>
+    </div>
+    <a asp-action="Index" class="btn btn-secondary">← Quay lại</a>
+</div>
+
+<form asp-action="Edit" asp-route-id="@Model.Id" method="post"
+      enctype="multipart/form-data" class="admin-form">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="Id" />
+    <input type="hidden" asp-for="ImageUrl" />
+    <div asp-validation-summary="ModelOnly" class="alert alert-error"></div>
+
+    <div class="form-group">
+        <label>Tiêu đề sự kiện *</label>
+        <input asp-for="Title" required maxlength="255" />
+    </div>
+
+    <div class="form-group">
+        <label>Ngày diễn ra *</label>
+        <input asp-for="EventDate" type="datetime-local" required
+               value="@Model.EventDate.ToString("yyyy-MM-ddTHH:mm")" />
+    </div>
+
+    <div class="form-group">
+        <label>Địa điểm *</label>
+        <input asp-for="Location" required maxlength="255" />
+    </div>
+
+    <div class="form-group">
+        <label>Mô tả</label>
+        <textarea asp-for="Description" rows="5"></textarea>
+    </div>
+
+    @if (!string.IsNullOrEmpty(Model.ImageUrl))
+    {
+        <div class="form-group">
+            <label>Ảnh hiện tại</label>
+            <img src="@Model.ImageUrl" alt="@Model.Title"
+                 style="max-width:240px;border-radius:10px;
+                        border:2px solid rgba(255,255,255,0.1)" />
+        </div>
+    }
+
+    <div class="form-group">
+        <label>Thay ảnh mới (để trống nếu giữ ảnh cũ)</label>
+        <input type="file" name="imageFile" accept="image/*" />
+    </div>
+
+    <div class="form-actions">
+        <button type="submit" class="btn">💾 Cập nhật</button>
+        <a asp-action="Index" class="btn btn-secondary">Hủy</a>
+    </div>
+</form>

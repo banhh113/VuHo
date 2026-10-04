@@ -1,0 +1,54 @@
+@model CLBVo.Models.ClubEvent
+@{
+    ViewData["Title"] = "Thêm sự kiện";
+    Layout = "_AdminLayout";
+}
+
+<div class="admin-page-header">
+    <div>
+        <h1>+ Thêm sự kiện</h1>
+        <p class="admin-subtitle">Tạo sự kiện, giải đấu hoặc buổi tập mới</p>
+    </div>
+    <a asp-action="Index" class="btn btn-secondary">← Quay lại</a>
+</div>
+
+<form asp-action="Create" method="post" enctype="multipart/form-data" class="admin-form">
+    @Html.AntiForgeryToken()
+    <div asp-validation-summary="ModelOnly" class="alert alert-error"></div>
+
+    <div class="form-group">
+        <label>Tiêu đề sự kiện *</label>
+        <input asp-for="Title" required maxlength="255"
+               placeholder="VD: Giải đấu võ thuật mở rộng 2026" />
+    </div>
+
+    <div class="form-group">
+        <label>Ngày diễn ra *</label>
+        <input asp-for="EventDate" type="datetime-local" required
+               value="@Model.EventDate.ToString("yyyy-MM-ddTHH:mm")" />
+        <small>Chọn ngày và giờ sự kiện bắt đầu.</small>
+    </div>
+
+    <div class="form-group">
+        <label>Địa điểm *</label>
+        <input asp-for="Location" required maxlength="255"
+               placeholder="VD: Nhà thi đấu Phú Thọ, TP.HCM" />
+    </div>
+
+    <div class="form-group">
+        <label>Mô tả</label>
+        <textarea asp-for="Description" rows="5"
+                  placeholder="Mô tả ngắn về sự kiện, nội dung, đối tượng tham gia..."></textarea>
+    </div>
+
+    <div class="form-group">
+        <label>Ảnh sự kiện</label>
+        <input type="file" name="imageFile" accept="image/*" />
+        <small>Chấp nhận jpg, png, gif, webp. Tối đa 5MB.</small>
+    </div>
+
+    <div class="form-actions">
+        <button type="submit" class="btn">💾 Lưu sự kiện</button>
+        <a asp-action="Index" class="btn btn-secondary">Hủy</a>
+    </div>
+</form>

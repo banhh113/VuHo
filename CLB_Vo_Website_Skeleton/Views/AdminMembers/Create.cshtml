@@ -1,0 +1,48 @@
+@model CLBVo.Models.Member
+@{
+    ViewData["Title"] = "Thêm thành viên";
+    Layout = "_AdminLayout";
+}
+
+<div class="admin-page-header">
+    <div>
+        <h1>+ Thêm thành viên</h1>
+        <p class="admin-subtitle">Thêm HLV hoặc võ sinh mới</p>
+    </div>
+    <a asp-action="Index" class="btn btn-secondary">← Quay lại</a>
+</div>
+
+<form asp-action="Create" method="post" enctype="multipart/form-data" class="admin-form">
+    @Html.AntiForgeryToken()
+    <div asp-validation-summary="ModelOnly" class="alert alert-error"></div>
+
+    <div class="form-group">
+        <label>Họ tên *</label>
+        <input asp-for="FullName" required maxlength="150"
+               placeholder="VD: Nguyễn Văn A" />
+    </div>
+
+    <div class="form-group">
+        <label>Vai trò *</label>
+        <input asp-for="Role" required maxlength="100"
+               placeholder="VD: Huấn luyện viên, Võ sinh..." />
+        <small>Gợi ý: Huấn luyện viên, Trợ giảng, Võ sinh, HLV Boxing...</small>
+    </div>
+
+    <div class="form-group">
+        <label>Mô tả ngắn</label>
+        <textarea asp-for="Description" rows="4"
+                  placeholder="VD: HLV chính với 10 năm kinh nghiệm..."></textarea>
+    </div>
+
+    <div class="form-group">
+        <label>Ảnh đại diện</label>
+        <input type="file" name="imageFile" accept="image/*" />
+        <small>Chấp nhận jpg, png, gif, webp. Tối đa 5MB. Nên dùng ảnh vuông để hiển thị tròn đẹp.</small>
+    </div>
+
+    <div class="form-actions">
+        <button type="submit" class="btn">💾 Lưu thành viên</button>
+        <a asp-action="Index" class="btn btn-secondary">Hủy</a>
+    </div>
+</form>

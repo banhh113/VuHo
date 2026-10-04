@@ -1,0 +1,49 @@
+@model CLBVo.Models.Achievement
+@{
+    ViewData["Title"] = "Thêm thành tích";
+    Layout = "_AdminLayout";
+}
+
+<div class="admin-page-header">
+    <div>
+        <h1>+ Thêm thành tích</h1>
+        <p class="admin-subtitle">Thêm huy chương, giải thưởng mới</p>
+    </div>
+    <a asp-action="Index" class="btn btn-secondary">← Quay lại</a>
+</div>
+
+<form asp-action="Create" method="post" class="admin-form">
+    @Html.AntiForgeryToken()
+    <div asp-validation-summary="ModelOnly" class="alert alert-error"></div>
+
+    <div class="form-group">
+        <label>Tiêu đề *</label>
+        <input asp-for="Title" required maxlength="255"
+               placeholder="VD: Huy chương vàng giải Boxing & Kickboxing toàn quốc" />
+        <small>Tên ngắn gọn của thành tích.</small>
+    </div>
+
+    <div class="form-group">
+        <label>Cuộc thi *</label>
+        <input asp-for="Competition" required maxlength="255"
+               placeholder="VD: Giải vô địch Boxing & Kickboxing toàn quốc 2026" />
+        <small>Tên đầy đủ của giải đấu / cuộc thi.</small>
+    </div>
+
+    <div class="form-group">
+        <label>Huy chương *</label>
+        <input asp-for="Medal" required maxlength="50"
+               placeholder="VD: 🥇 Huy chương vàng" />
+        <small>Gợi ý: 🥇 HCV, 🥈 HCB, 🥉 HCĐ, 🏆 Giải nhất, 🎖️ Giải nhì...</small>
+    </div>
+
+    <div class="form-group">
+        <label>Năm *</label>
+        <input asp-for="Year" type="number" required min="1950" max="2100" />
+    </div>
+
+    <div class="form-actions">
+        <button type="submit" class="btn">💾 Lưu thành tích</button>
+        <a asp-action="Index" class="btn btn-secondary">Hủy</a>
+    </div>
+</form>
