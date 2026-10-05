@@ -1,0 +1,40 @@
+@model CLBVo.Models.Member
+@{
+    ViewData["Title"] = Model.FullName;
+}
+
+<section class="section" style="padding-top:140px">
+    <div class="container" style="max-width:820px">
+        <a href="/#members" class="back-link">← Quay lại thành viên</a>
+
+        <div class="member-detail">
+            <div class="member-detail-avatar">
+                @if (!string.IsNullOrEmpty(Model.AvatarUrl))
+                {
+                    <img src="@Model.AvatarUrl" alt="@Model.FullName" />
+                }
+                else
+                {
+                    <span>ẢNH</span>
+                }
+            </div>
+
+            <div class="member-detail-info">
+                <p class="eyebrow">Thành viên</p>
+                <h1 style="font-size:clamp(1.8rem,4vw,2.4rem);margin-bottom:10px">
+                    @Model.FullName
+                </h1>
+                <p class="member-detail-role">@Model.Role</p>
+
+                @if (!string.IsNullOrEmpty(Model.Description))
+                {
+                    <p class="member-detail-desc">@Model.Description</p>
+                }
+            </div>
+        </div>
+
+        <hr style="border-color:rgba(255,255,255,0.1);margin:50px 0 30px" />
+
+        <a href="/#members" class="btn btn-outline">← Về trang chủ</a>
+    </div>
+</section>

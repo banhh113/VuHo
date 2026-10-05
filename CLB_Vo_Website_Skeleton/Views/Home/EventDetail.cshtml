@@ -1,0 +1,51 @@
+@model CLBVo.Models.ClubEvent
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<section class="section" style="padding-top:140px">
+    <div class="container" style="max-width:820px">
+        <a href="/#events" class="back-link">← Quay lại sự kiện</a>
+
+        <p class="eyebrow" style="margin-top:30px">Sự kiện</p>
+        <h1 style="font-size:clamp(1.8rem,4vw,2.8rem);line-height:1.2;margin-bottom:16px">
+            @Model.Title
+        </h1>
+
+        <div class="event-detail-meta">
+            <div class="meta-item">
+                <span class="meta-icon">📅</span>
+                <div>
+                    <small>Ngày diễn ra</small>
+                    <strong>@Model.EventDate.ToString("dddd, dd/MM/yyyy HH:mm",
+                        new System.Globalization.CultureInfo("vi-VN"))</strong>
+                </div>
+            </div>
+            <div class="meta-item">
+                <span class="meta-icon">📍</span>
+                <div>
+                    <small>Địa điểm</small>
+                    <strong>@Model.Location</strong>
+                </div>
+            </div>
+        </div>
+
+        @if (!string.IsNullOrEmpty(Model.ImageUrl))
+        {
+            <img src="@Model.ImageUrl" alt="@Model.Title"
+                 style="width:100%;border-radius:12px;margin:30px 0;
+                        border:2px solid rgba(255,255,255,0.08)" />
+        }
+
+        @if (!string.IsNullOrEmpty(Model.Description))
+        {
+            <div class="post-content">
+                @Model.Description
+            </div>
+        }
+
+        <hr style="border-color:rgba(255,255,255,0.1);margin:50px 0 30px" />
+
+        <a href="/#events" class="btn btn-outline">← Về trang chủ</a>
+    </div>
+</section>

@@ -80,7 +80,9 @@
                             <small>@post.CreatedAt.ToString("dd/MM/yyyy")</small>
                             <h3>@post.Title</h3>
                             <p>@post.Content</p>
-                            <a href="#">Đọc thêm →</a>
+                            <a asp-controller="Home" asp-action="PostDetail" asp-route-id="@post.Id">
+    Đọc thêm →
+</a>
                         </div>
                     </article>
                 }
@@ -105,12 +107,14 @@
                 @foreach (var ev in Model.Events)
                 {
                     <div class="event-item">
-                        <strong>@ev.EventDate.Day</strong>
-                        <div>
-                            <h3>@ev.Title</h3>
-                            <p>Tháng @ev.EventDate.Month/@ev.EventDate.Year • @ev.Location</p>
-                        </div>
-                    </div>
+    <strong>@ev.EventDate.Day</strong>
+    <div style="flex:1">
+        <h3>@ev.Title</h3>
+        <p>Tháng @ev.EventDate.Month/@ev.EventDate.Year • @ev.Location</p>
+    </div>
+    <a asp-controller="Home" asp-action="EventDetail" asp-route-id="@ev.Id"
+       class="event-more">Chi tiết →</a>
+</div>
                 }
             }
             else
@@ -121,16 +125,56 @@
     </div>
 </section>
 
-<section id="members" class="section section-dark reveal">
+<!-- ==================== HLV ==================== -->
+<section id="coaches" class="section section-dark reveal">
     <div class="container">
         <div class="section-header">
             <p class="eyebrow">Đội ngũ</p>
-            <h2>HLV & Thành viên</h2>
+            <h2>Huấn luyện viên</h2>
         </div>
         <div class="cards">
-            @if (Model.Members.Any())
+            @if (Model.Coaches.Any())
             {
-                @foreach (var m in Model.Members)
+                @foreach (var m in Model.Coaches)
+                {
+                   <a asp-controller="Home" asp-action="MemberDetail" asp-route-id="@m.Id"
+   style="text-decoration:none;color:inherit">
+    <article class="member-card">
+        <div class="avatar">
+            @if (!string.IsNullOrEmpty(m.AvatarUrl))
+            {
+                <img src="@m.AvatarUrl" alt="@m.FullName" />
+            }
+            else
+            {
+                <span>ẢNH</span>
+            }
+        </div>
+        <h3>@m.FullName</h3>
+        <p>@m.Role</p>
+    </article>
+</a>
+                }
+            }
+            else
+            {
+                <p style="color:#666;grid-column:1/-1;text-align:center">Chưa có HLV nào.</p>
+            }
+        </div>
+    </div>
+</section>
+
+<!-- ==================== VÕ SINH ==================== -->
+<section id="members" class="section reveal">
+    <div class="container">
+        <div class="section-header">
+            <p class="eyebrow">Học viên</p>
+            <h2>Võ sinh</h2>
+        </div>
+        <div class="cards">
+            @if (Model.Students.Any())
+            {
+                @foreach (var m in Model.Students)
                 {
                     <article class="member-card">
                         <div class="avatar">
@@ -150,7 +194,7 @@
             }
             else
             {
-                <p style="color:#666;grid-column:1/-1;text-align:center">Chưa có thành viên nào.</p>
+                <p style="color:#666;grid-column:1/-1;text-align:center">Chưa có võ sinh nào.</p>
             }
         </div>
     </div>
