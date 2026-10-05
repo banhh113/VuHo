@@ -2807,3 +2807,47 @@ body.admin-body {
         align-self: flex-start;
     }
 }
+
+/* About page */
+.about-content {
+    color: #ddd;
+    line-height: 1.85;
+    font-size: 1.05rem;
+    white-space: pre-line;
+}
+
+.about-contact-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 16px;
+}
+
+.about-contact-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 18px 22px;
+    background: var(--black-card);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--gold);
+    border-radius: 10px;
+}
+
+.about-contact-item > span {
+    font-size: 1.8rem;
+    flex-shrink: 0;
+}
+
+.about-contact-item small {
+    display: block;
+    color: var(--gray);
+    font-size: .75rem;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    margin-bottom: 4px;
+}
+
+.about-contact-item strong {
+    color: var(--white);
+    font-size: .95rem;
+}

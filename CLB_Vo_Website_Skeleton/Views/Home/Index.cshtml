@@ -39,7 +39,7 @@
                     ? "CLB Vũ Hổ là nơi hội tụ những người yêu thích võ thuật. Chúng tôi hướng đến việc rèn luyện thể chất, kỷ luật và bản lĩnh cho mọi học viên."
                     : Model.ClubInfo.Description)
             </p>
-            <a class="text-link" href="#contact">Xem thêm →</a>
+            <a class="text-link" asp-controller="Home" asp-action="About">Xem thêm →</a>
         </div>
         @if (!string.IsNullOrEmpty(Model.ClubInfo?.ImageUrl))
         {

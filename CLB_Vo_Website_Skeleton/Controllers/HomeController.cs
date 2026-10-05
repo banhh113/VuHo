@@ -91,6 +91,12 @@ public class HomeController : Controller
         if (member == null) return NotFound();
         return View(member);
     }
+    [HttpGet("/about")]
+public async Task<IActionResult> About()
+{
+    var info = await _db.ClubInfos.FirstOrDefaultAsync();
+    return View(info);
+}
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error() => View();
