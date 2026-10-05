@@ -12,20 +12,18 @@ namespace CLBVo.Controllers;
 public class AdminEventsController : Controller
 {
     private readonly AppDbContext _db;
-    private readonly FileUploadService _upload;
+    private readonly CloudinaryService _cloudinary;
 
-    public AdminEventsController(AppDbContext db, FileUploadService upload)
+    public AdminEventsController(AppDbContext db, CloudinaryService cloudinary)
     {
         _db = db;
-        _upload = upload;
+        _cloudinary = cloudinary;
     }
 
     [HttpGet("")]
     public async Task<IActionResult> Index()
     {
-        var events = await _db.Events
-            .OrderByDescending(e => e.EventDate)
-            .ToListAsync();
+        var events = await _db.Events.OrderByDescending(e => e.EventDate).ToListAsync();
         return View(events);
     }
 
@@ -40,10 +38,9 @@ public class AdminEventsController : Controller
     public async Task<IActionResult> Create(ClubEvent ev, IFormFile? imageFile)
     {
         if (!ModelState.IsValid) return View(ev);
-
         try
         {
-            ev.ImageUrl = await _upload.UploadAsync(imageFile, "uploads/events");
+            ev.ImageUrl = await _cloudinary.UploadAsync(imageFile, "clb-vo/events");
             _db.Events.Add(ev);
             await _db.SaveChangesAsync();
             TempData["Success"] = "Đã thêm sự kiện mới.";
@@ -83,8 +80,10 @@ public class AdminEventsController : Controller
 
             if (imageFile != null && imageFile.Length > 0)
             {
-                _upload.Delete(existing.ImageUrl);
-                existing.ImageUrl = await _upload.UploadAsync(imageFile, "uploads/events");
+                await _cloudinary.DeleteAsync(existing.ImageUrl);
+                var newUrl = await _cloudinary.UploadAsync(imageFile, "clb-vo/events");
+                if (!string.IsNullOrEmpty(newUrl))
+                    existing.ImageUrl = newUrl;
             }
 
             await _db.SaveChangesAsync();
@@ -105,7 +104,7 @@ public class AdminEventsController : Controller
         var ev = await _db.Events.FindAsync(id);
         if (ev == null) return NotFound();
 
-        _upload.Delete(ev.ImageUrl);
+        await _cloudinary.DeleteAsync(ev.ImageUrl);
         _db.Events.Remove(ev);
         await _db.SaveChangesAsync();
         TempData["Success"] = "Đã xóa sự kiện.";

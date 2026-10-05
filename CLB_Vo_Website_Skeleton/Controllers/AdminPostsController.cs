@@ -12,12 +12,12 @@ namespace CLBVo.Controllers;
 public class AdminPostsController : Controller
 {
     private readonly AppDbContext _db;
-    private readonly FileUploadService _upload;
+    private readonly CloudinaryService _cloudinary;
 
-    public AdminPostsController(AppDbContext db, FileUploadService upload)
+    public AdminPostsController(AppDbContext db, CloudinaryService cloudinary)
     {
         _db = db;
-        _upload = upload;
+        _cloudinary = cloudinary;
     }
 
     [HttpGet("")]
@@ -38,7 +38,7 @@ public class AdminPostsController : Controller
 
         try
         {
-            post.ImageUrl = await _upload.UploadAsync(imageFile);
+            post.ImageUrl = await _cloudinary.UploadAsync(imageFile, "clb-vo/posts");
             post.CreatedAt = DateTime.Now;
             _db.Posts.Add(post);
             await _db.SaveChangesAsync();
@@ -76,8 +76,10 @@ public class AdminPostsController : Controller
 
             if (imageFile != null && imageFile.Length > 0)
             {
-                _upload.Delete(existing.ImageUrl);
-                existing.ImageUrl = await _upload.UploadAsync(imageFile);
+                await _cloudinary.DeleteAsync(existing.ImageUrl);
+                var newUrl = await _cloudinary.UploadAsync(imageFile, "clb-vo/posts");
+                if (!string.IsNullOrEmpty(newUrl))
+                    existing.ImageUrl = newUrl;
             }
 
             await _db.SaveChangesAsync();
@@ -97,7 +99,7 @@ public class AdminPostsController : Controller
         var post = await _db.Posts.FindAsync(id);
         if (post == null) return NotFound();
 
-        _upload.Delete(post.ImageUrl);
+        await _cloudinary.DeleteAsync(post.ImageUrl);
         _db.Posts.Remove(post);
         await _db.SaveChangesAsync();
         return RedirectToAction(nameof(Index));

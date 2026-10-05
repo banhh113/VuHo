@@ -12,20 +12,18 @@ namespace CLBVo.Controllers;
 public class AdminGalleryController : Controller
 {
     private readonly AppDbContext _db;
-    private readonly FileUploadService _upload;
+    private readonly CloudinaryService _cloudinary;
 
-    public AdminGalleryController(AppDbContext db, FileUploadService upload)
+    public AdminGalleryController(AppDbContext db, CloudinaryService cloudinary)
     {
         _db = db;
-        _upload = upload;
+        _cloudinary = cloudinary;
     }
 
     [HttpGet("")]
     public async Task<IActionResult> Index()
     {
-        var images = await _db.GalleryImages
-            .OrderByDescending(g => g.CreatedAt)
-            .ToListAsync();
+        var images = await _db.GalleryImages.OrderByDescending(g => g.CreatedAt).ToListAsync();
         return View(images);
     }
 
@@ -41,7 +39,6 @@ public class AdminGalleryController : Controller
             ModelState.AddModelError("", "Vui lòng nhập tiêu đề.");
             return View(new GalleryImage());
         }
-
         if (imageFiles == null || imageFiles.Count == 0 || imageFiles.All(f => f.Length == 0))
         {
             ModelState.AddModelError("", "Vui lòng chọn ít nhất 1 ảnh.");
@@ -53,7 +50,7 @@ public class AdminGalleryController : Controller
             var count = 0;
             foreach (var file in imageFiles.Where(f => f.Length > 0))
             {
-                var url = await _upload.UploadAsync(file, "uploads/gallery");
+                var url = await _cloudinary.UploadAsync(file, "clb-vo/gallery");
                 if (string.IsNullOrEmpty(url)) continue;
 
                 _db.GalleryImages.Add(new GalleryImage
@@ -99,14 +96,12 @@ public class AdminGalleryController : Controller
             existing.Title = img.Title;
 
             if (imageFile != null && imageFile.Length > 0)
-{
-    _upload.Delete(existing.ImageUrl);
-    var newUrl = await _upload.UploadAsync(imageFile, "uploads/gallery");
-    if (!string.IsNullOrEmpty(newUrl))
-    {
-        existing.ImageUrl = newUrl;
-    }
-}
+            {
+                await _cloudinary.DeleteAsync(existing.ImageUrl);
+                var newUrl = await _cloudinary.UploadAsync(imageFile, "clb-vo/gallery");
+                if (!string.IsNullOrEmpty(newUrl))
+                    existing.ImageUrl = newUrl;
+            }
 
             await _db.SaveChangesAsync();
             TempData["Success"] = "Đã cập nhật ảnh.";
@@ -126,7 +121,7 @@ public class AdminGalleryController : Controller
         var img = await _db.GalleryImages.FindAsync(id);
         if (img == null) return NotFound();
 
-        _upload.Delete(img.ImageUrl);
+        await _cloudinary.DeleteAsync(img.ImageUrl);
         _db.GalleryImages.Remove(img);
         await _db.SaveChangesAsync();
         TempData["Success"] = "Đã xóa ảnh.";

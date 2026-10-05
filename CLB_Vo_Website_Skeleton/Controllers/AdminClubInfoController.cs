@@ -12,26 +12,24 @@ namespace CLBVo.Controllers;
 public class AdminClubInfoController : Controller
 {
     private readonly AppDbContext _db;
-    private readonly FileUploadService _upload;
+    private readonly CloudinaryService _cloudinary;
 
-    public AdminClubInfoController(AppDbContext db, FileUploadService upload)
+    public AdminClubInfoController(AppDbContext db, CloudinaryService cloudinary)
     {
         _db = db;
-        _upload = upload;
+        _cloudinary = cloudinary;
     }
 
     [HttpGet("")]
     public async Task<IActionResult> Index()
     {
         var info = await _db.ClubInfos.FirstOrDefaultAsync();
-
         if (info == null)
         {
             info = new ClubInfo();
             _db.ClubInfos.Add(info);
             await _db.SaveChangesAsync();
         }
-
         return View(info);
     }
 
@@ -49,17 +47,14 @@ public class AdminClubInfoController : Controller
         info.Address = model.Address ?? "";
         info.Phone = model.Phone ?? "";
         info.Email = model.Email ?? "";
-        info.OpeningHours = model.OpeningHours ?? "";   // ← thêm dòng này
+        info.OpeningHours = model.OpeningHours ?? "";
 
-        // Upload ảnh mới nếu có
         if (imageFile != null && imageFile.Length > 0)
         {
-            _upload.Delete(info.ImageUrl);
-            var newUrl = await _upload.UploadAsync(imageFile, "uploads/club");
+            await _cloudinary.DeleteAsync(info.ImageUrl);
+            var newUrl = await _cloudinary.UploadAsync(imageFile, "clb-vo/club");
             if (!string.IsNullOrEmpty(newUrl))
-            {
                 info.ImageUrl = newUrl;
-            }
         }
 
         await _db.SaveChangesAsync();

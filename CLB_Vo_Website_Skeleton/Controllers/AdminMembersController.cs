@@ -12,12 +12,12 @@ namespace CLBVo.Controllers;
 public class AdminMembersController : Controller
 {
     private readonly AppDbContext _db;
-    private readonly FileUploadService _upload;
+    private readonly CloudinaryService _cloudinary;
 
-    public AdminMembersController(AppDbContext db, FileUploadService upload)
+    public AdminMembersController(AppDbContext db, CloudinaryService cloudinary)
     {
         _db = db;
-        _upload = upload;
+        _cloudinary = cloudinary;
     }
 
     [HttpGet("")]
@@ -35,10 +35,9 @@ public class AdminMembersController : Controller
     public async Task<IActionResult> Create(Member member, IFormFile? imageFile)
     {
         if (!ModelState.IsValid) return View(member);
-
         try
         {
-            member.AvatarUrl = await _upload.UploadAsync(imageFile, "uploads/members");
+            member.AvatarUrl = await _cloudinary.UploadAsync(imageFile, "clb-vo/members");
             _db.Members.Add(member);
             await _db.SaveChangesAsync();
             TempData["Success"] = "Đã thêm thành viên mới.";
@@ -77,8 +76,10 @@ public class AdminMembersController : Controller
 
             if (imageFile != null && imageFile.Length > 0)
             {
-                _upload.Delete(existing.AvatarUrl);
-                existing.AvatarUrl = await _upload.UploadAsync(imageFile, "uploads/members");
+                await _cloudinary.DeleteAsync(existing.AvatarUrl);
+                var newUrl = await _cloudinary.UploadAsync(imageFile, "clb-vo/members");
+                if (!string.IsNullOrEmpty(newUrl))
+                    existing.AvatarUrl = newUrl;
             }
 
             await _db.SaveChangesAsync();
@@ -99,7 +100,7 @@ public class AdminMembersController : Controller
         var member = await _db.Members.FindAsync(id);
         if (member == null) return NotFound();
 
-        _upload.Delete(member.AvatarUrl);
+        await _cloudinary.DeleteAsync(member.AvatarUrl);
         _db.Members.Remove(member);
         await _db.SaveChangesAsync();
         TempData["Success"] = "Đã xóa thành viên.";

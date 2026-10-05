@@ -1,12 +1,11 @@
 using CLBVo.Data;
+using CLBVo.Models;
 using CLBVo.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Chỉ bind port khi chạy trên Render (có biến PORT)
-// Local: để Kestrel tự chọn port 5000
 var port = Environment.GetEnvironmentVariable("PORT");
 if (!string.IsNullOrEmpty(port))
 {
@@ -19,6 +18,13 @@ builder.Services.AddControllersWithViews(options =>
 });
 
 builder.Services.AddHttpContextAccessor();
+
+// Đăng ký Cloudinary
+builder.Services.Configure<CloudinarySettings>(
+    builder.Configuration.GetSection("CloudinarySettings"));
+builder.Services.AddScoped<CloudinaryService>();
+
+// Giữ FileUploadService cũ (xóa sau khi chuyển hết sang Cloudinary)
 builder.Services.AddScoped<FileUploadService>();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
@@ -44,7 +50,6 @@ builder.Services.ConfigureApplicationCookie(options =>
 
 var app = builder.Build();
 
-// HEALTH CHECK
 app.Use(async (ctx, next) =>
 {
     if (string.Equals(ctx.Request.Path.Value, "/health", StringComparison.OrdinalIgnoreCase))
@@ -90,7 +95,6 @@ try
 }
 catch (Exception ex)
 {
-    // Nếu DB chậm, app vẫn khởi động — admin sẽ được tạo lần sau
     Console.WriteLine($"[WARN] Không thể tạo admin lúc khởi động: {ex.Message}");
 }
 
