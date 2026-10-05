@@ -94,6 +94,7 @@ public class AdminGalleryController : Controller
         try
         {
             existing.Title = img.Title;
+            existing.CreatedAt = img.CreatedAt;
 
             if (imageFile != null && imageFile.Length > 0)
             {

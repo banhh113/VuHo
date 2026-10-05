@@ -38,15 +38,23 @@ public class AdminPostsController : Controller
 
         try
         {
+            post.Title = post.Title ?? "";
+            post.Content = post.Content ?? "";
+
+            // Nếu admin không chọn ngày → dùng ngày hiện tại
+            if (post.CreatedAt == default(DateTime))
+            {
+                post.CreatedAt = DateTime.Now;
+            }
+
             post.ImageUrl = await _cloudinary.UploadAsync(imageFile, "clb-vo/posts");
-            post.CreatedAt = DateTime.Now;
             _db.Posts.Add(post);
             await _db.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
-        catch (InvalidOperationException ex)
+        catch (Exception ex)
         {
-            ModelState.AddModelError("", ex.Message);
+            ModelState.AddModelError("", $"Lỗi: {ex.Message}");
             return View(post);
         }
     }
@@ -71,8 +79,9 @@ public class AdminPostsController : Controller
 
         try
         {
-            existing.Title = post.Title;
-            existing.Content = post.Content;
+            existing.Title = post.Title ?? "";
+            existing.Content = post.Content ?? "";
+            existing.CreatedAt = post.CreatedAt;
 
             if (imageFile != null && imageFile.Length > 0)
             {
@@ -85,9 +94,9 @@ public class AdminPostsController : Controller
             await _db.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
-        catch (InvalidOperationException ex)
+        catch (Exception ex)
         {
-            ModelState.AddModelError("", ex.Message);
+            ModelState.AddModelError("", $"Lỗi: {ex.Message}");
             return View(post);
         }
     }

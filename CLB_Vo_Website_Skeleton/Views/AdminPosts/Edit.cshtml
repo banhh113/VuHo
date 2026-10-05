@@ -13,7 +13,6 @@
     @Html.AntiForgeryToken()
     <input type="hidden" asp-for="Id" />
     <input type="hidden" asp-for="ImageUrl" />
-    <input type="hidden" asp-for="CreatedAt" />
     <div asp-validation-summary="ModelOnly" class="alert alert-error"></div>
 
     <div class="form-group">
@@ -24,6 +23,13 @@
     <div class="form-group">
         <label>Nội dung *</label>
         <textarea asp-for="Content" rows="10" required></textarea>
+    </div>
+
+    <div class="form-group">
+        <label>Ngày đăng *</label>
+        <input asp-for="CreatedAt" type="datetime-local" required
+               value="@Model.CreatedAt.ToString("yyyy-MM-ddTHH:mm")" />
+        <small>Có thể sửa để đổi ngày hiển thị bài viết.</small>
     </div>
 
     @if (!string.IsNullOrEmpty(Model.ImageUrl))

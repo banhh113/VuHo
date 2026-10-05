@@ -24,6 +24,13 @@
     </div>
 
     <div class="form-group">
+        <label>Ngày đăng</label>
+        <input asp-for="CreatedAt" type="datetime-local"
+               value="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")" />
+        <small>Để trống sẽ dùng ngày hiện tại.</small>
+    </div>
+
+    <div class="form-group">
         <label>Ảnh đại diện</label>
         <input type="file" name="imageFile" accept="image/*" />
         <small>Chấp nhận jpg, png, gif, webp. Tối đa 5MB.</small>
