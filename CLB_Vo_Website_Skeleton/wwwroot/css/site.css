@@ -2818,7 +2818,7 @@ body.admin-body {
 
 .about-contact-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    grid-template-columns: 1fr;   /* 1 cột, xếp dọc */
     gap: 16px;
 }
 
@@ -2850,4 +2850,33 @@ body.admin-body {
 .about-contact-item strong {
     color: var(--white);
     font-size: .95rem;
+}
+
+/* Textarea cho địa chỉ và SĐT */
+textarea[name="Address"],
+textarea[name="Phone"] {
+    min-height: 90px;
+    resize: vertical;
+    line-height: 1.6;
+    font-family: var(--font-body);
+}
+
+/* Giữ xuống dòng khi hiển thị ở footer */
+.footer-contact li span {
+    white-space: pre-line;
+}
+
+/* Giữ xuống dòng cho địa chỉ, SĐT trong footer */
+.footer-contact li span,
+.footer-contact li a {
+    white-space: pre-line;
+    line-height: 1.6;
+}
+
+/* Giữ xuống dòng cho địa chỉ, SĐT trong trang About */
+.about-contact-item strong {
+    white-space: pre-line;
+    line-height: 1.6;
+    display: block;
+    margin-top: 4px;
 }

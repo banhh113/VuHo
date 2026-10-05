@@ -45,23 +45,29 @@
             }
             @if (!string.IsNullOrEmpty(Model?.Phone))
             {
-                <div class="about-contact-item">
-                    <span>📞</span>
-                    <div>
-                        <small>Điện thoại</small>
-                        <strong>@Model.Phone</strong>
-                    </div>
-                </div>
-            }
-            @if (!string.IsNullOrEmpty(Model?.Email))
-            {
-                <div class="about-contact-item">
-                    <span>✉️</span>
-                    <div>
-                        <small>Email</small>
-                        <strong>@Model.Email</strong>
-                    </div>
-                </div>
+                <div class="about-contact-grid">
+    
+    @if (!string.IsNullOrEmpty(Model?.Phone))
+    {
+        <div class="about-contact-item">
+            <span>📞</span>
+            <div>
+                <small>Điện thoại</small>
+                <strong style="white-space: pre-line">@Model.Phone</strong>
+            </div>
+        </div>
+    }
+    @if (!string.IsNullOrEmpty(Model?.Email))
+    {
+        <div class="about-contact-item">
+            <span>✉️</span>
+            <div>
+                <small>Email</small>
+                <strong>@Model.Email</strong>
+            </div>
+        </div>
+    }
+</div>
             }
         </div>
 

@@ -1,21 +1,14 @@
 @model CLBVo.Models.ClubInfo
 
-<!-- Cột Liên hệ -->
+<!-- Cột Liên hệ (SĐT + Email) -->
 <div class="footer-col">
     <h4>📍 Liên hệ</h4>
     <ul class="footer-contact">
-        @if (!string.IsNullOrEmpty(Model?.Address))
-        {
-            <li>
-                <span class="contact-icon">📍</span>
-                <span>@Model.Address</span>
-            </li>
-        }
         @if (!string.IsNullOrEmpty(Model?.Phone))
         {
             <li>
                 <span class="contact-icon">📞</span>
-                <a href="tel:@Model.Phone">@Model.Phone</a>
+                <span style="white-space: pre-line">@Model.Phone</span>
             </li>
         }
         @if (!string.IsNullOrEmpty(Model?.Email))
@@ -25,7 +18,7 @@
                 <a href="mailto:@Model.Email">@Model.Email</a>
             </li>
         }
-        @if (string.IsNullOrEmpty(Model?.Address) && string.IsNullOrEmpty(Model?.Phone) && string.IsNullOrEmpty(Model?.Email))
+        @if (string.IsNullOrEmpty(Model?.Phone) && string.IsNullOrEmpty(Model?.Email))
         {
             <li style="color:#666;font-style:italic">
                 Chưa cập nhật thông tin liên hệ
@@ -34,38 +27,22 @@
     </ul>
 </div>
 
-<!-- Cột Giờ tập -->
+<!-- Cột Địa chỉ -->
 <div class="footer-col">
-    <h4>🕐 Giờ tập</h4>
-    <ul class="footer-hours">
-        @if (!string.IsNullOrEmpty(Model?.OpeningHours))
+    <h4>📍 Địa chỉ</h4>
+    <ul class="footer-contact">
+        @if (!string.IsNullOrEmpty(Model?.Address))
         {
-            var lines = Model.OpeningHours
-                .Split('\n', StringSplitOptions.RemoveEmptyEntries)
-                .Select(l => l.Trim())
-                .Where(l => !string.IsNullOrEmpty(l));
-
-            @foreach (var line in lines)
-            {
-                var parts = line.Split(':', 2);
-                if (parts.Length == 2)
-                {
-                    <li>
-                        <span>@parts[0].Trim()</span>
-                        <strong>@parts[1].Trim()</strong>
-                    </li>
-                }
-                else
-                {
-                    <li>
-                        <span>@line</span>
-                    </li>
-                }
-            }
+            <li>
+                <span class="contact-icon">📍</span>
+                <span style="white-space: pre-line">@Model.Address</span>
+            </li>
         }
         else
         {
-            <li style="color:#666;font-style:italic">Chưa cập nhật giờ tập</li>
+            <li style="color:#666;font-style:italic">
+                Chưa cập nhật địa chỉ
+            </li>
         }
     </ul>
 </div>
