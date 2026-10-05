@@ -17,16 +17,12 @@ public class HomeController : Controller
         var allMembers = await _db.Members.OrderBy(m => m.Id).ToListAsync();
 
         var coaches = allMembers
-            .Where(m => !string.IsNullOrEmpty(m.Role) &&
-                (m.Role.Contains("Huấn luyện", StringComparison.OrdinalIgnoreCase)
-                 || m.Role.Contains("HLV", StringComparison.OrdinalIgnoreCase)
-                 || m.Role.Contains("Coach", StringComparison.OrdinalIgnoreCase)
-                 || m.Role.Contains("Trợ giảng", StringComparison.OrdinalIgnoreCase)
-                 || m.Role.Contains("Giáo viên", StringComparison.OrdinalIgnoreCase)))
-            .ToList();
+    .Where(m => m.Role == "Huấn luyện viên")
+    .ToList();
 
-        var students = allMembers.Where(m => !coaches.Contains(m)).ToList();
-
+var students = allMembers
+    .Where(m => m.Role == "Võ sinh")
+    .ToList();
         var vm = new HomeViewModel
         {
             Posts = await _db.Posts.OrderByDescending(p => p.CreatedAt).ToListAsync(),

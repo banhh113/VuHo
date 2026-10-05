@@ -2880,3 +2880,34 @@ textarea[name="Phone"] {
     display: block;
     margin-top: 4px;
 }
+/* Select dropdown — style giống input */
+.form-group select {
+    width: 100%;
+    padding: 13px 40px 13px 16px;
+    background: #0e0e0e;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--white);
+    font-family: var(--font-body);
+    font-size: .95rem;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23f5c518' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+    transition: all .3s;
+}
+
+.form-group select:focus {
+    outline: none;
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(245, 197, 24, 0.15);
+    background-color: #121212;
+}
+
+.form-group select option {
+    background: #1a1a1a;
+    color: var(--white);
+    padding: 10px;
+}
