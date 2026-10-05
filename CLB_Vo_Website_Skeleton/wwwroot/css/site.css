@@ -2880,7 +2880,6 @@ textarea[name="Phone"] {
     display: block;
     margin-top: 4px;
 }
-/* Select dropdown — style giống input */
 .form-group select {
     width: 100%;
     padding: 13px 40px 13px 16px;

@@ -32,22 +32,19 @@ var students = allMembers
             Gallery = await _db.GalleryImages.OrderByDescending(g => g.CreatedAt).ToListAsync(),
 
             GoldCount = allAchievements.Count(a =>
-                !string.IsNullOrEmpty(a.Medal) &&
-                (a.Medal.Contains("vàng", StringComparison.OrdinalIgnoreCase)
-                 || a.Medal.Contains("🥇")
-                 || a.Medal.Contains("HCV", StringComparison.OrdinalIgnoreCase))),
+    !string.IsNullOrEmpty(a.Medal) &&
+    (a.Medal.Contains("vàng", StringComparison.OrdinalIgnoreCase)
+     || a.Medal.Contains("nhất", StringComparison.OrdinalIgnoreCase))),
 
-            SilverCount = allAchievements.Count(a =>
-                !string.IsNullOrEmpty(a.Medal) &&
-                (a.Medal.Contains("bạc", StringComparison.OrdinalIgnoreCase)
-                 || a.Medal.Contains("🥈")
-                 || a.Medal.Contains("HCB", StringComparison.OrdinalIgnoreCase))),
+SilverCount = allAchievements.Count(a =>
+    !string.IsNullOrEmpty(a.Medal) &&
+    (a.Medal.Contains("bạc", StringComparison.OrdinalIgnoreCase)
+     || a.Medal.Contains("nhì", StringComparison.OrdinalIgnoreCase))),
 
-            BronzeCount = allAchievements.Count(a =>
-                !string.IsNullOrEmpty(a.Medal) &&
-                (a.Medal.Contains("đồng", StringComparison.OrdinalIgnoreCase)
-                 || a.Medal.Contains("🥉")
-                 || a.Medal.Contains("HCĐ", StringComparison.OrdinalIgnoreCase))),
+BronzeCount = allAchievements.Count(a =>
+    !string.IsNullOrEmpty(a.Medal) &&
+    (a.Medal.Contains("đồng", StringComparison.OrdinalIgnoreCase)
+     || a.Medal.Contains("ba", StringComparison.OrdinalIgnoreCase))),
 
             TournamentCount = allAchievements
                 .Select(a => a.Competition)

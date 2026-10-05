@@ -33,9 +33,18 @@
     </div>
 
     <div class="form-group">
-        <label>Năm *</label>
-        <input asp-for="Year" type="number" required min="1950" max="2100" />
-    </div>
+    <label>Huy chương *</label>
+    <select asp-for="Medal" required>
+        <option value="">-- Chọn loại huy chương --</option>
+        <option value="🥇 Huy chương vàng">🥇 Huy chương vàng</option>
+        <option value="🥈 Huy chương bạc">🥈 Huy chương bạc</option>
+        <option value="🥉 Huy chương đồng">🥉 Huy chương đồng</option>
+        <option value="🏆 Giải nhất">🏆 Giải nhất</option>
+        <option value="🎖️ Giải nhì">🎖️ Giải nhì</option>
+        <option value="🏅 Giải ba">🏅 Giải ba</option>
+        
+    </select>
+</div>
 
     <div class="form-actions">
         <button type="submit" class="btn">💾 Cập nhật</button>

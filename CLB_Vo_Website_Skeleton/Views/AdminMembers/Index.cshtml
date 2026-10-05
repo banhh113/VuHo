@@ -58,9 +58,12 @@
                 </td>
                 <td>
                     <small style="color:#a0a0a0;font-size:.85rem">
-                        @(m.Description.Length > 80
-                            ? m.Description.Substring(0, 80) + "..."
-                            : m.Description)
+                        @{
+                            var description = m.Description ?? string.Empty;
+                        }
+                        @(description.Length > 80
+                            ? description.Substring(0, 80) + "..."
+                            : description)
                     </small>
                 </td>
                 <td class="actions">
