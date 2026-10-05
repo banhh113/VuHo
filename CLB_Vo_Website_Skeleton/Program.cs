@@ -1,17 +1,18 @@
 using CLBVo.Data;
 using CLBVo.Services;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Render cấp port qua biến PORT
-var port = Environment.GetEnvironmentVariable("PORT") ?? "10000";
-builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
+// Chỉ bind port khi chạy trên Render (có biến PORT)
+// Local: để Kestrel tự chọn port 5000
+var port = Environment.GetEnvironmentVariable("PORT");
+if (!string.IsNullOrEmpty(port))
+{
+    builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
+}
 
-// ⚠️ QUAN TRỌNG: tắt implicit required cho nullable reference types
-// Không có dòng này, mọi property string non-nullable sẽ bị coi là [Required]
 builder.Services.AddControllersWithViews(options =>
 {
     options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true;
@@ -43,6 +44,19 @@ builder.Services.ConfigureApplicationCookie(options =>
 
 var app = builder.Build();
 
+// HEALTH CHECK
+app.Use(async (ctx, next) =>
+{
+    if (string.Equals(ctx.Request.Path.Value, "/health", StringComparison.OrdinalIgnoreCase))
+    {
+        ctx.Response.ContentType = "application/json";
+        ctx.Response.StatusCode = 200;
+        await ctx.Response.WriteAsync("{\"status\":\"ok\"}");
+        return;
+    }
+    await next();
+});
+
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
@@ -53,14 +67,13 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 
-app.UseAuthentication();   // BẮT BUỘC, phải trước UseAuthorization
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
-// Tạo tài khoản admin mặc định
 using (var scope = app.Services.CreateScope())
 {
     var userManager = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
