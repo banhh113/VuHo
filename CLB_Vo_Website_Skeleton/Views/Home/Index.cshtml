@@ -3,7 +3,6 @@
     ViewData["Title"] = "Trang chủ";
 }
 
-
 <section class="hero">
     <div class="container hero-content">
         <div class="hero-text">
@@ -43,15 +42,15 @@
             <a class="text-link" href="#contact">Xem thêm →</a>
         </div>
         @if (!string.IsNullOrEmpty(Model.ClubInfo?.ImageUrl))
-{
-    <img src="@Model.ClubInfo.ImageUrl" alt="CLB Vũ Hổ"
-         style="width:100%;border-radius:12px;border:2px solid rgba(255,255,255,0.08);
-                box-shadow:0 10px 40px rgba(0,0,0,0.5)" />
-}
-else
-{
-    <div class="placeholder-image">ẢNH CLB</div>
-}
+        {
+            <img src="@Model.ClubInfo.ImageUrl" alt="CLB Vũ Hổ"
+                 style="width:100%;border-radius:12px;border:2px solid rgba(255,255,255,0.08);
+                        box-shadow:0 10px 40px rgba(0,0,0,0.5)" />
+        }
+        else
+        {
+            <div class="placeholder-image">ẢNH CLB</div>
+        }
     </div>
 </section>
 
@@ -164,17 +163,25 @@ else
             <h2>Thư viện CLB</h2>
         </div>
         <div class="gallery">
-            <div class="gallery-item"><span>ẢNH 01</span></div>
-            <div class="gallery-item"><span>ẢNH 02</span></div>
-            <div class="gallery-item"><span>ẢNH 03</span></div>
-            <div class="gallery-item"><span>ẢNH 04</span></div>
-            <div class="gallery-item"><span>ẢNH 05</span></div>
-            <div class="gallery-item"><span>ẢNH 06</span></div>
+            @if (Model.Gallery.Any())
+            {
+                @foreach (var img in Model.Gallery)
+                {
+                    <div class="gallery-item">
+                        <img src="@img.ImageUrl" alt="@img.Title" loading="lazy" />
+                    </div>
+                }
+            }
+            else
+            {
+                <p style="color:#666;grid-column:1/-1;text-align:center">
+                    Chưa có ảnh nào trong thư viện.
+                </p>
+            }
         </div>
     </div>
 </section>
 
-<!-- PHẦN THÀNH TÍCH — ĐỌC TỪ DB -->
 <section class="section achievement reveal">
     <div class="container">
         <div class="section-header">

@@ -33,6 +33,11 @@ public class HomeController : Controller
                 .Take(2)
                 .ToListAsync(),
 
+            Gallery = await _db.GalleryImages
+                .OrderByDescending(g => g.CreatedAt)
+                .Take(6)
+                .ToListAsync(),
+
             GoldCount = allAchievements.Count(a =>
                 !string.IsNullOrEmpty(a.Medal) &&
                 (a.Medal.Contains("vàng", StringComparison.OrdinalIgnoreCase)
@@ -62,8 +67,6 @@ public class HomeController : Controller
 
             ClubInfo = await _db.ClubInfos.FirstOrDefaultAsync()
         };
-
-        
 
         return View(vm);
     }

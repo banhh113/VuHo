@@ -74,16 +74,24 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
-using (var scope = app.Services.CreateScope())
+try
 {
-    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
-    var adminEmail = "admin@vuhoclb.vn";
-    var admin = await userManager.FindByEmailAsync(adminEmail);
-    if (admin == null)
+    using (var scope = app.Services.CreateScope())
     {
-        admin = new IdentityUser { UserName = adminEmail, Email = adminEmail, EmailConfirmed = true };
-        await userManager.CreateAsync(admin, "admin123");
+        var userManager = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
+        var adminEmail = "admin@vuhoclb.vn";
+        var admin = await userManager.FindByEmailAsync(adminEmail);
+        if (admin == null)
+        {
+            admin = new IdentityUser { UserName = adminEmail, Email = adminEmail, EmailConfirmed = true };
+            await userManager.CreateAsync(admin, "admin123");
+        }
     }
+}
+catch (Exception ex)
+{
+    // Nếu DB chậm, app vẫn khởi động — admin sẽ được tạo lần sau
+    Console.WriteLine($"[WARN] Không thể tạo admin lúc khởi động: {ex.Message}");
 }
 
 app.Run();
