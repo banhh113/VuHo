@@ -15,4 +15,7 @@ public class AppDbContext : IdentityDbContext<IdentityUser>
     public DbSet<GalleryImage> GalleryImages => Set<GalleryImage>();
     public DbSet<Member> Members => Set<Member>();
     public DbSet<Post> Posts => Set<Post>();
+    public DbSet<Registration> Registrations => Set<Registration>();
+    public DbSet<TimeSlot> TimeSlots => Set<TimeSlot>();       // ← THÊM DÒNG NÀY
+    public DbSet<ClubLocation> ClubLocations => Set<ClubLocation>();
 }

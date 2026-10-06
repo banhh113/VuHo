@@ -1,0 +1,38 @@
+@model CLBVo.Models.TimeSlot
+@{
+    ViewData["Title"] = "Sửa khung giờ";
+    Layout = "_AdminLayout";
+}
+
+<div class="admin-page-header">
+    <h1>✏️ Sửa khung giờ</h1>
+    <a asp-action="Index" class="btn btn-secondary">← Quay lại</a>
+</div>
+
+<form asp-action="Edit" asp-route-id="@Model.Id" method="post" class="admin-form" autocomplete="off">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="Id" />
+    <div asp-validation-summary="ModelOnly" class="alert alert-error"></div>
+
+    <div class="form-group">
+        <label>Tên khung giờ *</label>
+        <input asp-for="Name" required maxlength="100" autocomplete="off" />
+    </div>
+
+    <div class="form-group">
+        <label>Thứ tự hiển thị</label>
+        <input asp-for="SortOrder" type="number" min="0" autocomplete="off" />
+    </div>
+
+    <div class="form-group">
+        <label class="checkbox-label">
+            <input asp-for="IsActive" type="checkbox" />
+            Hiển thị trong form đăng ký
+        </label>
+    </div>
+
+    <div class="form-actions">
+        <button type="submit" class="btn">💾 Cập nhật</button>
+        <a asp-action="Index" class="btn btn-secondary">Hủy</a>
+    </div>
+</form>

@@ -1,0 +1,86 @@
+@model List<CLBVo.Models.ClubLocation>
+@{
+    ViewData["Title"] = "Quản lý cơ sở";
+    Layout = "_AdminLayout";
+}
+
+<div class="admin-page-header">
+    <div>
+        <h1>📍 Quản lý cơ sở</h1>
+        <p class="admin-subtitle">Địa chỉ các cơ sở tập luyện của CLB</p>
+    </div>
+    <a asp-action="Create" class="btn">+ Thêm cơ sở</a>
+</div>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
+
+<table class="admin-table">
+    <thead>
+        <tr>
+            <th style="width:60px">Thứ tự</th>
+            <th style="width:200px">Tên cơ sở</th>
+            <th>Địa chỉ</th>
+            <th style="width:200px">Bản đồ</th>
+            <th style="width:100px">Trạng thái</th>
+            <th style="width:180px">Hành động</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (!Model.Any())
+        {
+            <tr>
+                <td colspan="6" class="empty">Chưa có cơ sở nào. Bấm "+ Thêm cơ sở" để bắt đầu.</td>
+            </tr>
+        }
+        @foreach (var loc in Model)
+        {
+            <tr>
+                <td style="text-align:center">@loc.SortOrder</td>
+                <td><strong>@loc.Name</strong></td>
+                <td>
+                    <small style="color:#a0a0a0">@loc.Address</small>
+                </td>
+                <td>
+                    @if (!string.IsNullOrEmpty(loc.MapUrl))
+                    {
+                        <a href="@loc.MapUrl" target="_blank"
+                           style="color:#f5c518;font-size:.82rem">
+                            🗺️ Xem map →
+                        </a>
+                    }
+                    else
+                    {
+                        <span style="color:#666;font-style:italic">Chưa có link</span>
+                    }
+                </td>
+                <td>
+                    @if (loc.IsActive)
+                    {
+                        <span style="color:#10b981;font-weight:700">✓ Hiện</span>
+                    }
+                    else
+                    {
+                        <span style="color:#666">✗ Ẩn</span>
+                    }
+                </td>
+                <td class="actions">
+                    <a asp-action="Edit" asp-route-id="@loc.Id" class="btn-sm btn-edit">
+                        <span class="icon">✏️</span>
+                        <span>Sửa</span>
+                    </a>
+                    <form asp-action="Delete" asp-route-id="@loc.Id" method="post" style="display:inline"
+                          onsubmit="return confirm('Xóa cơ sở này?');">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn-sm btn-delete">
+                            <span class="icon">🗑️</span>
+                            <span>Xóa</span>
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

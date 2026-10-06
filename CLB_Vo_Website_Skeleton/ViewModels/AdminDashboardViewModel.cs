@@ -23,4 +23,7 @@ public class AdminDashboardViewModel
     // Admin info
     public string AdminName { get; set; } = "Admin";
     public string CurrentDate { get; set; } = "";
+
+    public int RegistrationCount { get; set; }
+public int NewRegistrationCount { get; set; }
 }

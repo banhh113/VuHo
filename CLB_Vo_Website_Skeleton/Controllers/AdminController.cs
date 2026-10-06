@@ -40,6 +40,8 @@ public class AdminController : Controller
             EventCount = await _db.Events.CountAsync(),
             GalleryCount = await _db.GalleryImages.CountAsync(),
             AchievementCount = await _db.Achievements.CountAsync(),
+            RegistrationCount = await _db.Registrations.CountAsync(),
+NewRegistrationCount = await _db.Registrations.CountAsync(r => !r.IsContacted),
 
             RecentPosts = await _db.Posts
                 .OrderByDescending(p => p.CreatedAt)

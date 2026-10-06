@@ -22,8 +22,8 @@
                 CLB Vũ Hổ — nơi hun đúc tinh thần võ thuật, rèn luyện thể chất và bản lĩnh cho thế hệ trẻ.
             </p>
             <div class="hero-actions">
-                <a class="btn" href="#about">Tìm hiểu CLB</a>
-                <a class="btn btn-outline" href="#contact">Liên hệ ngay</a>
+                <a class="btn" href="/dang-ky">📩 Đăng ký tập thử</a>
+                <a class="btn btn-outline" href="#about">Tìm hiểu CLB</a>
             </div>
         </div>
     </div>
@@ -81,8 +81,8 @@
                             <h3>@post.Title</h3>
                             <p>@post.Content</p>
                             <a asp-controller="Home" asp-action="PostDetail" asp-route-id="@post.Id">
-    Đọc thêm →
-</a>
+                                Đọc thêm →
+                            </a>
                         </div>
                     </article>
                 }
@@ -99,7 +99,7 @@
     <div class="container">
         <div class="section-header">
             <p class="eyebrow">Hoạt động</p>
-<h2>Thông báo & Lịch tập</h2>
+            <h2>Thông báo &amp; Lịch tập</h2>
         </div>
         <div class="event-list">
             @if (Model.Events.Any())
@@ -107,14 +107,14 @@
                 @foreach (var ev in Model.Events)
                 {
                     <div class="event-item">
-    <strong>@ev.EventDate.Day</strong>
-    <div style="flex:1">
-        <h3>@ev.Title</h3>
-        <p>Tháng @ev.EventDate.Month/@ev.EventDate.Year • @ev.Location</p>
-    </div>
-    <a asp-controller="Home" asp-action="EventDetail" asp-route-id="@ev.Id"
-       class="event-more">Chi tiết →</a>
-</div>
+                        <strong>@ev.EventDate.Day</strong>
+                        <div style="flex:1">
+                            <h3>@ev.Title</h3>
+                            <p>Tháng @ev.EventDate.Month/@ev.EventDate.Year • @ev.Location</p>
+                        </div>
+                        <a asp-controller="Home" asp-action="EventDetail" asp-route-id="@ev.Id"
+                           class="event-more">Chi tiết →</a>
+                    </div>
                 }
             }
             else
@@ -137,23 +137,23 @@
             {
                 @foreach (var m in Model.Coaches)
                 {
-                   <a asp-controller="Home" asp-action="MemberDetail" asp-route-id="@m.Id"
-   style="text-decoration:none;color:inherit">
-    <article class="member-card">
-        <div class="avatar">
-            @if (!string.IsNullOrEmpty(m.AvatarUrl))
-            {
-                <img src="@m.AvatarUrl" alt="@m.FullName" />
-            }
-            else
-            {
-                <span>ẢNH</span>
-            }
-        </div>
-        <h3>@m.FullName</h3>
-        <p>@m.Role</p>
-    </article>
-</a>
+                    <a asp-controller="Home" asp-action="MemberDetail" asp-route-id="@m.Id"
+                       style="text-decoration:none;color:inherit">
+                        <article class="member-card">
+                            <div class="avatar">
+                                @if (!string.IsNullOrEmpty(m.AvatarUrl))
+                                {
+                                    <img src="@m.AvatarUrl" alt="@m.FullName" />
+                                }
+                                else
+                                {
+                                    <span>ẢNH</span>
+                                }
+                            </div>
+                            <h3>@m.FullName</h3>
+                            <p>@m.Role</p>
+                        </article>
+                    </a>
                 }
             }
             else
@@ -176,20 +176,23 @@
             {
                 @foreach (var m in Model.Students)
                 {
-                    <article class="member-card">
-                        <div class="avatar">
-                            @if (!string.IsNullOrEmpty(m.AvatarUrl))
-                            {
-                                <img src="@m.AvatarUrl" alt="@m.FullName" />
-                            }
-                            else
-                            {
-                                <span>ẢNH</span>
-                            }
-                        </div>
-                        <h3>@m.FullName</h3>
-                        <p>@m.Role</p>
-                    </article>
+                    <a asp-controller="Home" asp-action="MemberDetail" asp-route-id="@m.Id"
+                       style="text-decoration:none;color:inherit">
+                        <article class="member-card">
+                            <div class="avatar">
+                                @if (!string.IsNullOrEmpty(m.AvatarUrl))
+                                {
+                                    <img src="@m.AvatarUrl" alt="@m.FullName" />
+                                }
+                                else
+                                {
+                                    <span>ẢNH</span>
+                                }
+                            </div>
+                            <h3>@m.FullName</h3>
+                            <p>@m.Role</p>
+                        </article>
+                    </a>
                 }
             }
             else

@@ -1,0 +1,106 @@
+@model List<CLBVo.Models.Registration>
+@{
+    ViewData["Title"] = "Đăng ký tập";
+    Layout = "_AdminLayout";
+    var filter = ViewBag.Filter as string;
+}
+
+<div class="admin-page-header">
+    <div>
+        <h1>📩 Đăng ký tập</h1>
+        <p class="admin-subtitle">
+            Tổng: @ViewBag.TotalCount |
+            <span style="color:#f5c518">Mới: @ViewBag.NewCount</span>
+        </p>
+    </div>
+</div>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
+
+<!-- Filter tabs -->
+<div class="filter-tabs">
+    <a asp-action="Index" class="@(string.IsNullOrEmpty(filter) ? "active" : "")">Tất cả</a>
+    <a asp-action="Index" asp-route-filter="new" class="@(filter == "new" ? "active" : "")">
+        Chưa liên hệ (@ViewBag.NewCount)
+    </a>
+    <a asp-action="Index" asp-route-filter="contacted" class="@(filter == "contacted" ? "active" : "")">
+        Đã liên hệ
+    </a>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="admin-panel" style="text-align:center;padding:60px 20px">
+        <p style="color:#666;font-style:italic">Chưa có đăng ký nào.</p>
+    </div>
+}
+else
+{
+    <table class="admin-table">
+        <thead>
+            <tr>
+                <th style="width:180px">Họ tên</th>
+                <th style="width:140px">SĐT</th>
+                <th>Chi tiết</th>
+                <th style="width:130px">Ngày</th>
+                <th style="width:200px">Hành động</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var r in Model)
+            {
+                <tr style="@(r.IsContacted ? "opacity:.55" : "")">
+                    <td>
+                        <strong>@r.FullName</strong>
+                        @if (!r.IsContacted)
+                        {
+                            <span class="badge-new">MỚI</span>
+                        }
+                    </td>
+                    <td>
+                        <a href="tel:@r.Phone" style="color:#f5c518">@r.Phone</a>
+                    </td>
+                    <td>
+                        <div style="font-size:.85rem;color:#a0a0a0;line-height:1.6">
+                            @if (!string.IsNullOrEmpty(r.Email))
+                            {
+                                <div>✉️ <a href="mailto:@r.Email" style="color:#a0a0a0">@r.Email</a></div>
+                            }
+                            @if (r.Age.HasValue)
+                            {
+                                <div>🎂 @r.Age tuổi</div>
+                            }
+                            @if (!string.IsNullOrEmpty(r.PreferredTime))
+                            {
+                                <div>🕐 @r.PreferredTime</div>
+                            }
+                            @if (!string.IsNullOrEmpty(r.Message))
+                            {
+                                <div style="margin-top:6px;color:#ddd">💬 @r.Message</div>
+                            }
+                        </div>
+                    </td>
+                    <td>
+                        <small>@r.CreatedAt.ToString("dd/MM/yyyy HH:mm")</small>
+                    </td>
+                    <td class="actions">
+                        <form asp-action="Toggle" asp-route-id="@r.Id" method="post" style="display:inline">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn-sm btn-edit">
+                                @(r.IsContacted ? "↩ Bỏ" : "✓ Đã LH")
+                            </button>
+                        </form>
+                        <form asp-action="Delete" asp-route-id="@r.Id" method="post" style="display:inline"
+                              onsubmit="return confirm('Xóa đăng ký này?');">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn-sm btn-delete">Xóa</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

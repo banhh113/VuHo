@@ -2910,3 +2910,324 @@ textarea[name="Phone"] {
     color: var(--white);
     padding: 10px;
 }
+
+/* ============================================================
+   FORM ĐĂNG KÝ TẬP
+   ============================================================ */
+
+.register-box {
+    background: var(--black-card);
+    border: 1px solid var(--border);
+    border-top: 4px solid var(--gold);
+    border-radius: 16px;
+    padding: 40px 36px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+}
+
+.register-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.register-logo {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 16px;
+    object-fit: contain;
+    border-radius: 50%;
+    filter: drop-shadow(0 6px 20px rgba(245,197,24,0.4));
+}
+
+.register-header h1 {
+    font-size: clamp(1.6rem, 4vw, 2.2rem);
+    color: var(--white);
+    margin-bottom: 12px;
+}
+
+.register-desc {
+    color: var(--gray);
+    font-size: .95rem;
+    line-height: 1.6;
+    max-width: 460px;
+    margin: 0 auto;
+}
+
+.register-form .form-group {
+    margin-bottom: 18px;
+}
+
+.register-note {
+    color: var(--gray-dark);
+    font-size: .78rem;
+    text-align: center;
+    margin-top: 14px;
+    font-style: italic;
+}
+
+.register-form .btn-block {
+    margin-top: 12px;
+}
+
+/* Thank you box */
+.thankyou-box {
+    background: var(--black-card);
+    border: 1px solid var(--border);
+    border-top: 4px solid #10b981;
+    border-radius: 16px;
+    padding: 50px 36px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+}
+
+.thankyou-icon {
+    font-size: 4rem;
+    margin-bottom: 20px;
+    animation: float 3s ease-in-out infinite;
+}
+
+.thankyou-box h1 {
+    color: var(--white);
+    font-size: clamp(1.6rem, 4vw, 2.2rem);
+    margin-bottom: 16px;
+}
+
+.thankyou-desc {
+    color: var(--gray);
+    line-height: 1.7;
+    margin-bottom: 30px;
+}
+
+.thankyou-desc strong {
+    color: var(--gold);
+}
+
+.thankyou-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+/* ============================================================
+   ADMIN — Đăng ký tập
+   ============================================================ */
+
+.filter-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.filter-tabs a {
+    padding: 8px 16px;
+    background: var(--black-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--gray);
+    font-size: .85rem;
+    font-weight: 600;
+    transition: all .25s;
+}
+
+.filter-tabs a:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+}
+
+.filter-tabs a.active {
+    background: var(--gold);
+    color: var(--black);
+    border-color: var(--gold);
+}
+
+.badge-new {
+    display: inline-block;
+    background: var(--red);
+    color: var(--white);
+    font-size: .6rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+    padding: 2px 6px;
+    border-radius: 10px;
+    margin-left: 6px;
+    vertical-align: middle;
+    animation: statusPulse 2s infinite;
+}
+
+/* ============================================================
+   Liên kết bản đồ
+   ============================================================ */
+
+.map-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--gold);
+    font-size: .82rem;
+    font-weight: 700;
+    letter-spacing: .5px;
+    padding: 4px 10px;
+    border: 1px solid rgba(245,197,24,0.35);
+    border-radius: 6px;
+    transition: all .25s;
+}
+
+.map-link:hover {
+    background: var(--gold);
+    color: var(--black);
+    border-color: var(--gold);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(245,197,24,0.4);
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+    .register-box { padding: 28px 20px; }
+    .thankyou-box { padding: 36px 24px; }
+    .thankyou-actions { flex-direction: column; }
+    .thankyou-actions .btn { width: 100%; justify-content: center; }
+}
+
+/* Nút mở Google Maps */
+.map-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--gold);
+    font-size: .8rem;
+    font-weight: 700;
+    letter-spacing: .5px;
+    padding: 6px 12px;
+    border: 1px solid rgba(245, 197, 24, 0.4);
+    border-radius: 6px;
+    transition: all .25s;
+    text-decoration: none;
+}
+
+.map-link:hover {
+    background: var(--gold);
+    color: var(--black);
+    border-color: var(--gold);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(245, 197, 24, 0.4);
+}
+/* ============================================================
+   FIX CHROME AUTOFILL — giữ theme tối
+   ============================================================ */
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+    -webkit-text-fill-color: #ffffff !important;
+    -webkit-box-shadow: 0 0 0 1000px #0e0e0e inset !important;
+    box-shadow: 0 0 0 1000px #0e0e0e inset !important;
+    transition: background-color 5000s ease-in-out 0s;
+    caret-color: #ffffff;
+    border-color: rgba(255,255,255,0.08) !important;
+}
+
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill:focus {
+    -webkit-box-shadow: 0 0 0 1000px #121212 inset !important;
+    box-shadow: 0 0 0 1000px #121212 inset !important;
+    border-color: #f5c518 !important;
+}
+
+/* Ẩn icon autofill của Chrome */
+input::-webkit-contacts-auto-fill-button,
+input::-webkit-credentials-auto-fill-button {
+    visibility: hidden;
+    display: none !important;
+    pointer-events: none;
+    position: absolute;
+    right: 0;
+}
+
+/* Tắt dropdown gợi ý của Chrome khi autocomplete=off */
+input[autocomplete="off"]::-webkit-calendar-picker-indicator {
+    display: none !important;
+}/* ============================================================
+   FIX TRIỆT ĐỂ — Chrome autofill nền trắng
+   ============================================================ */
+
+/* Ô input autofill — ép nền tối bằng box-shadow inset */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    -webkit-text-fill-color: #ffffff !important;
+    -webkit-box-shadow: 0 0 0px 1000px #0e0e0e inset !important;
+    box-shadow: 0 0 0px 1000px #0e0e0e inset !important;
+    transition: background-color 50000s ease-in-out 0s;
+    caret-color: #ffffff;
+}
+
+/* Ô input focus + autofill */
+input:-webkit-autofill:focus {
+    -webkit-box-shadow: 0 0 0px 1000px #121212 inset !important;
+    box-shadow: 0 0 0px 1000px #121212 inset !important;
+    border-color: #f5c518 !important;
+}
+
+/* Đè màu nền bằng animation — Chrome không override được */
+@keyframes autofill-dark {
+    to {
+        background: #0e0e0e;
+        color: #ffffff;
+    }
+}
+
+input:-webkit-autofill {
+    animation-name: autofill-dark;
+    animation-fill-mode: both;
+}
+
+/* Ẩn hoàn toàn icon autofill Chrome */
+input::-webkit-contacts-auto-fill-button,
+input::-webkit-credentials-auto-fill-button,
+input::-webkit-strong-password-auto-fill-button {
+    visibility: hidden !important;
+    display: none !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    width: 0 !important;
+    height: 0 !important;
+    position: absolute !important;
+    right: 0 !important;
+}
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    -webkit-text-fill-color: #ffffff !important;
+    -webkit-box-shadow: 0 0 0px 1000px #0e0e0e inset !important;
+    box-shadow: 0 0 0px 1000px #0e0e0e inset !important;
+    transition: background-color 50000s ease-in-out 0s;
+    caret-color: #ffffff;
+}
+
+input:-webkit-autofill:focus {
+    -webkit-box-shadow: 0 0 0px 1000px #121212 inset !important;
+    box-shadow: 0 0 0px 1000px #121212 inset !important;
+    border-color: #f5c518 !important;
+}
+
+/* Ẩn icon autofill Chrome */
+input::-webkit-contacts-auto-fill-button,
+input::-webkit-credentials-auto-fill-button {
+    visibility: hidden;
+    display: none !important;
+    pointer-events: none;
+}   
+/* Mô tả thành viên — giữ xuống dòng */
+.member-detail-desc {
+    white-space: pre-line;
+    line-height: 1.7;
+}

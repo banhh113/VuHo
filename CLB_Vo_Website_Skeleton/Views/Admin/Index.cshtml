@@ -56,6 +56,14 @@
             <span>Thành tích</span>
         </div>
     </div>
+    
+    <a asp-controller="AdminRegistrations" asp-action="Index" class="stat-card stat-card-blue">
+    <div class="stat-icon">📩</div>
+    <div class="stat-info">
+        <strong data-count="@Model.NewRegistrationCount">0</strong>
+        <span>Đăng ký mới</span>
+    </div>
+</a>
 </div>
 
 <!-- QUICK ACTIONS -->

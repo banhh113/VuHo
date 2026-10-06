@@ -1,0 +1,64 @@
+@model List<CLBVo.Models.TimeSlot>
+@{
+    ViewData["Title"] = "Khung giờ tập";
+    Layout = "_AdminLayout";
+}
+
+<div class="admin-page-header">
+    <div>
+        <h1>🕐 Khung giờ tập</h1>
+        <p class="admin-subtitle">Các khung giờ hiển thị trong form đăng ký</p>
+    </div>
+    <a asp-action="Create" class="btn">+ Thêm khung giờ</a>
+</div>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
+
+<table class="admin-table">
+    <thead>
+        <tr>
+            <th style="width:80px">Thứ tự</th>
+            <th>Tên khung giờ</th>
+            <th style="width:120px">Trạng thái</th>
+            <th style="width:180px">Hành động</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (!Model.Any())
+        {
+            <tr><td colspan="4" class="empty">Chưa có khung giờ nào.</td></tr>
+        }
+        @foreach (var slot in Model)
+        {
+            <tr>
+                <td style="text-align:center">@slot.SortOrder</td>
+                <td><strong>@slot.Name</strong></td>
+                <td>
+                    @if (slot.IsActive)
+                    {
+                        <span style="color:#10b981;font-weight:700">✓ Hiện</span>
+                    }
+                    else
+                    {
+                        <span style="color:#666">✗ Ẩn</span>
+                    }
+                </td>
+                <td class="actions">
+                    <a asp-action="Edit" asp-route-id="@slot.Id" class="btn-sm btn-edit">
+                        <span class="icon">✏️</span><span>Sửa</span>
+                    </a>
+                    <form asp-action="Delete" asp-route-id="@slot.Id" method="post" style="display:inline"
+                          onsubmit="return confirm('Xóa khung giờ này?');">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn-sm btn-delete">
+                            <span class="icon">🗑️</span><span>Xóa</span>
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

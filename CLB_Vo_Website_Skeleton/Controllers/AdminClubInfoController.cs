@@ -34,31 +34,31 @@ public class AdminClubInfoController : Controller
     }
 
     [HttpPost("")]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Index(ClubInfo model, IFormFile? imageFile)
+[ValidateAntiForgeryToken]
+public async Task<IActionResult> Index(ClubInfo model, IFormFile? imageFile)
+{
+    if (!ModelState.IsValid) return View(model);
+
+    var info = await _db.ClubInfos.FindAsync(model.Id);
+    if (info == null) return NotFound();
+
+    info.Name = model.Name ?? "";
+    info.Description = model.Description ?? "";
+    info.Address = model.Address ?? "";
+    info.Phone = model.Phone ?? "";
+    info.Email = model.Email ?? "";
+    info.OpeningHours = model.OpeningHours ?? "";
+
+    if (imageFile != null && imageFile.Length > 0)
     {
-        if (!ModelState.IsValid) return View(model);
-
-        var info = await _db.ClubInfos.FindAsync(model.Id);
-        if (info == null) return NotFound();
-
-        info.Name = model.Name ?? "";
-        info.Description = model.Description ?? "";
-        info.Address = model.Address ?? "";
-        info.Phone = model.Phone ?? "";
-        info.Email = model.Email ?? "";
-        info.OpeningHours = model.OpeningHours ?? "";
-
-        if (imageFile != null && imageFile.Length > 0)
-        {
-            await _cloudinary.DeleteAsync(info.ImageUrl);
-            var newUrl = await _cloudinary.UploadAsync(imageFile, "clb-vo/club");
-            if (!string.IsNullOrEmpty(newUrl))
-                info.ImageUrl = newUrl;
-        }
-
-        await _db.SaveChangesAsync();
-        TempData["Success"] = "Đã lưu thông tin CLB.";
-        return RedirectToAction(nameof(Index));
+        await _cloudinary.DeleteAsync(info.ImageUrl);
+        var newUrl = await _cloudinary.UploadAsync(imageFile, "clb-vo/club");
+        if (!string.IsNullOrEmpty(newUrl))
+            info.ImageUrl = newUrl;
     }
+
+    await _db.SaveChangesAsync();
+    TempData["Success"] = "Đã lưu thông tin CLB.";
+    return RedirectToAction(nameof(Index));
+}
 }

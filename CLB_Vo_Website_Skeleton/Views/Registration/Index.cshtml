@@ -1,0 +1,76 @@
+@model CLBVo.Models.Registration
+@{
+    ViewData["Title"] = "Đăng ký tập thử";
+}
+
+<section class="section" style="padding-top:140px">
+    <div class="container" style="max-width:640px">
+        <div class="register-box">
+            <div class="register-header">
+                <img src="~/images/logo.png" alt="CLB Vũ Hổ" class="register-logo" />
+                <p class="eyebrow">Đăng ký tập thử</p>
+                <h1>Tham gia CLB Vũ Hổ</h1>
+                <p class="register-desc">
+                    Để lại thông tin, chúng tôi sẽ liên hệ tư vấn và sắp xếp buổi tập thử miễn phí cho bạn.
+                </p>
+            </div>
+
+            <form asp-action="Index" method="post" class="register-form" autocomplete="off">
+                @Html.AntiForgeryToken()
+                <div asp-validation-summary="ModelOnly" class="alert alert-error"></div>
+
+                <div class="form-group">
+                    <label>Họ tên *</label>
+                    <input asp-for="FullName" required maxlength="150" autocomplete="off"
+                           placeholder="VD: Nguyễn Văn A" />
+                    <span asp-validation-for="FullName" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label>Số điện thoại *</label>
+                    <input asp-for="Phone" required maxlength="20" type="text"
+                           inputmode="tel" autocomplete="nope"
+                           placeholder="VD: 0948 660 111" />
+                    <span asp-validation-for="Phone" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label>Email</label>
+                    <input asp-for="Email" type="email" maxlength="150" autocomplete="off"
+                           placeholder="VD: email@gmail.com" />
+                </div>
+
+                <div class="form-group">
+                    <label>Tuổi</label>
+                    <input asp-for="Age" type="number" min="5" max="80" autocomplete="off"
+                           placeholder="VD: 18" />
+                </div>
+
+                <div class="form-group">
+    <label>Thời gian muốn tập</label>
+    <select asp-for="PreferredTime" autocomplete="off">
+        <option value="">-- Chọn khung giờ --</option>
+        @foreach (var slot in (List<CLBVo.Models.TimeSlot>)ViewBag.TimeSlots)
+        {
+            <option value="@slot.Name">@slot.Name</option>
+        }
+    </select>
+</div>
+
+                <div class="form-group">
+                    <label>Lời nhắn</label>
+                    <textarea asp-for="Message" rows="4" autocomplete="off"
+                              placeholder="VD: Tôi muốn tập thử Boxing, mong CLB tư vấn..."></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-block">
+                    📩 Gửi đăng ký
+                </button>
+
+                <p class="register-note">
+                    Bằng việc gửi đăng ký, bạn đồng ý để CLB liên hệ qua SĐT/Email.
+                </p>
+            </form>
+        </div>
+    </div>
+</section>

@@ -1,6 +1,16 @@
 @model CLBVo.Models.ClubInfo
+@using CLBVo.Data
+@using Microsoft.EntityFrameworkCore
+@inject AppDbContext Db
+
 @{
     ViewData["Title"] = "Giới thiệu CLB";
+
+    var locations = Db.ClubLocations
+        .Where(l => l.IsActive)
+        .OrderBy(l => l.SortOrder)
+        .ThenBy(l => l.Id)
+        .ToList();
 }
 
 <section class="section" style="padding-top:140px">
@@ -30,44 +40,67 @@
             }
         </div>
 
-        <hr style="border-color:rgba(255,255,255,0.1);margin:50px 0 30px" />
+        <hr style="border-color:rgba(255,255,255,0.1);margin:40px 0 30px" />
 
+        <!-- Địa chỉ các cơ sở -->
+        @if (locations.Any())
+        {
+            <div class="about-contact-item" style="margin-bottom:20px">
+                <span>📍</span>
+                <div style="flex:1">
+                    <small>Địa chỉ</small>
+                    @foreach (var loc in locations)
+                    {
+                        <div style="margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid rgba(255,255,255,0.05)">
+                            <strong style="color:#f5c518;display:block;margin-bottom:6px;font-size:1rem">
+                                @loc.Name
+                            </strong>
+                            <div style="white-space:pre-line;color:#ddd;margin-bottom:10px;line-height:1.6">
+                                @loc.Address
+                            </div>
+                            @if (!string.IsNullOrEmpty(loc.MapUrl))
+                            {
+                                <a href="@loc.MapUrl" target="_blank" rel="noopener" class="map-link">
+                                    🗺️ Mở Google Maps chỉ đường →
+                                </a>
+                            }
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+        else if (!string.IsNullOrEmpty(Model?.Address))
+        {
+            <div class="about-contact-item" style="margin-bottom:20px">
+                <span>📍</span>
+                <div>
+                    <small>Địa chỉ</small>
+                    <strong style="white-space:pre-line">@Model.Address</strong>
+                </div>
+            </div>
+        }
+
+        <!-- Liên hệ -->
         <div class="about-contact-grid">
-            @if (!string.IsNullOrEmpty(Model?.Address))
+            @if (!string.IsNullOrEmpty(Model?.Phone))
             {
                 <div class="about-contact-item">
-                    <span>📍</span>
+                    <span>📞</span>
                     <div>
-                        <small>Địa chỉ</small>
-                        <strong>@Model.Address</strong>
+                        <small>Điện thoại</small>
+                        <strong style="white-space: pre-line">@Model.Phone</strong>
                     </div>
                 </div>
             }
-            @if (!string.IsNullOrEmpty(Model?.Phone))
+            @if (!string.IsNullOrEmpty(Model?.Email))
             {
-                <div class="about-contact-grid">
-    
-    @if (!string.IsNullOrEmpty(Model?.Phone))
-    {
-        <div class="about-contact-item">
-            <span>📞</span>
-            <div>
-                <small>Điện thoại</small>
-                <strong style="white-space: pre-line">@Model.Phone</strong>
-            </div>
-        </div>
-    }
-    @if (!string.IsNullOrEmpty(Model?.Email))
-    {
-        <div class="about-contact-item">
-            <span>✉️</span>
-            <div>
-                <small>Email</small>
-                <strong>@Model.Email</strong>
-            </div>
-        </div>
-    }
-</div>
+                <div class="about-contact-item">
+                    <span>✉️</span>
+                    <div>
+                        <small>Email</small>
+                        <strong>@Model.Email</strong>
+                    </div>
+                </div>
             }
         </div>
 
