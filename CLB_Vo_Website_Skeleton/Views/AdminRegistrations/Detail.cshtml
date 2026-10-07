@@ -1,0 +1,130 @@
+@model CLBVo.Models.Registration
+@using CLBVo.Models
+@{
+    ViewData["Title"] = "Chi tiết đăng ký";
+    Layout = "_AdminLayout";
+}
+
+<div class="admin-page-header">
+    <div>
+        <h1>👤 @Model.FullName</h1>
+        <p class="admin-subtitle">Đăng ký lúc @Model.CreatedAt.ToString("dd/MM/yyyy HH:mm")</p>
+    </div>
+    <a asp-action="Index" class="btn btn-secondary">← Quay lại</a>
+</div>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
+
+<div class="admin-two-col">
+    <!-- Thông tin khách -->
+    <div class="admin-panel">
+        <div class="panel-header">
+            <h2>📋 Thông tin khách</h2>
+        </div>
+        <ul class="info-list">
+            <li><strong>Họ tên:</strong> @Model.FullName</li>
+            <li><strong>SĐT:</strong> <a href="tel:@Model.Phone" style="color:#f5c518">@Model.Phone</a></li>
+            @if (!string.IsNullOrEmpty(Model.Email))
+            {
+                <li><strong>Email:</strong> <a href="mailto:@Model.Email" style="color:#f5c518">@Model.Email</a></li>
+            }
+            @if (Model.Age.HasValue)
+            {
+                <li><strong>Tuổi:</strong> @Model.Age</li>
+            }
+            @if (!string.IsNullOrEmpty(Model.PreferredTime))
+            {
+                <li><strong>Khung giờ mong muốn:</strong> @Model.PreferredTime</li>
+            }
+            @if (!string.IsNullOrEmpty(Model.Experience))
+            {
+                <li><strong>Kinh nghiệm:</strong> @Model.Experience</li>
+            }
+            @if (!string.IsNullOrEmpty(Model.Message))
+            {
+                <li><strong>Lời nhắn:</strong> @Model.Message</li>
+            }
+        </ul>
+    </div>
+
+    <!-- Cập nhật trạng thái -->
+    <div class="admin-panel">
+        <div class="panel-header">
+            <h2>🔄 Cập nhật trạng thái</h2>
+        </div>
+        <form asp-action="UpdateStatus" asp-route-id="@Model.Id" method="post">
+            @Html.AntiForgeryToken()
+            <div class="form-group">
+                <label>Trạng thái</label>
+                <select name="status" required>
+                    @foreach (RegistrationStatus st in Enum.GetValues(typeof(RegistrationStatus)))
+                    {
+                        var label = st switch
+                        {
+                            RegistrationStatus.New => "🆕 Mới đăng ký",
+                            RegistrationStatus.Contacting => "📞 Đang liên hệ",
+                            RegistrationStatus.Confirmed => "✅ Đã xác nhận tham gia",
+                            RegistrationStatus.Joined => "🥋 Đã vào tập",
+                            RegistrationStatus.Archived => "🗄️ Lưu trữ (đăng ký ảo / spam)",
+                            RegistrationStatus.Cancelled => "❌ Đã hủy",
+                            _ => st.ToString()
+                        };
+                        if (st == Model.Status)
+                        {
+                            <option value="@st" selected>@label</option>
+                        }
+                        else
+                        {
+                            <option value="@st">@label</option>
+                        }
+                    }
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Ngày tập thử dự kiến (nếu có)</label>
+                <input type="date" name="trialDate"
+                       value="@(Model.TrialDate?.ToString("yyyy-MM-dd"))" />
+            </div>
+
+            <button type="submit" class="btn">💾 Cập nhật</button>
+        </form>
+    </div>
+</div>
+
+<!-- Ghi chú nội bộ -->
+<div class="admin-panel" style="margin-top:20px">
+    <div class="panel-header">
+        <h2>📝 Ghi chú nội bộ</h2>
+    </div>
+    <form asp-action="SaveNote" asp-route-id="@Model.Id" method="post">
+        @Html.AntiForgeryToken()
+        <div class="form-group">
+            <textarea name="adminNote" rows="5"
+                      placeholder="Ghi chú về khách: đã gọi mấy lần, phản hồi, lý do không tham gia...">@Model.AdminNote</textarea>
+        </div>
+        <button type="submit" class="btn">💾 Lưu ghi chú</button>
+    </form>
+
+    @if (Model.ContactedAt.HasValue || Model.ConfirmedAt.HasValue)
+    {
+        <div style="margin-top:20px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.08);
+                    font-size:.85rem;color:#a0a0a0">
+            @if (Model.ContactedAt.HasValue)
+            {
+                <div>📞 Liên hệ lần đầu: @Model.ContactedAt.Value.ToString("dd/MM/yyyy HH:mm")</div>
+            }
+            @if (Model.ConfirmedAt.HasValue)
+            {
+                <div>✅ Xác nhận tham gia: @Model.ConfirmedAt.Value.ToString("dd/MM/yyyy HH:mm")</div>
+            }
+            @if (Model.UpdatedAt.HasValue)
+            {
+                <div>🔄 Cập nhật cuối: @Model.UpdatedAt.Value.ToString("dd/MM/yyyy HH:mm")</div>
+            }
+        </div>
+    }
+</div>

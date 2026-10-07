@@ -16,6 +16,25 @@ public class AppDbContext : IdentityDbContext<IdentityUser>
     public DbSet<Member> Members => Set<Member>();
     public DbSet<Post> Posts => Set<Post>();
     public DbSet<Registration> Registrations => Set<Registration>();
-    public DbSet<TimeSlot> TimeSlots => Set<TimeSlot>();       // ← THÊM DÒNG NÀY
+    public DbSet<TimeSlot> TimeSlots => Set<TimeSlot>();
     public DbSet<ClubLocation> ClubLocations => Set<ClubLocation>();
+    public DbSet<Tournament> Tournaments => Set<Tournament>();
+    public DbSet<TournamentResult> TournamentResults => Set<TournamentResult>();
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<TournamentResult>()
+            .HasOne(r => r.Tournament)
+            .WithMany(t => t.Results)
+            .HasForeignKey(r => r.TournamentId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<TournamentResult>()
+            .HasOne(r => r.Member)
+            .WithMany()
+            .HasForeignKey(r => r.MemberId)
+            .OnDelete(DeleteBehavior.SetNull);
+    }
 }

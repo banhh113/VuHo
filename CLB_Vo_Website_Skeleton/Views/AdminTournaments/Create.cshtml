@@ -1,0 +1,60 @@
+@model CLBVo.Models.Tournament
+@{
+    ViewData["Title"] = "Thêm giải đấu";
+    Layout = "_AdminLayout";
+}
+
+<div class="admin-page-header">
+    <h1>+ Thêm giải đấu</h1>
+    <a asp-action="Index" class="btn btn-secondary">← Quay lại</a>
+</div>
+
+<form asp-action="Create" method="post" enctype="multipart/form-data" class="admin-form" autocomplete="off">
+    @Html.AntiForgeryToken()
+    <div asp-validation-summary="ModelOnly" class="alert alert-error"></div>
+
+    <div class="form-group">
+        <label>Tên giải đấu *</label>
+        <input asp-for="Name" required maxlength="200" autocomplete="off"
+               placeholder="VD: Giải Boxing & Kickboxing toàn quốc" />
+        <small>Nếu cùng tên nhưng khác năm → OK. Nếu cùng tên cùng năm → báo lỗi trùng.</small>
+    </div>
+
+    <div class="form-group">
+        <label>Năm *</label>
+        <input asp-for="Year" type="number" required min="1950" max="2100" autocomplete="off" />
+    </div>
+
+    <div class="form-group">
+        <label>Địa điểm</label>
+        <input asp-for="Location" maxlength="200" autocomplete="off"
+               placeholder="VD: Nhà thi đấu Phú Thọ, TP.HCM" />
+    </div>
+
+    <div class="form-group">
+        <label>Ngày bắt đầu</label>
+        <input asp-for="StartDate" type="date" />
+    </div>
+
+    <div class="form-group">
+        <label>Ngày kết thúc</label>
+        <input asp-for="EndDate" type="date" />
+    </div>
+
+    <div class="form-group">
+        <label>Mô tả</label>
+        <textarea asp-for="Description" rows="4"
+                  placeholder="Giới thiệu về giải đấu, đối tượng tham gia..."></textarea>
+    </div>
+
+    <div class="form-group">
+        <label>Ảnh giải đấu</label>
+        <input type="file" name="imageFile" accept="image/*" />
+        <small>Chấp nhận jpg, png, gif, webp. Tối đa 5MB.</small>
+    </div>
+
+    <div class="form-actions">
+        <button type="submit" class="btn">💾 Lưu và thêm kết quả</button>
+        <a asp-action="Index" class="btn btn-secondary">Hủy</a>
+    </div>
+</form>

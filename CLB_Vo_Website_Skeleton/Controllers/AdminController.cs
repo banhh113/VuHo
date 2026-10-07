@@ -1,4 +1,5 @@
 using CLBVo.Data;
+using CLBVo.Models;
 using CLBVo.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -17,7 +18,6 @@ public class AdminController : Controller
     [HttpGet("")]
     public async Task<IActionResult> Index()
     {
-        // Thống kê 6 tháng gần nhất
         var now = DateTime.Now;
         var sixMonthsAgo = new DateTime(now.Year, now.Month, 1).AddMonths(-5);
         var posts = await _db.Posts
@@ -40,8 +40,10 @@ public class AdminController : Controller
             EventCount = await _db.Events.CountAsync(),
             GalleryCount = await _db.GalleryImages.CountAsync(),
             AchievementCount = await _db.Achievements.CountAsync(),
+
             RegistrationCount = await _db.Registrations.CountAsync(),
-NewRegistrationCount = await _db.Registrations.CountAsync(r => !r.IsContacted),
+            NewRegistrationCount = await _db.Registrations.CountAsync(r => r.Status == RegistrationStatus.New),
+            ConfirmedRegistrationCount = await _db.Registrations.CountAsync(r => r.Status == RegistrationStatus.Confirmed),
 
             RecentPosts = await _db.Posts
                 .OrderByDescending(p => p.CreatedAt)

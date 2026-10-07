@@ -1,17 +1,16 @@
 @model List<CLBVo.Models.Registration>
+@using CLBVo.Models
 @{
-    ViewData["Title"] = "Đăng ký tập";
+    ViewData["Title"] = "Quản lý đăng ký";
     Layout = "_AdminLayout";
-    var filter = ViewBag.Filter as string;
+    var statusFilter = ViewBag.StatusFilter as string;
+    var keyword = ViewBag.Keyword as string;
 }
 
 <div class="admin-page-header">
     <div>
-        <h1>📩 Đăng ký tập</h1>
-        <p class="admin-subtitle">
-            Tổng: @ViewBag.TotalCount |
-            <span style="color:#f5c518">Mới: @ViewBag.NewCount</span>
-        </p>
+        <h1>📩 Quản lý đăng ký tập</h1>
+        <p class="admin-subtitle">Tổng: @ViewBag.TotalCount đăng ký</p>
     </div>
 </div>
 
@@ -20,87 +19,120 @@
     <div class="alert alert-success">@TempData["Success"]</div>
 }
 
-<!-- Filter tabs -->
+<!-- Status tabs -->
 <div class="filter-tabs">
-    <a asp-action="Index" class="@(string.IsNullOrEmpty(filter) ? "active" : "")">Tất cả</a>
-    <a asp-action="Index" asp-route-filter="new" class="@(filter == "new" ? "active" : "")">
-        Chưa liên hệ (@ViewBag.NewCount)
+    <a asp-action="Index" class="@(string.IsNullOrEmpty(statusFilter) ? "active" : "")">
+        Tất cả (@ViewBag.TotalCount)
     </a>
-    <a asp-action="Index" asp-route-filter="contacted" class="@(filter == "contacted" ? "active" : "")">
-        Đã liên hệ
+    <a asp-action="Index" asp-route-status="New" class="@(statusFilter == "New" ? "active" : "")">
+        🆕 Mới (@ViewBag.CountNew)
+    </a>
+    <a asp-action="Index" asp-route-status="Contacting" class="@(statusFilter == "Contacting" ? "active" : "")">
+        📞 Đang LH (@ViewBag.CountContacting)
+    </a>
+    <a asp-action="Index" asp-route-status="Confirmed" class="@(statusFilter == "Confirmed" ? "active" : "")">
+        ✅ Xác nhận (@ViewBag.CountConfirmed)
+    </a>
+    <a asp-action="Index" asp-route-status="Joined" class="@(statusFilter == "Joined" ? "active" : "")">
+        🥋 Đã vào tập (@ViewBag.CountJoined)
+    </a>
+    <a asp-action="Index" asp-route-status="Archived" class="@(statusFilter == "Archived" ? "active" : "")">
+        🗄️ Lưu trữ (@ViewBag.CountArchived)
     </a>
 </div>
 
-@if (!Model.Any())
-{
-    <div class="admin-panel" style="text-align:center;padding:60px 20px">
-        <p style="color:#666;font-style:italic">Chưa có đăng ký nào.</p>
+<!-- Search form -->
+<form method="get" class="admin-panel" style="margin-bottom:20px;padding:16px">
+    <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:end">
+        <div style="flex:1;min-width:200px">
+            <label style="display:block;font-size:.75rem;color:#f5c518;margin-bottom:6px">
+                TÌM KIẾM
+            </label>
+            <input type="text" name="keyword" value="@keyword"
+                   placeholder="Họ tên hoặc SĐT..."
+                   style="width:100%;padding:10px;background:#0e0e0e;border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:#fff" />
+        </div>
+        <div>
+            <label style="display:block;font-size:.75rem;color:#f5c518;margin-bottom:6px">
+                TỪ NGÀY
+            </label>
+            <input type="date" name="fromDate" value="@ViewBag.FromDate"
+                   style="padding:10px;background:#0e0e0e;border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:#fff" />
+        </div>
+        <div>
+            <label style="display:block;font-size:.75rem;color:#f5c518;margin-bottom:6px">
+                ĐẾN NGÀY
+            </label>
+            <input type="date" name="toDate" value="@ViewBag.ToDate"
+                   style="padding:10px;background:#0e0e0e;border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:#fff" />
+        </div>
+        <button type="submit" class="btn" style="padding:10px 20px">🔍 Tìm</button>
+        <a asp-action="Index" class="btn btn-secondary" style="padding:10px 20px">Xóa lọc</a>
     </div>
-}
-else
-{
-    <table class="admin-table">
-        <thead>
+</form>
+
+<!-- Table -->
+<table class="admin-table">
+    <thead>
+        <tr>
+            <th style="width:160px">Họ tên</th>
+            <th style="width:130px">SĐT</th>
+            <th style="width:130px">Trạng thái</th>
+            <th>Chi tiết</th>
+            <th style="width:110px">Ngày ĐK</th>
+            <th style="width:180px">Hành động</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (!Model.Any())
+        {
+            <tr><td colspan="6" class="empty">Không có đăng ký nào phù hợp.</td></tr>
+        }
+        @foreach (var r in Model)
+        {
             <tr>
-                <th style="width:180px">Họ tên</th>
-                <th style="width:140px">SĐT</th>
-                <th>Chi tiết</th>
-                <th style="width:130px">Ngày</th>
-                <th style="width:200px">Hành động</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var r in Model)
-            {
-                <tr style="@(r.IsContacted ? "opacity:.55" : "")">
-                    <td>
-                        <strong>@r.FullName</strong>
-                        @if (!r.IsContacted)
+                <td><strong>@r.FullName</strong></td>
+                <td><a href="tel:@r.Phone" style="color:#f5c518">@r.Phone</a></td>
+                <td>
+                    @{
+                        var (cls, icon, label) = r.Status switch
                         {
-                            <span class="badge-new">MỚI</span>
+                            RegistrationStatus.New => ("status-new", "🆕", "Mới"),
+                            RegistrationStatus.Contacting => ("status-contacting", "📞", "Đang LH"),
+                            RegistrationStatus.Confirmed => ("status-confirmed", "✅", "Xác nhận"),
+                            RegistrationStatus.Joined => ("status-joined", "🥋", "Đã vào tập"),
+                            RegistrationStatus.Archived => ("status-archived", "🗄️", "Lưu trữ"),
+                            RegistrationStatus.Cancelled => ("status-cancelled", "❌", "Đã hủy"),
+                            _ => ("status-new", "🆕", "Mới")
+                        };
+                    }
+                    <span class="status-badge @cls">@icon @label</span>
+                </td>
+                <td>
+                    <div style="font-size:.82rem;color:#a0a0a0;line-height:1.5">
+                        @if (!string.IsNullOrEmpty(r.Email)) { <div>✉️ @r.Email</div> }
+                        @if (r.Age.HasValue) { <div>🎂 @r.Age tuổi</div> }
+                        @if (!string.IsNullOrEmpty(r.PreferredTime)) { <div>🕐 @r.PreferredTime</div> }
+                        @if (r.TrialDate.HasValue)
+                        {
+                            <div style="color:#f5c518">📅 Tập thử: @r.TrialDate.Value.ToString("dd/MM/yyyy")</div>
                         }
-                    </td>
-                    <td>
-                        <a href="tel:@r.Phone" style="color:#f5c518">@r.Phone</a>
-                    </td>
-                    <td>
-                        <div style="font-size:.85rem;color:#a0a0a0;line-height:1.6">
-                            @if (!string.IsNullOrEmpty(r.Email))
-                            {
-                                <div>✉️ <a href="mailto:@r.Email" style="color:#a0a0a0">@r.Email</a></div>
-                            }
-                            @if (r.Age.HasValue)
-                            {
-                                <div>🎂 @r.Age tuổi</div>
-                            }
-                            @if (!string.IsNullOrEmpty(r.PreferredTime))
-                            {
-                                <div>🕐 @r.PreferredTime</div>
-                            }
-                            @if (!string.IsNullOrEmpty(r.Message))
-                            {
-                                <div style="margin-top:6px;color:#ddd">💬 @r.Message</div>
-                            }
-                        </div>
-                    </td>
-                    <td>
-                        <small>@r.CreatedAt.ToString("dd/MM/yyyy HH:mm")</small>
-                    </td>
-                    <td class="actions">
-                        <form asp-action="Toggle" asp-route-id="@r.Id" method="post" style="display:inline">
-                            @Html.AntiForgeryToken()
-                            <button type="submit" class="btn-sm btn-edit">
-                                @(r.IsContacted ? "↩ Bỏ" : "✓ Đã LH")
-                            </button>
-                        </form>
-                        <form asp-action="Delete" asp-route-id="@r.Id" method="post" style="display:inline"
-                              onsubmit="return confirm('Xóa đăng ký này?');">
-                            @Html.AntiForgeryToken()
-                            <button type="submit" class="btn-sm btn-delete">Xóa</button>
-                        </form>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-}
+                    </div>
+                </td>
+                <td><small>@r.CreatedAt.ToString("dd/MM/yyyy HH:mm")</small></td>
+                <td class="actions">
+                    <a asp-action="Detail" asp-route-id="@r.Id" class="btn-sm btn-edit">
+                        <span class="icon">👁️</span><span>Xem</span>
+                    </a>
+                    <form asp-action="Delete" asp-route-id="@r.Id" method="post" style="display:inline"
+                          onsubmit="return confirm('Xóa đăng ký này?');">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn-sm btn-delete">
+                            <span class="icon">🗑️</span><span>Xóa</span>
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

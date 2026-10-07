@@ -30,21 +30,6 @@ const observer = new IntersectionObserver((entries) => {
 revealEls.forEach(el => observer.observe(el));
 
 // ==================== 3. Counter animation ====================
-function animateCounter(el, target, duration = 1600) {
-    let start = 0;
-    const step = target / (duration / 16);
-    const update = () => {
-        start += step;
-        if (start < target) {
-            el.textContent = Math.floor(start);
-            requestAnimationFrame(update);
-        } else {
-            el.textContent = target;
-        }
-    };
-    requestAnimationFrame(update);
-}
-
 const statObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -89,7 +74,6 @@ document.querySelectorAll('a[href*="#"]').forEach(link => {
         const path = href.slice(0, hashIndex) || '/';
         const hash = href.slice(hashIndex);
 
-        // Nếu click cùng trang
         if (path === '/' || path === '' || path === window.location.pathname) {
             const target = document.querySelector(hash);
             if (target) {
@@ -108,15 +92,13 @@ document.querySelectorAll('form[data-confirm]').forEach(form => {
     });
 });
 
-// ==================== Admin sidebar active state ====================
+// ==================== 6. Admin sidebar active state ====================
 (function () {
     const path = window.location.pathname.toLowerCase().replace(/\/$/, '') || '/';
     const items = [...document.querySelectorAll('.admin-nav-item')];
 
-    // Xóa active cũ (phòng trường hợp đã có sẵn trong HTML)
     items.forEach(i => i.classList.remove('active'));
 
-    // Tìm item khớp dài nhất
     let bestMatch = null;
     let bestLen = 0;
 
@@ -125,8 +107,6 @@ document.querySelectorAll('form[data-confirm]').forEach(form => {
         if (!href || href === '#') return;
 
         const clean = href.toLowerCase().replace(/\/$/, '') || '/';
-
-        // Khớp khi path bằng chính xác, hoặc bắt đầu bằng clean + '/'
         const isMatch = path === clean || path.startsWith(clean + '/');
 
         if (isMatch && clean.length > bestLen) {
@@ -137,3 +117,20 @@ document.querySelectorAll('form[data-confirm]').forEach(form => {
 
     if (bestMatch) bestMatch.classList.add('active');
 })();
+
+// ==================== 7. GLightbox cho Gallery ====================
+document.addEventListener('DOMContentLoaded', function () {
+    if (typeof GLightbox !== 'undefined') {
+        GLightbox({
+            selector: '.glightbox',
+            touchNavigation: true,
+            loop: true,
+            zoomable: true,
+            draggable: true,
+            openEffect: 'zoom',
+            closeEffect: 'fade',
+            slideEffect: 'slide',
+            moreLength: 60
+        });
+    }
+});

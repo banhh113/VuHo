@@ -2,6 +2,8 @@
 @{
     ViewData["Title"] = "Sửa thành viên";
     Layout = "_AdminLayout";
+    var achievements = ViewBag.Achievements as List<CLBVo.Models.TournamentResult> ?? new();
+    var tournaments = ViewBag.Tournaments as List<CLBVo.Models.Tournament> ?? new();
 }
 
 <div class="admin-page-header">
@@ -12,49 +14,187 @@
     <a asp-action="Index" class="btn btn-secondary">← Quay lại</a>
 </div>
 
-<form asp-action="Edit" asp-route-id="@Model.Id" method="post"
-      enctype="multipart/form-data" class="admin-form">
-    @Html.AntiForgeryToken()
-    <input type="hidden" asp-for="Id" />
-    <input type="hidden" asp-for="AvatarUrl" />
-    <div asp-validation-summary="ModelOnly" class="alert alert-error"></div>
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-error">@TempData["Error"]</div>
+}
 
-    <div class="form-group">
-        <label>Họ tên *</label>
-        <input asp-for="FullName" required maxlength="150" />
+<div class="admin-two-col">
+    <!-- Cột trái: thông tin thành viên -->
+    <div class="admin-panel">
+        <div class="panel-header">
+            <h2>📋 Thông tin thành viên</h2>
+        </div>
+
+        <form asp-action="Edit" asp-route-id="@Model.Id" method="post" enctype="multipart/form-data" autocomplete="off">
+            @Html.AntiForgeryToken()
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="AvatarUrl" />
+            <div asp-validation-summary="ModelOnly" class="alert alert-error"></div>
+
+            <div class="form-group">
+                <label>Họ tên *</label>
+                <input asp-for="FullName" required maxlength="150" />
+            </div>
+
+            <div class="form-group">
+                <label>Nhóm *</label>
+                <select asp-for="Category" required>
+                    <option value="">-- Chọn nhóm --</option>
+                    <option value="Boxing">🥊 Boxing</option>
+                    <option value="Kickboxing">🦵 Kickboxing</option>
+                    <option value="HLV">🎓 Huấn luyện viên</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Vai trò *</label>
+                <input asp-for="Role" required maxlength="100" />
+            </div>
+
+            <div class="form-group">
+                <label>Mô tả ngắn</label>
+                <textarea asp-for="Description" rows="4"></textarea>
+            </div>
+
+            @if (!string.IsNullOrEmpty(Model.AvatarUrl))
+            {
+                <div class="form-group">
+                    <label>Ảnh hiện tại</label>
+                    <img src="@Model.AvatarUrl" alt="@Model.FullName"
+                         style="width:120px;height:120px;border-radius:50%;
+                                object-fit:cover;border:3px solid #f5c518" />
+                </div>
+            }
+
+            <div class="form-group">
+                <label>Thay ảnh mới (để trống nếu giữ ảnh cũ)</label>
+                <input type="file" name="imageFile" accept="image/*" />
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn">💾 Cập nhật</button>
+                <a asp-action="Index" class="btn btn-secondary">Hủy</a>
+            </div>
+        </form>
     </div>
 
-    <div class="form-group">
-    <label>Vai trò *</label>
-    <select asp-for="Role" required>
-        <option value="">-- Chọn vai trò --</option>
-        <option value="Huấn luyện viên">Huấn luyện viên</option>
-        <option value="Võ sinh">Võ sinh</option>
-    </select>
+    <!-- Cột phải: thành tích -->
+    <div class="admin-panel">
+        <div class="panel-header">
+            <h2>🏆 Thành tích (@achievements.Count)</h2>
+        </div>
+
+        @if (achievements.Any())
+        {
+            <ul class="panel-list" style="margin-bottom:20px">
+                @foreach (var a in achievements)
+                {
+                    var medalIcon = a.Medal.Contains("vàng", StringComparison.OrdinalIgnoreCase) || a.Medal.Contains("nhất", StringComparison.OrdinalIgnoreCase) || a.Medal.Contains("🥇") ? "🥇"
+                                  : a.Medal.Contains("bạc", StringComparison.OrdinalIgnoreCase) || a.Medal.Contains("nhì", StringComparison.OrdinalIgnoreCase) || a.Medal.Contains("🥈") ? "🥈"
+                                  : a.Medal.Contains("đồng", StringComparison.OrdinalIgnoreCase) || a.Medal.Contains("ba", StringComparison.OrdinalIgnoreCase) || a.Medal.Contains("🥉") ? "🥉" : "🏅";
+
+                    var tournamentName = a.Tournament?.Name ?? a.TournamentNameText ?? "Không rõ giải";
+                    var year = a.Tournament?.Year;
+
+                    <li>
+                        <div style="font-size:1.4rem">@medalIcon</div>
+                        <div style="flex:1;min-width:0">
+                            <div class="list-title">@tournamentName @(year.HasValue ? $"({year})" : "")</div>
+                            <div class="list-meta">
+                                @a.Medal
+                                @if (!string.IsNullOrEmpty(a.Category)) { <span> • @a.Category</span> }
+                            </div>
+                        </div>
+                        <form asp-action="DeleteAchievement" asp-route-id="@a.Id" method="post"
+                              onsubmit="return confirm('Xóa thành tích này?');">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn-sm btn-delete">
+                                <span class="icon">🗑️</span>
+                            </button>
+                        </form>
+                    </li>
+                }
+            </ul>
+        }
+        else
+        {
+            <p class="empty-state">Chưa có thành tích nào.</p>
+        }
+
+        <hr style="border-color:rgba(255,255,255,0.1);margin:20px 0" />
+
+        <h3 style="font-size:.9rem;color:#f5c518;margin-bottom:12px">Thêm thành tích mới</h3>
+        <form asp-action="AddAchievement" asp-route-memberId="@Model.Id" method="post" autocomplete="off">
+            @Html.AntiForgeryToken()
+
+            <div class="form-group">
+                <label>Chọn giải đấu có sẵn</label>
+                <select name="tournamentId" id="tournamentSelect">
+                    <option value="">-- Chọn giải --</option>
+                    @foreach (var t in tournaments)
+                    {
+                        <option value="@t.Id">@t.Name (@t.Year)</option>
+                    }
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Hoặc nhập tay tên giải</label>
+                <input type="text" name="tournamentNameText" id="manualTournament"
+                       maxlength="200" placeholder="VD: Boxing Toàn quốc 2026" />
+                <small>Nếu chọn giải ở trên, ô này sẽ bị khóa tự động.</small>
+            </div>
+
+            <div class="form-group">
+                <label>Huy chương *</label>
+                <select name="medal" required>
+                    <option value="">-- Chọn --</option>
+                    <option value="🥇 Huy chương vàng">🥇 Huy chương vàng</option>
+                    <option value="🥈 Huy chương bạc">🥈 Huy chương bạc</option>
+                    <option value="🥉 Huy chương đồng">🥉 Huy chương đồng</option>
+                    <option value="🏅 Giải khuyến khích">🏅 Giải khuyến khích</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Hạng cân / Nội dung thi</label>
+                <input type="text" name="category" maxlength="100"
+                       placeholder="VD: Hạng 65kg, Đối kháng nam..." />
+            </div>
+
+            <div class="form-group">
+                <label>Ghi chú</label>
+                <textarea name="note" rows="2" maxlength="500"></textarea>
+            </div>
+
+            <button type="submit" class="btn">+ Thêm thành tích</button>
+        </form>
+    </div>
 </div>
 
-    <div class="form-group">
-        <label>Mô tả ngắn</label>
-        <textarea asp-for="Description" rows="4"></textarea>
-    </div>
-
-    @if (!string.IsNullOrEmpty(Model.AvatarUrl))
-    {
-        <div class="form-group">
-            <label>Ảnh hiện tại</label>
-            <img src="@Model.AvatarUrl" alt="@Model.FullName"
-                 style="width:120px;height:120px;border-radius:50%;
-                        object-fit:cover;border:3px solid #f5c518" />
-        </div>
-    }
-
-    <div class="form-group">
-        <label>Thay ảnh mới (để trống nếu giữ ảnh cũ)</label>
-        <input type="file" name="imageFile" accept="image/*" />
-    </div>
-
-    <div class="form-actions">
-        <button type="submit" class="btn">💾 Cập nhật</button>
-        <a asp-action="Index" class="btn btn-secondary">Hủy</a>
-    </div>
-</form>
+@section Scripts {
+    <script>
+        const sel = document.getElementById('tournamentSelect');
+        const manual = document.getElementById('manualTournament');
+        if (sel && manual) {
+            sel.addEventListener('change', () => {
+                if (sel.value) {
+                    manual.value = '';
+                    manual.disabled = true;
+                    manual.placeholder = 'Đã chọn giải ở trên';
+                } else {
+                    manual.disabled = false;
+                    manual.placeholder = 'VD: Boxing Toàn quốc 2026';
+                }
+            });
+            manual.addEventListener('input', () => {
+                if (manual.value) sel.value = '';
+            });
+        }
+    </script>
+}

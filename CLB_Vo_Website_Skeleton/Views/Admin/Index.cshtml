@@ -56,14 +56,14 @@
             <span>Thành tích</span>
         </div>
     </div>
-    
+
     <a asp-controller="AdminRegistrations" asp-action="Index" class="stat-card stat-card-blue">
-    <div class="stat-icon">📩</div>
-    <div class="stat-info">
-        <strong data-count="@Model.NewRegistrationCount">0</strong>
-        <span>Đăng ký mới</span>
-    </div>
-</a>
+        <div class="stat-icon">📩</div>
+        <div class="stat-info">
+            <strong data-count="@Model.NewRegistrationCount">0</strong>
+            <span>Đăng ký mới</span>
+        </div>
+    </a>
 </div>
 
 <!-- QUICK ACTIONS -->
@@ -213,12 +213,10 @@
     </div>
 </div>
 
-
-
 @section Scripts {
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <script>
-        // ===== Counter animation =====
+        // Counter animation
         document.querySelectorAll('.stat-info strong[data-count]').forEach(el => {
             const target = parseInt(el.dataset.count, 10);
             if (target === 0) { el.textContent = '0'; return; }
@@ -235,7 +233,7 @@
             }, 25);
         });
 
-        // ===== Chart =====
+        // Chart
         const ctx = document.getElementById('postsChart');
         if (ctx) {
             new Chart(ctx, {
@@ -255,9 +253,7 @@
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: false }
-                    },
+                    plugins: { legend: { display: false } },
                     scales: {
                         y: {
                             beginAtZero: true,

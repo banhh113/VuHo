@@ -8,7 +8,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" />
     <link rel="icon" type="image/png" href="~/images/logo.png" />
 </head>
 <body>
@@ -19,15 +21,17 @@
                 <span>CLB VŨ HỔ</span>
             </a>
 
-            <nav>
-                <a href="/#about">Giới thiệu</a>
-                <a href="/#news">Tin tức</a>
-                <a href="/#events">Thông báo & Lịch tập</a>
-                <a href="/#members">Thành viên</a>
-                <a href="/#gallery">Thư viện</a>
-                <a href="/#contact">Liên hệ</a>
-                <a href="/dang-ky" style="color:#f5c518">📩 Đăng ký tập</a>
-            </nav>
+    <nav>
+    <a href="/#about">Giới thiệu</a>
+    <a href="/#news">Tin tức</a>
+    <a href="/#events">Lịch tập</a>
+    <a href="/#coaches">🎓 HLV</a>
+    <a href="/#boxing">🥊 Boxing</a>
+    <a href="/#kickboxing">🦵 Kickboxing</a>
+    <a href="/thanh-tich">🏆 Thành tích</a>
+    <a href="/#gallery">Thư viện</a>
+    <a href="/dang-ky" style="color:#f5c518">📩 Đăng ký</a>
+</nav>
 
             <a class="admin-link" asp-controller="Admin" asp-action="Index">🔐 Admin</a>
         </div>
@@ -61,6 +65,7 @@
     </footer>
 
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

@@ -9,6 +9,7 @@ namespace CLBVo.Controllers;
 public class RegistrationController : Controller
 {
     private readonly AppDbContext _db;
+
     public RegistrationController(AppDbContext db) => _db = db;
 
     [HttpGet("")]
@@ -42,9 +43,10 @@ public class RegistrationController : Controller
         model.Email = model.Email ?? "";
         model.Message = model.Message ?? "";
         model.PreferredTime = model.PreferredTime ?? "";
+        model.Experience = model.Experience ?? "";
         model.CreatedAt = DateTime.Now;
-        model.IsContacted = false;
-
+        model.Status = RegistrationStatus.New;
+        
         _db.Registrations.Add(model);
         await _db.SaveChangesAsync();
 

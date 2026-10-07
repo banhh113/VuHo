@@ -2,6 +2,7 @@
 @{
     ViewData["Title"] = "Quản lý thành viên";
     Layout = "_AdminLayout";
+    var catFilter = ViewBag.CategoryFilter as string;
 }
 
 <div class="admin-page-header">
@@ -17,11 +18,28 @@
     <div class="alert alert-success">@TempData["Success"]</div>
 }
 
+<!-- Filter tabs -->
+<div class="filter-tabs">
+    <a asp-action="Index" class="@(string.IsNullOrEmpty(catFilter) ? "active" : "")">
+        Tất cả (@ViewBag.CountAll)
+    </a>
+    <a asp-action="Index" asp-route-category="Boxing" class="@(catFilter == "Boxing" ? "active" : "")">
+        🥊 Boxing (@ViewBag.CountBoxing)
+    </a>
+    <a asp-action="Index" asp-route-category="Kickboxing" class="@(catFilter == "Kickboxing" ? "active" : "")">
+        🦵 Kickboxing (@ViewBag.CountKickboxing)
+    </a>
+    <a asp-action="Index" asp-route-category="HLV" class="@(catFilter == "HLV" ? "active" : "")">
+        🎓 HLV (@ViewBag.CountHLV)
+    </a>
+</div>
+
 <table class="admin-table">
     <thead>
         <tr>
             <th style="width:100px">Ảnh</th>
             <th>Họ tên</th>
+            <th style="width:140px">Nhóm</th>
             <th style="width:180px">Vai trò</th>
             <th>Mô tả</th>
             <th style="width:180px">Hành động</th>
@@ -31,13 +49,29 @@
         @if (!Model.Any())
         {
             <tr>
-                <td colspan="5" class="empty">
-                    Chưa có thành viên nào. Bấm "+ Thêm thành viên" để bắt đầu.
+                <td colspan="6" class="empty">
+                    Chưa có thành viên nào trong nhóm này.
                 </td>
             </tr>
         }
         @foreach (var m in Model)
         {
+            var catIcon = m.Category switch
+            {
+                "Boxing" => "🥊",
+                "Kickboxing" => "🦵",
+                "HLV" => "🎓",
+                _ => "📌"
+            };
+            var catColor = m.Category switch
+            {
+                "Boxing" => "#f5c518",
+                "Kickboxing" => "#60a5fa",
+                "HLV" => "#34d399",
+                _ => "#888"
+            };
+            var catLabel = m.Category ?? "Chưa phân loại";
+
             <tr>
                 <td>
                     @if (!string.IsNullOrEmpty(m.AvatarUrl))
@@ -52,6 +86,12 @@
                 </td>
                 <td><strong>@m.FullName</strong></td>
                 <td>
+                    <span class="status-badge"
+                          style="background:@(catColor)20;color:@catColor;border:1px solid @(catColor)60">
+                        @catIcon @catLabel
+                    </span>
+                </td>
+                <td>
                     <span style="color:#f5c518;font-weight:600;font-size:.85rem;letter-spacing:1px">
                         @m.Role
                     </span>
@@ -59,11 +99,9 @@
                 <td>
                     <small style="color:#a0a0a0;font-size:.85rem">
                         @{
-                            var description = m.Description ?? string.Empty;
+                            var desc = m.Description ?? "";
+                            @(desc.Length > 80 ? desc.Substring(0, 80) + "..." : desc)
                         }
-                        @(description.Length > 80
-                            ? description.Substring(0, 80) + "..."
-                            : description)
                     </small>
                 </td>
                 <td class="actions">

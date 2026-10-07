@@ -3231,3 +3231,447 @@ input::-webkit-credentials-auto-fill-button {
     white-space: pre-line;
     line-height: 1.7;
 }
+/* Member card bấm được — hover effect */
+.cards > a {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+.cards > a .member-card {
+    transition: all .4s;
+    cursor: pointer;
+}
+
+.cards > a:hover .member-card {
+    transform: translateY(-8px);
+    border-color: var(--gold);
+    box-shadow: var(--shadow-gold);
+}
+/* ============================================================
+   REGISTRATION STATUS BADGES
+   ============================================================ */
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: .72rem;
+    font-weight: 700;
+    letter-spacing: .3px;
+    white-space: nowrap;
+}
+
+.status-new {
+    background: rgba(59, 130, 246, 0.15);
+    color: #60a5fa;
+    border: 1px solid rgba(59, 130, 246, 0.4);
+}
+
+.status-contacting {
+    background: rgba(245, 197, 24, 0.15);
+    color: #f5c518;
+    border: 1px solid rgba(245, 197, 24, 0.4);
+}
+
+.status-confirmed {
+    background: rgba(16, 185, 129, 0.15);
+    color: #34d399;
+    border: 1px solid rgba(16, 185, 129, 0.4);
+}
+
+.status-joined {
+    background: rgba(139, 92, 246, 0.15);
+    color: #c084fc;
+    border: 1px solid rgba(139, 92, 246, 0.4);
+}
+
+.status-archived {
+    background: rgba(120, 120, 120, 0.15);
+    color: #888;
+    border: 1px solid rgba(120, 120, 120, 0.3);
+}
+
+.status-cancelled {
+    background: rgba(200, 16, 46, 0.15);
+    color: #e63946;
+    border: 1px solid rgba(200, 16, 46, 0.4);
+}
+
+.info-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.info-list li {
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    color: #ddd;
+    font-size: .92rem;
+}
+
+.info-list li:last-child {
+    border-bottom: none;
+}
+
+.info-list li strong {
+    color: #f5c518;
+    margin-right: 8px;
+}
+/* ============================================================
+   GALLERY LIGHTBOX
+   ============================================================ */
+
+a.gallery-item {
+    display: block;
+    cursor: zoom-in;
+    position: relative;
+    overflow: hidden;
+    border-radius: 10px;
+    text-decoration: none;
+}
+
+/* Icon kính lúp khi hover */
+a.gallery-item::before {
+    content: '🔍';
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 36px;
+    height: 36px;
+    background: rgba(245, 197, 24, 0.95);
+    color: #0a0a0a;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    font-size: 1rem;
+    opacity: 0;
+    transform: scale(0.8);
+    transition: opacity .3s, transform .3s;
+    z-index: 2;
+    pointer-events: none;
+}
+
+a.gallery-item:hover::before {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* Overlay tối khi hover */
+a.gallery-item::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.6), transparent 60%);
+    opacity: 0;
+    transition: opacity .3s;
+    pointer-events: none;
+}
+
+a.gallery-item:hover::after {
+    opacity: 1;
+}
+
+/* Ảnh bên trong */
+a.gallery-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform .5s;
+    display: block;
+}
+
+a.gallery-item:hover img {
+    transform: scale(1.08);
+}
+
+/* Ảnh trong card-image và avatar — bọc trong link glightbox */
+.card-image > a.glightbox {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.card-image > a.glightbox img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.avatar > a.glightbox {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.avatar > a.glightbox img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+/* ============================================================
+   TOURNAMENTS
+   ============================================================ */
+
+.tournaments-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 20px;
+}
+
+.tournament-card {
+    background: var(--black-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: all .3s;
+    text-decoration: none;
+    color: inherit;
+}
+
+.tournament-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--gold);
+    box-shadow: 0 12px 32px rgba(245, 197, 24, 0.2);
+}
+
+.tournament-card-img {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+}
+
+.tournament-card-body {
+    padding: 20px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.tournament-year {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--red), var(--red-dark));
+    color: var(--white);
+    padding: 4px 12px;
+    border-radius: 6px;
+    font-weight: 900;
+    font-size: .9rem;
+    letter-spacing: 1px;
+    align-self: flex-start;
+}
+
+.tournament-card-body h3 {
+    color: var(--white);
+    font-size: 1.15rem;
+    margin: 0;
+}
+
+.tournament-card-body p {
+    color: var(--gray);
+    font-size: .85rem;
+    margin: 0;
+}
+
+.tournament-medals {
+    display: flex;
+    gap: 12px;
+    margin-top: auto;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+    font-size: .85rem;
+    font-weight: 700;
+}
+
+.medal-gold { color: #f5c518; }
+.medal-silver { color: #c0c0c0; }
+.medal-bronze { color: #cd7f32; }
+
+.tournament-year-badge {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, var(--red), var(--red-dark));
+    border-radius: 12px;
+    display: grid;
+    place-items: center;
+    font-family: var(--font-head);
+    font-size: 1.6rem;
+    font-weight: 900;
+    color: var(--white);
+    flex-shrink: 0;
+    box-shadow: 0 8px 24px rgba(200, 16, 46, 0.3);
+}
+
+.results-table {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.result-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px 20px;
+    background: var(--black-card);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--gold);
+    border-radius: 10px;
+    transition: all .25s;
+}
+
+.result-row:hover {
+    border-left-color: var(--red);
+    transform: translateX(4px);
+    background: #161616;
+}
+
+.result-medal {
+    font-size: 2rem;
+    flex-shrink: 0;
+}
+
+.result-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.result-info strong {
+    color: var(--white);
+    font-size: 1rem;
+    display: block;
+}
+
+.result-category {
+    color: #a0a0a0;
+    font-size: .82rem;
+    margin-top: 2px;
+}
+
+.result-note {
+    color: #777;
+    font-size: .78rem;
+    font-style: italic;
+    margin-top: 2px;
+}
+
+.result-medal-label {
+    color: var(--gold);
+    font-weight: 700;
+    font-size: .82rem;
+    padding: 4px 10px;
+    border: 1px solid rgba(245, 197, 24, 0.4);
+    border-radius: 6px;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+@media (max-width: 640px) {
+    .tournament-card-body { padding: 16px; }
+    .result-row { padding: 12px 14px; gap: 10px; }
+    .result-medal { font-size: 1.5rem; }
+}
+/* Card thành viên bấm được */
+.cards > a {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+.cards > a .member-card {
+    transition: all .4s;
+    cursor: pointer;
+}
+
+.cards > a:hover .member-card {
+    transform: translateY(-8px);
+    border-color: var(--gold);
+    box-shadow: var(--shadow-gold);
+}
+
+/* Avatar bên trong — đảm bảo ảnh fill */
+.avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+/* ============================================================
+   TOP ACHIEVEMENTS — Trang chủ
+   ============================================================ */
+
+.top-achievements {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 16px;
+}
+
+.top-achievement-card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px 20px;
+    background: var(--black-card);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--gold);
+    border-radius: 10px;
+    transition: all .3s;
+}
+
+.top-achievement-card:hover {
+    border-left-color: var(--red);
+    transform: translateX(4px);
+    box-shadow: 0 8px 24px rgba(200, 16, 46, 0.2);
+}
+
+.top-achievement-medal {
+    font-size: 2rem;
+    flex-shrink: 0;
+}
+
+.top-achievement-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.top-achievement-info strong {
+    color: var(--white);
+    font-size: 1rem;
+    display: block;
+}
+
+.top-achievement-event {
+    color: #a0a0a0;
+    font-size: .82rem;
+    margin-top: 2px;
+}
+
+.top-achievement-category {
+    color: #777;
+    font-size: .78rem;
+    font-style: italic;
+}
+
+.top-achievement-medal-label {
+    color: var(--gold);
+    font-size: .72rem;
+    font-weight: 700;
+    padding: 4px 10px;
+    border: 1px solid rgba(245, 197, 24, 0.4);
+    border-radius: 6px;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+@media (max-width: 640px) {
+    .top-achievement-card {
+        padding: 12px 14px;
+        gap: 12px;
+    }
+    .top-achievement-medal { font-size: 1.5rem; }
+    .top-achievement-medal-label { font-size: .65rem; padding: 3px 8px; }
+}

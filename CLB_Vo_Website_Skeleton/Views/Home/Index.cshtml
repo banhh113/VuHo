@@ -69,7 +69,9 @@
                         <div class="card-image">
                             @if (!string.IsNullOrEmpty(post.ImageUrl))
                             {
-                                <img src="@post.ImageUrl" alt="@post.Title" />
+                                <a href="@post.ImageUrl" class="glightbox" data-gallery="posts" data-title="@post.Title">
+                                    <img src="@post.ImageUrl" alt="@post.Title" />
+                                </a>
                             }
                             else
                             {
@@ -125,12 +127,12 @@
     </div>
 </section>
 
-<!-- ==================== HLV ==================== -->
+<!-- ==================== HLV (đầu tiên) ==================== -->
 <section id="coaches" class="section section-dark reveal">
     <div class="container">
         <div class="section-header">
             <p class="eyebrow">Đội ngũ</p>
-            <h2>Huấn luyện viên</h2>
+            <h2>🎓 Huấn luyện viên</h2>
         </div>
         <div class="cards">
             @if (Model.Coaches.Any())
@@ -164,17 +166,17 @@
     </div>
 </section>
 
-<!-- ==================== VÕ SINH ==================== -->
-<section id="members" class="section reveal">
+<!-- ==================== BOXING (thứ hai) ==================== -->
+<section id="boxing" class="section reveal">
     <div class="container">
         <div class="section-header">
-            <p class="eyebrow">Học viên</p>
-            <h2>Võ sinh</h2>
+            <p class="eyebrow">Bộ môn</p>
+            <h2>🥊 Võ sinh Boxing</h2>
         </div>
         <div class="cards">
-            @if (Model.Students.Any())
+            @if (Model.BoxingMembers.Any())
             {
-                @foreach (var m in Model.Students)
+                @foreach (var m in Model.BoxingMembers)
                 {
                     <a asp-controller="Home" asp-action="MemberDetail" asp-route-id="@m.Id"
                        style="text-decoration:none;color:inherit">
@@ -197,12 +199,52 @@
             }
             else
             {
-                <p style="color:#666;grid-column:1/-1;text-align:center">Chưa có võ sinh nào.</p>
+                <p style="color:#666;grid-column:1/-1;text-align:center">Chưa có võ sinh Boxing.</p>
             }
         </div>
     </div>
 </section>
 
+<!-- ==================== KICKBOXING (thứ ba) ==================== -->
+<section id="kickboxing" class="section section-dark reveal">
+    <div class="container">
+        <div class="section-header">
+            <p class="eyebrow">Bộ môn</p>
+            <h2>🦵 Võ sinh Kickboxing</h2>
+        </div>
+        <div class="cards">
+            @if (Model.KickboxingMembers.Any())
+            {
+                @foreach (var m in Model.KickboxingMembers)
+                {
+                    <a asp-controller="Home" asp-action="MemberDetail" asp-route-id="@m.Id"
+                       style="text-decoration:none;color:inherit">
+                        <article class="member-card">
+                            <div class="avatar">
+                                @if (!string.IsNullOrEmpty(m.AvatarUrl))
+                                {
+                                    <img src="@m.AvatarUrl" alt="@m.FullName" />
+                                }
+                                else
+                                {
+                                    <span>ẢNH</span>
+                                }
+                            </div>
+                            <h3>@m.FullName</h3>
+                            <p>@m.Role</p>
+                        </article>
+                    </a>
+                }
+            }
+            else
+            {
+                <p style="color:#666;grid-column:1/-1;text-align:center">Chưa có võ sinh Kickboxing.</p>
+            }
+        </div>
+    </div>
+</section>
+
+<!-- ==================== GALLERY ==================== -->
 <section id="gallery" class="section reveal">
     <div class="container">
         <div class="section-header">
@@ -214,9 +256,13 @@
             {
                 @foreach (var img in Model.Gallery)
                 {
-                    <div class="gallery-item">
+                    <a href="@img.ImageUrl"
+                       class="gallery-item glightbox"
+                       data-gallery="clb-gallery"
+                       data-title="@img.Title"
+                       data-description="@img.Title">
                         <img src="@img.ImageUrl" alt="@img.Title" loading="lazy" />
-                    </div>
+                    </a>
                 }
             }
             else
@@ -253,5 +299,41 @@
                 <span>Giải đấu tham gia</span>
             </div>
         </div>
+
+        @if (Model.TopAchievements.Any())
+        {
+            <div style="margin-top:50px">
+                <h3 style="color:#fff;font-size:1.4rem;margin-bottom:20px">
+                    🌟 Thành tích tiêu biểu
+                </h3>
+                <div class="top-achievements">
+                    @foreach (var a in Model.TopAchievements)
+                    {
+                        var medalIcon = a.Medal.Contains("vàng", StringComparison.OrdinalIgnoreCase) || a.Medal.Contains("nhất", StringComparison.OrdinalIgnoreCase) || a.Medal.Contains("🥇") ? "🥇"
+                                      : a.Medal.Contains("bạc", StringComparison.OrdinalIgnoreCase) || a.Medal.Contains("nhì", StringComparison.OrdinalIgnoreCase) || a.Medal.Contains("🥈") ? "🥈"
+                                      : a.Medal.Contains("đồng", StringComparison.OrdinalIgnoreCase) || a.Medal.Contains("ba", StringComparison.OrdinalIgnoreCase) || a.Medal.Contains("🥉") ? "🥉" : "🏅";
+
+                        var tournamentName = a.Tournament?.Name ?? a.TournamentNameText ?? "Không rõ giải";
+                        var year = a.Tournament?.Year;
+
+                        <div class="top-achievement-card">
+                            <div class="top-achievement-medal">@medalIcon</div>
+                            <div class="top-achievement-info">
+                                <strong>@a.MemberName</strong>
+                                <div class="top-achievement-event">@tournamentName @(year.HasValue ? $"({year})" : "")</div>
+                                @if (!string.IsNullOrEmpty(a.Category))
+                                {
+                                    <div class="top-achievement-category">@a.Category</div>
+                                }
+                            </div>
+                            <div class="top-achievement-medal-label">@a.Medal</div>
+                        </div>
+                    }
+                </div>
+                <div style="text-align:center;margin-top:24px">
+                    <a href="/thanh-tich" class="btn btn-outline">Xem tất cả thành tích →</a>
+                </div>
+            </div>
+        }
     </div>
 </section>

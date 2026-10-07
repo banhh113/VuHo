@@ -1,0 +1,180 @@
+@model CLBVo.Models.Tournament
+@{
+    ViewData["Title"] = "Sửa giải đấu";
+    Layout = "_AdminLayout";
+}
+
+<div class="admin-page-header">
+    <div>
+        <h1>✏️ Sửa giải đấu</h1>
+        <p class="admin-subtitle">@Model.Name (@Model.Year)</p>
+    </div>
+    <a asp-action="Index" class="btn btn-secondary">← Quay lại</a>
+</div>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-error">@TempData["Error"]</div>
+}
+
+<div class="admin-two-col">
+    <!-- Cột trái: thông tin giải đấu -->
+    <div class="admin-panel">
+        <div class="panel-header">
+            <h2>📋 Thông tin giải đấu</h2>
+        </div>
+
+        <form asp-action="Edit" asp-route-id="@Model.Id" method="post" enctype="multipart/form-data" autocomplete="off">
+            @Html.AntiForgeryToken()
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="ImageUrl" />
+            <input type="hidden" asp-for="CreatedAt" />
+
+            <div class="form-group">
+                <label>Tên giải đấu *</label>
+                <input asp-for="Name" required maxlength="200" />
+            </div>
+
+            <div class="form-group">
+                <label>Năm *</label>
+                <input asp-for="Year" type="number" required min="1950" max="2100" />
+            </div>
+
+            <div class="form-group">
+                <label>Địa điểm</label>
+                <input asp-for="Location" maxlength="200" />
+            </div>
+
+            <div class="form-group">
+                <label>Ngày bắt đầu</label>
+                <input asp-for="StartDate" type="date" />
+            </div>
+
+            <div class="form-group">
+                <label>Ngày kết thúc</label>
+                <input asp-for="EndDate" type="date" />
+            </div>
+
+            <div class="form-group">
+                <label>Mô tả</label>
+                <textarea asp-for="Description" rows="4"></textarea>
+            </div>
+
+            @if (!string.IsNullOrEmpty(Model.ImageUrl))
+            {
+                <div class="form-group">
+                    <label>Ảnh hiện tại</label>
+                    <img src="@Model.ImageUrl" alt="@Model.Name"
+                         style="max-width:300px;border-radius:8px" />
+                </div>
+            }
+
+            <div class="form-group">
+                <label>Thay ảnh mới</label>
+                <input type="file" name="imageFile" accept="image/*" />
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn">💾 Cập nhật</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Cột phải: thành tích CLB -->
+    <div class="admin-panel">
+        <div class="panel-header">
+            <h2>🏅 Thành tích CLB (@Model.Results.Count)</h2>
+        </div>
+
+        @if (Model.Results.Any())
+        {
+            <ul class="panel-list" style="margin-bottom:20px">
+                @foreach (var r in Model.Results)
+                {
+                    var medalIcon = r.Medal.Contains("vàng", StringComparison.OrdinalIgnoreCase) || r.Medal.Contains("nhất", StringComparison.OrdinalIgnoreCase) || r.Medal.Contains("🥇") ? "🥇"
+                                  : r.Medal.Contains("bạc", StringComparison.OrdinalIgnoreCase) || r.Medal.Contains("nhì", StringComparison.OrdinalIgnoreCase) || r.Medal.Contains("🥈") ? "🥈"
+                                  : r.Medal.Contains("đồng", StringComparison.OrdinalIgnoreCase) || r.Medal.Contains("ba", StringComparison.OrdinalIgnoreCase) || r.Medal.Contains("🥉") ? "🥉" : "🏅";
+
+                    <li>
+                        <div style="font-size:1.4rem">@medalIcon</div>
+                        <div style="flex:1;min-width:0">
+                            <div class="list-title">@r.Medal</div>
+                            @if (!string.IsNullOrEmpty(r.Category))
+                            {
+                                <div class="list-meta">@r.Category</div>
+                            }
+                            @if (!string.IsNullOrEmpty(r.Note))
+                            {
+                                <div class="list-meta" style="font-style:italic">@r.Note</div>
+                            }
+                        </div>
+                        <form asp-action="DeleteResult" asp-route-id="@r.Id" method="post"
+                              onsubmit="return confirm('Xóa thành tích này?');">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn-sm btn-delete">
+                                <span class="icon">🗑️</span>
+                            </button>
+                        </form>
+                    </li>
+                }
+            </ul>
+        }
+        else
+        {
+            <p class="empty-state" style="margin-bottom:20px">
+                Giải này CLB không đạt thành tích nào. Bỏ trống cũng được.
+            </p>
+        }
+
+        <hr style="border-color:rgba(255,255,255,0.1);margin:20px 0" />
+
+        <h3 style="font-size:.9rem;color:#f5c518;margin-bottom:12px">
+            Thêm thành tích cho CLB
+        </h3>
+        <form asp-action="AddResult" asp-route-tournamentId="@Model.Id" method="post" autocomplete="off">
+            @Html.AntiForgeryToken()
+
+            <div class="form-group">
+                <label>Huy chương / Thành tích *</label>
+                <select name="medal" required>
+                    <option value="">-- Chọn --</option>
+                    <option value="🏆 Giải nhất toàn đoàn">🏆 Giải nhất toàn đoàn</option>
+                    <option value="🎖️ Giải nhì toàn đoàn">🎖️ Giải nhì toàn đoàn</option>
+                    <option value="🏅 Giải ba toàn đoàn">🏅 Giải ba toàn đoàn</option>
+                    <option value="🥇 Huy chương vàng tập thể">🥇 Huy chương vàng tập thể</option>
+                    <option value="🥈 Huy chương bạc tập thể">🥈 Huy chương bạc tập thể</option>
+                    <option value="🥉 Huy chương đồng tập thể">🥉 Huy chương đồng tập thể</option>
+                    <option value="📜 Giải khuyến khích">📜 Giải khuyến khích</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Hạng cân / Nội dung thi</label>
+                <input type="text" name="category" maxlength="100"
+                       placeholder="VD: Đối kháng nam, Quyền thuật..." />
+            </div>
+
+            <div class="form-group">
+                <label>Ghi chú</label>
+                <textarea name="note" rows="2" maxlength="500"
+                          placeholder="VD: Đội tuyển 10 VĐV, do HLV Trần Quang Vinh dẫn dắt..."></textarea>
+            </div>
+
+            <button type="submit" class="btn">+ Thêm thành tích CLB</button>
+        </form>
+
+        <div style="margin-top:20px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.08);
+                    font-size:.85rem;color:#a0a0a0;line-height:1.6">
+            💡 <strong style="color:#f5c518">Lưu ý:</strong>
+            Đây là thành tích <strong>chung của CLB</strong> (giải toàn đoàn, giải tập thể).
+            Để thêm thành tích <strong>cá nhân</strong> cho VĐV, vào
+            <a asp-controller="AdminMembers" asp-action="Index"
+               style="color:#f5c518;text-decoration:underline">Quản lý thành viên</a>
+            → bấm <strong>Sửa</strong> → thêm thành tích ở cột phải.
+        </div>
+    </div>
+</div>

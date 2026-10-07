@@ -1,0 +1,71 @@
+@model List<CLBVo.Models.Tournament>
+@{
+    ViewData["Title"] = "Quản lý giải đấu";
+    Layout = "_AdminLayout";
+}
+
+<div class="admin-page-header">
+    <div>
+        <h1>🏆 Quản lý giải đấu</h1>
+        <p class="admin-subtitle">Giải đấu và thành tích của CLB Vũ Hổ</p>
+    </div>
+    <a asp-action="Create" class="btn">+ Thêm giải đấu</a>
+</div>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
+
+<table class="admin-table">
+    <thead>
+        <tr>
+            <th style="width:80px">Năm</th>
+            <th>Tên giải đấu</th>
+            <th style="width:180px">Địa điểm</th>
+            <th style="width:180px">Huy chương</th>
+            <th style="width:180px">Hành động</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (!Model.Any())
+        {
+            <tr><td colspan="5" class="empty">Chưa có giải đấu nào.</td></tr>
+        }
+        @foreach (var t in Model)
+        {
+            var gold = t.Results.Count(r => r.Medal.Contains("vàng", StringComparison.OrdinalIgnoreCase) || r.Medal.Contains("nhất", StringComparison.OrdinalIgnoreCase) || r.Medal.Contains("🥇"));
+            var silver = t.Results.Count(r => r.Medal.Contains("bạc", StringComparison.OrdinalIgnoreCase) || r.Medal.Contains("nhì", StringComparison.OrdinalIgnoreCase) || r.Medal.Contains("🥈"));
+            var bronze = t.Results.Count(r => r.Medal.Contains("đồng", StringComparison.OrdinalIgnoreCase) || r.Medal.Contains("ba", StringComparison.OrdinalIgnoreCase) || r.Medal.Contains("🥉"));
+
+            <tr>
+                <td><span class="achievement-year">@t.Year</span></td>
+                <td><strong>@t.Name</strong></td>
+                <td><small style="color:#a0a0a0">@(string.IsNullOrEmpty(t.Location) ? "—" : t.Location)</small></td>
+                <td>
+                    <div class="tournament-medals" style="border-top:none;padding-top:0;margin:0">
+                        @if (gold > 0) { <span class="medal-gold">🥇 @gold</span> }
+                        @if (silver > 0) { <span class="medal-silver">🥈 @silver</span> }
+                        @if (bronze > 0) { <span class="medal-bronze">🥉 @bronze</span> }
+                        @if (gold + silver + bronze == 0)
+                        {
+                            <span style="color:#666;font-size:.8rem">—</span>
+                        }
+                    </div>
+                </td>
+                <td class="actions">
+                    <a asp-action="Edit" asp-route-id="@t.Id" class="btn-sm btn-edit">
+                        <span class="icon">✏️</span><span>Sửa</span>
+                    </a>
+                    <form asp-action="Delete" asp-route-id="@t.Id" method="post" style="display:inline"
+                          onsubmit="return confirm('Xóa giải đấu này và tất cả kết quả?');">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn-sm btn-delete">
+                            <span class="icon">🗑️</span><span>Xóa</span>
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

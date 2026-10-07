@@ -5,8 +5,9 @@ namespace CLBVo.ViewModels;
 public class HomeViewModel
 {
     public List<Post> Posts { get; set; } = new();
-    public List<Member> Coaches { get; set; } = new();      // ← HLV
-    public List<Member> Students { get; set; } = new();     // ← Võ sinh
+    public List<Member> BoxingMembers { get; set; } = new();
+    public List<Member> KickboxingMembers { get; set; } = new();
+    public List<Member> Coaches { get; set; } = new();
     public List<ClubEvent> Events { get; set; } = new();
     public List<GalleryImage> Gallery { get; set; } = new();
 
@@ -14,6 +15,8 @@ public class HomeViewModel
     public int SilverCount { get; set; }
     public int BronzeCount { get; set; }
     public int TournamentCount { get; set; }
+
+    public List<TournamentResult> TopAchievements { get; set; } = new();
 
     public ClubInfo? ClubInfo { get; set; }
 }

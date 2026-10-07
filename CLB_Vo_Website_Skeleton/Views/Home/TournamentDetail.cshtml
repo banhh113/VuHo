@@ -1,0 +1,93 @@
+@model CLBVo.Models.Tournament
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+<section class="section" style="padding-top:140px">
+    <div class="container" style="max-width:900px">
+        <a href="/thanh-tich" class="back-link">← Tất cả giải đấu</a>
+
+        <div style="display:flex;align-items:center;gap:20px;margin:30px 0 20px;flex-wrap:wrap">
+            <div class="tournament-year-badge">@Model.Year</div>
+            <div>
+                <p class="eyebrow">Giải đấu</p>
+                <h1 style="font-size:clamp(1.6rem,4vw,2.4rem);line-height:1.2;margin:0">
+                    @Model.Name
+                </h1>
+            </div>
+        </div>
+
+        @if (!string.IsNullOrEmpty(Model.Location))
+        {
+            <p style="color:#a0a0a0">📍 @Model.Location</p>
+        }
+
+        @if (Model.StartDate.HasValue)
+        {
+            <p style="color:#a0a0a0">
+                📅 @Model.StartDate.Value.ToString("dd/MM/yyyy")
+                @if (Model.EndDate.HasValue && Model.EndDate.Value.Date != Model.StartDate.Value.Date)
+                {
+                    <span> — @Model.EndDate.Value.ToString("dd/MM/yyyy")</span>
+                }
+            </p>
+        }
+
+        @if (!string.IsNullOrEmpty(Model.ImageUrl))
+        {
+            <img src="@Model.ImageUrl" alt="@Model.Name"
+                 style="width:100%;border-radius:12px;margin:24px 0;
+                        border:2px solid rgba(255,255,255,0.08)" />
+        }
+
+        @if (!string.IsNullOrEmpty(Model.Description))
+        {
+            <div style="color:#ddd;line-height:1.8;white-space:pre-line;margin:24px 0">
+                @Model.Description
+            </div>
+        }
+
+        <h2 style="margin:40px 0 20px;color:#fff">🏅 Thành tích của VĐV</h2>
+
+        @if (Model.Results.Any())
+        {
+            <div class="results-table">
+                @foreach (var r in Model.Results)
+                {
+                    var medalIcon = r.Medal.Contains("vàng", StringComparison.OrdinalIgnoreCase) ||
+                                    r.Medal.Contains("nhất", StringComparison.OrdinalIgnoreCase) ||
+                                    r.Medal.Contains("🥇") ? "🥇"
+                                  : r.Medal.Contains("bạc", StringComparison.OrdinalIgnoreCase) ||
+                                    r.Medal.Contains("nhì", StringComparison.OrdinalIgnoreCase) ||
+                                    r.Medal.Contains("🥈") ? "🥈"
+                                  : r.Medal.Contains("đồng", StringComparison.OrdinalIgnoreCase) ||
+                                    r.Medal.Contains("ba", StringComparison.OrdinalIgnoreCase) ||
+                                    r.Medal.Contains("🥉") ? "🥉" : "🏅";
+
+                    <div class="result-row">
+                        <div class="result-medal">@medalIcon</div>
+                        <div class="result-info">
+                            <strong>@r.MemberName</strong>
+                            @if (!string.IsNullOrEmpty(r.Category))
+                            {
+                                <div class="result-category">@r.Category</div>
+                            }
+                            @if (!string.IsNullOrEmpty(r.Note))
+                            {
+                                <div class="result-note">@r.Note</div>
+                            }
+                        </div>
+                        <div class="result-medal-label">@r.Medal</div>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <p style="color:#666;font-style:italic">Chưa có thành tích nào được ghi nhận.</p>
+        }
+
+        <hr style="border-color:rgba(255,255,255,0.1);margin:50px 0 30px" />
+        <a href="/thanh-tich" class="btn btn-outline">← Về danh sách</a>
+    </div>
+</section>
