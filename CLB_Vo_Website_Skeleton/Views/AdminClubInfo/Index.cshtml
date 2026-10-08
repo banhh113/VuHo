@@ -24,6 +24,7 @@
     @Html.AntiForgeryToken()
     <input type="hidden" asp-for="Id" />
     <input type="hidden" asp-for="ImageUrl" />
+    <input type="hidden" asp-for="Address" />
     <div asp-validation-summary="ModelOnly" class="alert alert-error"></div>
 
     <div class="form-group">
@@ -55,21 +56,12 @@
         <small>Chấp nhận jpg, png, gif, webp. Tối đa 5MB. Ảnh hiển thị ở phần "Giới thiệu CLB" trên trang chủ.</small>
     </div>
 
-   <div class="form-group">
-    <label>Địa chỉ</label>
-    <textarea asp-for="Address" rows="3"
-              placeholder="VD: Cơ sở 1: Ngã 3 Thái Lan, KP. Long Đức, Phường Tam Phước, TP. Biên Hòa, Đồng Nai&#10;Cơ sở 2: Số 40 Nguyễn Hoàng, KP. Long Đức, Phường Tam Phước, TP. Biên Hòa, Đồng Nai"></textarea>
-    <small>Mỗi dòng 1 địa chỉ (nếu CLB có nhiều cơ sở).</small>
-</div>
-
-
-
     <div class="form-group">
-    <label>Số điện thoại</label>
-    <textarea asp-for="Phone" rows="2"
-              placeholder="VD: 0948 660 111 (Thầy Vinh)&#10;0971 373 536 (Thầy Huấn)"></textarea>
-    <small>Mỗi dòng 1 số (nếu có nhiều người liên hệ).</small>
-</div>
+        <label>Số điện thoại</label>
+        <textarea asp-for="Phone" rows="2"
+                  placeholder="VD: 0948 660 111 (Thầy Vinh)&#10;0971 373 536 (Thầy Huấn)"></textarea>
+        <small>Mỗi dòng 1 số (nếu có nhiều người liên hệ).</small>
+    </div>
 
     <div class="form-group">
         <label>Email</label>
@@ -77,9 +69,28 @@
                placeholder="VD: lienhe@vuhoclb.vn" />
     </div>
 
+    <div class="form-group">
+        <label>Giờ mở cửa</label>
+        <input asp-for="OpeningHours" maxlength="200"
+               placeholder="VD: Thứ 2 - Chủ nhật: 6h00 - 21h00" />
+        <small>Thông tin giờ mở cửa chung của CLB.</small>
+    </div>
 
     <div class="form-actions">
         <button type="submit" class="btn">💾 Lưu thông tin</button>
         <a asp-controller="Admin" asp-action="Index" class="btn btn-secondary">Hủy</a>
     </div>
 </form>
+
+<div class="admin-panel" style="max-width:860px;margin-top:24px;
+     background:rgba(230,57,70,0.06);border-left:3px solid var(--red)">
+    <p style="color:#a0a0a0;font-size:.88rem;line-height:1.7">
+        💡 <strong style="color:var(--gold)">Lưu ý:</strong>
+        Địa chỉ các cơ sở tập luyện đã được quản lý riêng tại
+        <a asp-controller="AdminLocations" asp-action="Index"
+           style="color:var(--gold);text-decoration:underline;font-weight:700">
+            Quản lý cơ sở
+        </a>
+        để có thể thêm nhiều cơ sở + link Google Maps cho từng cơ sở.
+    </p>
+</div>

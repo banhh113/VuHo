@@ -8,9 +8,7 @@
         <div class="register-box">
             <div class="register-header">
                 <img src="~/images/logo.png" alt="CLB Vũ Hổ" class="register-logo" />
-                <p class="section-eyebrow" style="justify-content:center">
-                    <span class="eyebrow-slash">/</span> ĐĂNG KÝ TẬP THỬ
-                </p>
+                <p class="section-eyebrow" style="justify-content:center">ĐĂNG KÝ TẬP THỬ</p>
                 <h1 class="section-title" style="font-size:clamp(1.6rem,4vw,2.2rem)">Tham gia CLB Vũ Hổ</h1>
                 <p class="register-desc">
                     Để lại thông tin, chúng tôi sẽ liên hệ tư vấn và sắp xếp buổi tập thử miễn phí cho bạn.
@@ -20,6 +18,13 @@
             <form asp-action="Index" method="post" class="register-form" autocomplete="off">
                 @Html.AntiForgeryToken()
                 <div asp-validation-summary="ModelOnly" class="alert alert-error"></div>
+
+                <!-- HONEYPOT — field ẩn, bot sẽ tự fill -->
+                <div class="hp-field" aria-hidden="true">
+                    <label for="website">Website</label>
+                    <input type="text" id="website" name="website" tabindex="-1"
+                           autocomplete="off" value="" />
+                </div>
 
                 <div class="form-group">
                     <label>Họ tên *</label>
@@ -65,8 +70,49 @@
                               placeholder="VD: Tôi muốn tập thử Boxing, mong CLB tư vấn..."></textarea>
                 </div>
 
+                <!-- CAPTCHA — xác nhận không phải bot -->
+                <div class="form-group captcha-group">
+                    <label>Xác nhận không phải bot *</label>
+                    <div class="captcha-wrap">
+                        <div class="captcha-question" aria-live="polite">
+                            <span class="captcha-expr">@ViewBag.CaptchaExpression</span>
+                            <span class="captcha-eq">=</span>
+                            <span class="captcha-qmark">?</span>
+                        </div>
+
+                        <input type="text"
+                               name="captchaAnswer"
+                               id="captchaAnswer"
+                               class="captcha-input"
+                               inputmode="numeric"
+                               pattern="-?[0-9]*"
+                               maxlength="4"
+                               autocomplete="off"
+                               required
+                               placeholder="Kết quả" />
+
+                        <button type="button"
+                                class="captcha-reload"
+                                id="captchaReload"
+                                title="Đổi phép tính khác"
+                                aria-label="Đổi phép tính khác">
+                            <svg class="ico" viewBox="0 0 24 24" style="width:18px;height:18px">
+                                <polyline points="23 4 23 10 17 10"/>
+                                <polyline points="1 20 1 14 7 14"/>
+                                <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10"/>
+                                <path d="M20.49 15a9 9 0 0 1-14.85 3.36L1 14"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <small>Giải phép tính đơn giản để xác nhận bạn là người thật.</small>
+                </div>
+
                 <button type="submit" class="btn btn-primary btn-block">
-                    📩 Gửi đăng ký
+                    <svg class="ico ico-sm" viewBox="0 0 24 24">
+                        <line x1="22" y1="2" x2="11" y2="13"/>
+                        <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                    </svg>
+                    Gửi đăng ký
                 </button>
 
                 <p class="register-note">
@@ -76,3 +122,48 @@
         </div>
     </div>
 </section>
+
+@section Scripts {
+    <script>
+        (function () {
+            const reloadBtn = document.getElementById('captchaReload');
+            const exprEl = document.querySelector('.captcha-expr');
+            const input = document.getElementById('captchaAnswer');
+
+            if (!reloadBtn || !exprEl) return;
+
+            reloadBtn.addEventListener('click', async () => {
+                reloadBtn.disabled = true;
+                reloadBtn.style.transform = 'rotate(360deg)';
+
+                try {
+                    const res = await fetch('/dang-ky/captcha', {
+                        method: 'GET',
+                        cache: 'no-store',
+                        headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                    });
+
+                    if (!res.ok) throw new Error('HTTP ' + res.status);
+
+                    const data = await res.json();
+
+                    if (data && data.expr) {
+                        exprEl.textContent = data.expr;
+                        if (input) {
+                            input.value = '';
+                            input.focus();
+                        }
+                    }
+                } catch (err) {
+                    console.warn('Không thể tải captcha mới, đang tải lại trang...', err);
+                    location.reload();
+                } finally {
+                    setTimeout(() => {
+                        reloadBtn.disabled = false;
+                        reloadBtn.style.transform = '';
+                    }, 350);
+                }
+            });
+        })();
+    </script>
+}

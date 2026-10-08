@@ -3,6 +3,50 @@
 @{
     ViewData["Title"] = "Chi tiết đăng ký";
     Layout = "_AdminLayout";
+
+    // Tính countdown
+    int? daysLeft = null;
+    string trialClass = "trial-none";
+    string trialText = "";
+    string trialSubtext = "";
+
+    if (Model.TrialDate.HasValue)
+    {
+        var today = DateTime.Today;
+        var trialDate = Model.TrialDate.Value.Date;
+        daysLeft = (trialDate - today).Days;
+
+        if (daysLeft < 0)
+        {
+            trialClass = "trial-past";
+            trialText = "Đã qua " + Math.Abs(daysLeft.Value) + " ngày";
+            trialSubtext = "Ngày tập thử đã qua — kiểm tra kết quả";
+        }
+        else if (daysLeft == 0)
+        {
+            trialClass = "trial-today";
+            trialText = "Hôm nay!";
+            trialSubtext = "Khách sẽ đến tập thử hôm nay";
+        }
+        else if (daysLeft <= 2)
+        {
+            trialClass = "trial-urgent";
+            trialText = "Còn " + daysLeft + " ngày";
+            trialSubtext = "Sắp tới — cần xác nhận lại với khách";
+        }
+        else if (daysLeft <= 7)
+        {
+            trialClass = "trial-soon";
+            trialText = "Còn " + daysLeft + " ngày";
+            trialSubtext = "Trong tuần này";
+        }
+        else
+        {
+            trialClass = "trial-future";
+            trialText = "Còn " + daysLeft + " ngày";
+            trialSubtext = "Đã lên lịch";
+        }
+    }
 }
 
 <div class="admin-page-header">
@@ -17,6 +61,37 @@
 {
     <div class="alert alert-success">@TempData["Success"]</div>
 }
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-error">@TempData["Error"]</div>
+}
+
+<!-- ==================== TRIAL DATE BANNER ==================== -->
+@if (Model.TrialDate.HasValue)
+{
+    <div class="trial-banner @trialClass">
+        <div class="trial-banner-icon">
+            <svg class="ico" viewBox="0 0 24 24" style="width:28px;height:28px">
+                <rect x="3" y="4" width="18" height="18" rx="2"/>
+                <line x1="16" y1="2" x2="16" y2="6"/>
+                <line x1="8" y1="2" x2="8" y2="6"/>
+                <line x1="3" y1="10" x2="21" y2="10"/>
+                <path d="m9 16 2 2 4-4"/>
+            </svg>
+        </div>
+        <div class="trial-banner-info">
+            <span class="trial-banner-label">Ngày tập thử dự kiến</span>
+            <strong class="trial-banner-date">
+                @Model.TrialDate.Value.ToString("dddd, dd/MM/yyyy",
+                    new System.Globalization.CultureInfo("vi-VN"))
+            </strong>
+            <span class="trial-banner-sub">@trialSubtext</span>
+        </div>
+        <div class="trial-banner-countdown">
+            <strong>@trialText</strong>
+        </div>
+    </div>
+}
 
 <div class="admin-two-col">
     <!-- Thông tin khách -->
@@ -26,10 +101,10 @@
         </div>
         <ul class="info-list">
             <li><strong>Họ tên:</strong> @Model.FullName</li>
-            <li><strong>SĐT:</strong> <a href="tel:@Model.Phone" style="color:#f5c518">@Model.Phone</a></li>
+            <li><strong>SĐT:</strong> <a href="tel:@Model.Phone" style="color:var(--gold)">@Model.Phone</a></li>
             @if (!string.IsNullOrEmpty(Model.Email))
             {
-                <li><strong>Email:</strong> <a href="mailto:@Model.Email" style="color:#f5c518">@Model.Email</a></li>
+                <li><strong>Email:</strong> <a href="mailto:@Model.Email" style="color:var(--gold)">@Model.Email</a></li>
             }
             @if (Model.Age.HasValue)
             {
@@ -85,9 +160,10 @@
             </div>
 
             <div class="form-group">
-                <label>Ngày tập thử dự kiến (nếu có)</label>
-                <input type="date" name="trialDate"
+                <label>Ngày tập thử dự kiến</label>
+                <input type="date" name="trialDate" id="trialDateInput"
                        value="@(Model.TrialDate?.ToString("yyyy-MM-dd"))" />
+                <small>Để trống nếu chưa hẹn ngày tập thử.</small>
             </div>
 
             <button type="submit" class="btn">💾 Cập nhật</button>
@@ -95,7 +171,77 @@
     </div>
 </div>
 
-<!-- Ghi chú nội bộ -->
+<!-- ==================== TRIAL DATE QUICK ACTIONS ==================== -->
+<div class="admin-panel" style="margin-top:20px">
+    <div class="panel-header">
+        <h2>📅 Đặt nhanh ngày tập thử</h2>
+        <span class="admin-subtitle" style="font-size:.8rem">
+            Bấm để chọn ngày và lưu ngay
+        </span>
+    </div>
+
+    <form asp-action="SaveTrialDate" asp-route-id="@Model.Id" method="post" id="trialDateForm">
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="trialDate" id="trialDateHidden"
+               value="@(Model.TrialDate?.ToString("yyyy-MM-dd"))" />
+
+        <div class="trial-quick-actions">
+            <button type="button" class="trial-quick-btn" data-days="0">
+                <svg class="ico ico-sm" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="10"/>
+                    <polyline points="12 6 12 12 16 14"/>
+                </svg>
+                Hôm nay
+            </button>
+            <button type="button" class="trial-quick-btn" data-days="1">
+                <svg class="ico ico-sm" viewBox="0 0 24 24">
+                    <polyline points="9 18 15 12 9 6"/>
+                </svg>
+                Ngày mai
+            </button>
+            <button type="button" class="trial-quick-btn" data-days="2">
+                <svg class="ico ico-sm" viewBox="0 0 24 24">
+                    <polyline points="13 17 18 12 13 7"/>
+                    <polyline points="6 17 11 12 6 7"/>
+                </svg>
+                +2 ngày
+            </button>
+            <button type="button" class="trial-quick-btn" data-days="3">
+                <svg class="ico ico-sm" viewBox="0 0 24 24">
+                    <polyline points="13 17 18 12 13 7"/>
+                    <polyline points="6 17 11 12 6 7"/>
+                </svg>
+                +3 ngày
+            </button>
+            <button type="button" class="trial-quick-btn" data-days="7">
+                <svg class="ico ico-sm" viewBox="0 0 24 24">
+                    <rect x="3" y="4" width="18" height="18" rx="2"/>
+                    <line x1="3" y1="10" x2="21" y2="10"/>
+                </svg>
+                Tuần sau
+            </button>
+            <button type="button" class="trial-quick-btn trial-quick-clear" data-days="clear">
+                <svg class="ico ico-sm" viewBox="0 0 24 24">
+                    <line x1="18" y1="6" x2="6" y2="18"/>
+                    <line x1="6" y1="6" x2="18" y2="18"/>
+                </svg>
+                Xóa
+            </button>
+        </div>
+
+        <div class="form-group" style="margin-top:16px;max-width:280px">
+            <label>Hoặc chọn ngày tùy chỉnh</label>
+            <input type="date" id="trialCustomDate"
+                   value="@(Model.TrialDate?.ToString("yyyy-MM-dd"))" />
+        </div>
+
+        <button type="submit" class="btn" style="margin-top:12px">
+            💾 Lưu ngày tập thử
+        </button>
+    </form>
+</div>
+
+<!-- ==================== GHI CHÚ NỘI BỘ ==================== -->
 <div class="admin-panel" style="margin-top:20px">
     <div class="panel-header">
         <h2>📝 Ghi chú nội bộ</h2>
@@ -109,10 +255,14 @@
         <button type="submit" class="btn">💾 Lưu ghi chú</button>
     </form>
 
-    @if (Model.ContactedAt.HasValue || Model.ConfirmedAt.HasValue)
+    @if (Model.ContactedAt.HasValue || Model.ConfirmedAt.HasValue || Model.UpdatedAt.HasValue)
     {
         <div style="margin-top:20px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.08);
-                    font-size:.85rem;color:#a0a0a0">
+                    font-size:.85rem;color:#a0a0a0;line-height:1.8">
+            <strong style="color:var(--gold);display:block;margin-bottom:8px;font-size:.8rem;
+                          letter-spacing:1px;text-transform:uppercase">
+                Lịch sử cập nhật
+            </strong>
             @if (Model.ContactedAt.HasValue)
             {
                 <div>📞 Liên hệ lần đầu: @Model.ContactedAt.Value.ToString("dd/MM/yyyy HH:mm")</div>
@@ -121,6 +271,10 @@
             {
                 <div>✅ Xác nhận tham gia: @Model.ConfirmedAt.Value.ToString("dd/MM/yyyy HH:mm")</div>
             }
+            @if (Model.TrialDate.HasValue)
+            {
+                <div>📅 Ngày tập thử: @Model.TrialDate.Value.ToString("dd/MM/yyyy")</div>
+            }
             @if (Model.UpdatedAt.HasValue)
             {
                 <div>🔄 Cập nhật cuối: @Model.UpdatedAt.Value.ToString("dd/MM/yyyy HH:mm")</div>
@@ -128,3 +282,52 @@
         </div>
     }
 </div>
+
+@section Scripts {
+    <script>
+        (function () {
+            const form = document.getElementById('trialDateForm');
+            const hidden = document.getElementById('trialDateHidden');
+            const customInput = document.getElementById('trialCustomDate');
+            const syncInput = document.getElementById('trialDateInput');
+
+            if (!form || !hidden || !customInput) return;
+
+            // Format date to yyyy-MM-dd
+            function toISO(date) {
+                const y = date.getFullYear();
+                const m = String(date.getMonth() + 1).padStart(2, '0');
+                const d = String(date.getDate()).padStart(2, '0');
+                return `${y}-${m}-${d}`;
+            }
+
+            // Quick action buttons
+            document.querySelectorAll('.trial-quick-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const days = btn.dataset.days;
+
+                    if (days === 'clear') {
+                        hidden.value = '';
+                        customInput.value = '';
+                        if (syncInput) syncInput.value = '';
+                    } else {
+                        const d = new Date();
+                        d.setDate(d.getDate() + parseInt(days, 10));
+                        const iso = toISO(d);
+                        hidden.value = iso;
+                        customInput.value = iso;
+                        if (syncInput) syncInput.value = iso;
+                    }
+
+                    form.submit();
+                });
+            });
+
+            // Custom date change
+            customInput.addEventListener('change', () => {
+                hidden.value = customInput.value;
+                if (syncInput) syncInput.value = customInput.value;
+            });
+        })();
+    </script>
+}

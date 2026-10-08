@@ -62,6 +62,7 @@ public class AdminRegistrationsController : Controller
         return View(reg);
     }
 
+    // ==================== UPDATE STATUS ====================
     [HttpPost("update-status/{id}")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> UpdateStatus(int id, RegistrationStatus status, DateTime? trialDate)
@@ -76,9 +77,12 @@ public class AdminRegistrationsController : Controller
             reg.ContactedAt = DateTime.Now;
 
         if (status == RegistrationStatus.Confirmed)
-        {
             reg.ConfirmedAt = DateTime.Now;
-            if (trialDate.HasValue) reg.TrialDate = trialDate;
+
+        // ⭐ Luôn cập nhật TrialDate nếu admin có nhập (không phụ thuộc status)
+        if (trialDate.HasValue)
+        {
+            reg.TrialDate = trialDate;
         }
 
         await _db.SaveChangesAsync();
@@ -86,6 +90,27 @@ public class AdminRegistrationsController : Controller
         return RedirectToAction(nameof(Detail), new { id });
     }
 
+    // ==================== SAVE TRIAL DATE (quick actions) ====================
+    [HttpPost("save-trial-date/{id}")]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> SaveTrialDate(int id, DateTime? trialDate)
+    {
+        var reg = await _db.Registrations.FindAsync(id);
+        if (reg == null) return NotFound();
+
+        reg.TrialDate = trialDate;
+        reg.UpdatedAt = DateTime.Now;
+
+        await _db.SaveChangesAsync();
+
+        TempData["Success"] = trialDate.HasValue
+            ? $"Đã lưu ngày tập thử: {trialDate.Value:dd/MM/yyyy}"
+            : "Đã xóa ngày tập thử.";
+
+        return RedirectToAction(nameof(Detail), new { id });
+    }
+
+    // ==================== SAVE NOTE ====================
     [HttpPost("save-note/{id}")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> SaveNote(int id, string? adminNote, DateTime? trialDate)
@@ -102,6 +127,7 @@ public class AdminRegistrationsController : Controller
         return RedirectToAction(nameof(Detail), new { id });
     }
 
+    // ==================== DELETE ====================
     [HttpPost("delete/{id}")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Delete(int id)

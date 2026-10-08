@@ -1,0 +1,67 @@
+@model CLBVo.Models.SocialLink
+@{
+    ViewData["Title"] = "Thêm liên kết MXH";
+    Layout = "_AdminLayout";
+
+    var platformOptions = new (string Key, string Label)[]
+    {
+        ("facebook", "Facebook"),
+        ("zalo", "Zalo"),
+        ("youtube", "YouTube"),
+        ("tiktok", "TikTok"),
+        ("instagram", "Instagram")
+    };
+}
+
+<div class="admin-page-header">
+    <h1>+ Thêm liên kết MXH</h1>
+    <a asp-action="Index" class="btn btn-secondary">← Quay lại</a>
+</div>
+
+<form asp-action="Create" method="post" class="admin-form" autocomplete="off">
+    @Html.AntiForgeryToken()
+    <div asp-validation-summary="ModelOnly" class="alert alert-error"></div>
+
+    <div class="form-group">
+        <label>Nền tảng *</label>
+        <select asp-for="Platform" required>
+            <option value="">-- Chọn nền tảng --</option>
+            @foreach (var opt in platformOptions)
+            {
+                <option value="@opt.Key">@opt.Label</option>
+            }
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label>URL *</label>
+        <input asp-for="Url" required maxlength="500"
+               placeholder="VD: https://facebook.com/clbvoho" />
+        <small>Dán link đầy đủ (bắt đầu bằng https://).</small>
+    </div>
+
+    <div class="form-group">
+        <label>Tên hiển thị (tooltip)</label>
+        <input asp-for="DisplayName" maxlength="100"
+               placeholder="VD: Facebook CLB Vũ Hổ" />
+        <small>Hiện khi rê chuột vào icon trên footer. Có thể để trống.</small>
+    </div>
+
+    <div class="form-group">
+        <label>Thứ tự hiển thị</label>
+        <input asp-for="SortOrder" type="number" min="0" value="0" />
+        <small>Số nhỏ hiển thị trước.</small>
+    </div>
+
+    <div class="form-group">
+        <label class="checkbox-label">
+            <input asp-for="IsActive" type="checkbox" checked />
+            Hiển thị trên footer
+        </label>
+    </div>
+
+    <div class="form-actions">
+        <button type="submit" class="btn">💾 Lưu</button>
+        <a asp-action="Index" class="btn btn-secondary">Hủy</a>
+    </div>
+</form>

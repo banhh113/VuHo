@@ -1,0 +1,103 @@
+@model List<CLBVo.Models.SocialLink>
+@{
+    ViewData["Title"] = "Quản lý mạng xã hội";
+    Layout = "_AdminLayout";
+
+    string PlatformLabel(string p) => p switch
+    {
+        "facebook" => "Facebook",
+        "zalo" => "Zalo",
+        "youtube" => "YouTube",
+        "tiktok" => "TikTok",
+        "instagram" => "Instagram",
+        _ => p
+    };
+}
+
+<div class="admin-page-header">
+    <div>
+        <h1>🔗 Quản lý mạng xã hội</h1>
+        <p class="admin-subtitle">Các liên kết MXH hiển thị ở footer website</p>
+    </div>
+    <a asp-action="Create" class="btn">+ Thêm liên kết</a>
+</div>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
+
+<table class="admin-table">
+    <thead>
+        <tr>
+            <th style="width:60px">Thứ tự</th>
+            <th style="width:80px">Icon</th>
+            <th style="width:140px">Nền tảng</th>
+            <th>URL</th>
+            <th style="width:140px">Tên hiển thị</th>
+            <th style="width:100px">Trạng thái</th>
+            <th style="width:180px">Hành động</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (!Model.Any())
+        {
+            <tr><td colspan="7" class="empty">Chưa có liên kết nào. Bấm "+ Thêm liên kết" để bắt đầu.</td></tr>
+        }
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td style="text-align:center">@item.SortOrder</td>
+                <td style="text-align:center">
+                    <span style="display:inline-flex;width:38px;height:38px;align-items:center;justify-content:center;
+                                 background:rgba(230,57,70,0.1);border:1px solid rgba(230,57,70,0.35);
+                                 border-radius:50%;color:var(--red);font-size:1.1rem">
+                        @switch (item.Platform)
+                        {
+                            case "facebook": <text>f</text>; break;
+                            case "zalo": <text>Z</text>; break;
+                            case "youtube": <text>▶</text>; break;
+                            case "tiktok": <text>♪</text>; break;
+                            case "instagram": <text>◉</text>; break;
+                            default: <text>🌐</text>; break;
+                        }
+                    </span>
+                </td>
+                <td>
+                    <span class="status-badge status-new">@PlatformLabel(item.Platform)</span>
+                </td>
+                <td>
+                    <a href="@item.Url" target="_blank" rel="noopener"
+                       style="color:var(--gold);font-size:.85rem;word-break:break-all">
+                        @item.Url
+                    </a>
+                </td>
+                <td>
+                    <small style="color:#a0a0a0">@(item.DisplayName ?? "—")</small>
+                </td>
+                <td>
+                    @if (item.IsActive)
+                    {
+                        <span style="color:#10b981;font-weight:700">✓ Hiện</span>
+                    }
+                    else
+                    {
+                        <span style="color:#666">✗ Ẩn</span>
+                    }
+                </td>
+                <td class="actions">
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn-sm btn-edit">
+                        <span class="icon">✏️</span><span>Sửa</span>
+                    </a>
+                    <form asp-action="Delete" asp-route-id="@item.Id" method="post" style="display:inline"
+                          onsubmit="return confirm('Xoá liên kết này?');">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn-sm btn-delete">
+                            <span class="icon">🗑️</span><span>Xoá</span>
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

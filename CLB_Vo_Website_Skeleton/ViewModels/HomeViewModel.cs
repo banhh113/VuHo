@@ -19,4 +19,8 @@ public class HomeViewModel
     public List<TournamentResult> TopAchievements { get; set; } = new();
 
     public ClubInfo? ClubInfo { get; set; }
+
+    // ⭐ Data cho section "Lịch tập" — động từ admin
+    public List<TimeSlot> TimeSlots { get; set; } = new();
+    public List<ClubLocation> ClubLocations { get; set; } = new();
 }

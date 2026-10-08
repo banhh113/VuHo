@@ -1,0 +1,63 @@
+@model CLBVo.Models.SocialLink
+@{
+    ViewData["Title"] = "Sửa liên kết MXH";
+    Layout = "_AdminLayout";
+
+    var platformOptions = new (string Key, string Label)[]
+    {
+        ("facebook", "Facebook"),
+        ("zalo", "Zalo"),
+        ("youtube", "YouTube"),
+        ("tiktok", "TikTok"),
+        ("instagram", "Instagram")
+    };
+}
+
+<div class="admin-page-header">
+    <h1>✏️ Sửa liên kết MXH</h1>
+    <a asp-action="Index" class="btn btn-secondary">← Quay lại</a>
+</div>
+
+<form asp-action="Edit" asp-route-id="@Model.Id" method="post" class="admin-form" autocomplete="off">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="Id" />
+    <div asp-validation-summary="ModelOnly" class="alert alert-error"></div>
+
+    <div class="form-group">
+        <label>Nền tảng *</label>
+        <select asp-for="Platform" required>
+            <option value="">-- Chọn nền tảng --</option>
+            @foreach (var opt in platformOptions)
+            {
+                <option value="@opt.Key">@opt.Label</option>
+            }
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label>URL *</label>
+        <input asp-for="Url" required maxlength="500" />
+    </div>
+
+    <div class="form-group">
+        <label>Tên hiển thị (tooltip)</label>
+        <input asp-for="DisplayName" maxlength="100" />
+    </div>
+
+    <div class="form-group">
+        <label>Thứ tự hiển thị</label>
+        <input asp-for="SortOrder" type="number" min="0" />
+    </div>
+
+    <div class="form-group">
+        <label class="checkbox-label">
+            <input asp-for="IsActive" type="checkbox" />
+            Hiển thị trên footer
+        </label>
+    </div>
+
+    <div class="form-actions">
+        <button type="submit" class="btn">💾 Cập nhật</button>
+        <a asp-action="Index" class="btn btn-secondary">Hủy</a>
+    </div>
+</form>

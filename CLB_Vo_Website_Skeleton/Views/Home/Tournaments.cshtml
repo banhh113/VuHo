@@ -8,25 +8,37 @@
         <a href="/" class="back-link">← Về trang chủ</a>
 
         <div class="section-header" style="margin-top:30px">
-            <p class="section-eyebrow"><span class="eyebrow-slash">/</span> THÀNH TÍCH</p>
+            <p class="section-eyebrow">THÀNH TÍCH</p>
             <h1 class="section-title" style="font-size:clamp(2rem,4vw,3rem)">Dấu ấn của CLB Vũ Hổ</h1>
         </div>
 
         <div class="stats" style="margin-bottom:50px">
             <div>
-                <strong>🥇 @Model.GoldCount</strong>
+                <strong>
+                    <svg class="ico medal-gold" viewBox="0 0 24 24"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg>
+                    @Model.GoldCount
+                </strong>
                 <span>Huy chương vàng</span>
             </div>
             <div>
-                <strong>🥈 @Model.SilverCount</strong>
+                <strong>
+                    <svg class="ico medal-silver" viewBox="0 0 24 24"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg>
+                    @Model.SilverCount
+                </strong>
                 <span>Huy chương bạc</span>
             </div>
             <div>
-                <strong>🥉 @Model.BronzeCount</strong>
+                <strong>
+                    <svg class="ico medal-bronze" viewBox="0 0 24 24"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg>
+                    @Model.BronzeCount
+                </strong>
                 <span>Huy chương đồng</span>
             </div>
             <div>
-                <strong>🏆 @Model.Tournaments.Count</strong>
+                <strong>
+                    <svg class="ico medal-gold" viewBox="0 0 24 24"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>
+                    @Model.Tournaments.Count
+                </strong>
                 <span>Giải đấu tham gia</span>
             </div>
         </div>
@@ -60,12 +72,33 @@
                             <h3>@t.Name</h3>
                             @if (!string.IsNullOrEmpty(t.Location))
                             {
-                                <p>📍 @t.Location</p>
+                                <p>
+                                    <svg class="ico ico-xs" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                                    @t.Location
+                                </p>
                             }
                             <div class="tournament-medals">
-                                @if (gold > 0) { <span class="medal-gold">🥇 @gold</span> }
-                                @if (silver > 0) { <span class="medal-silver">🥈 @silver</span> }
-                                @if (bronze > 0) { <span class="medal-bronze">🥉 @bronze</span> }
+                                @if (gold > 0)
+                                {
+                                    <span class="medal-gold">
+                                        <svg class="ico ico-xs" viewBox="0 0 24 24"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg>
+                                        @gold
+                                    </span>
+                                }
+                                @if (silver > 0)
+                                {
+                                    <span class="medal-silver">
+                                        <svg class="ico ico-xs" viewBox="0 0 24 24"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg>
+                                        @silver
+                                    </span>
+                                }
+                                @if (bronze > 0)
+                                {
+                                    <span class="medal-bronze">
+                                        <svg class="ico ico-xs" viewBox="0 0 24 24"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg>
+                                        @bronze
+                                    </span>
+                                }
                                 @if (gold + silver + bronze == 0)
                                 {
                                     <span style="color:var(--gray-mid)">Chưa có huy chương</span>

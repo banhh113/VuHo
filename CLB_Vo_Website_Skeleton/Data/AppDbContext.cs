@@ -20,22 +20,22 @@ public class AppDbContext : IdentityDbContext<IdentityUser>
     public DbSet<ClubLocation> ClubLocations => Set<ClubLocation>();
     public DbSet<Tournament> Tournaments => Set<Tournament>();
     public DbSet<TournamentResult> TournamentResults => Set<TournamentResult>();
+    public DbSet<SocialLink> SocialLinks => Set<SocialLink>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
-{
-    base.OnModelCreating(modelBuilder);
+    {
+        base.OnModelCreating(modelBuilder);
 
-    // Tournament → Results: SetNull thay vì Cascade (vì TournamentId nullable)
-    modelBuilder.Entity<TournamentResult>()
-        .HasOne(r => r.Tournament)
-        .WithMany(t => t.Results)
-        .HasForeignKey(r => r.TournamentId)
-        .OnDelete(DeleteBehavior.SetNull);
+        modelBuilder.Entity<TournamentResult>()
+            .HasOne(r => r.Tournament)
+            .WithMany(t => t.Results)
+            .HasForeignKey(r => r.TournamentId)
+            .OnDelete(DeleteBehavior.Cascade);
 
-    // Member → Results: SetNull
-    modelBuilder.Entity<TournamentResult>()
-        .HasOne(r => r.Member)
-        .WithMany()
-        .HasForeignKey(r => r.MemberId)
-        .OnDelete(DeleteBehavior.SetNull);
-}}
+        modelBuilder.Entity<TournamentResult>()
+            .HasOne(r => r.Member)
+            .WithMany()
+            .HasForeignKey(r => r.MemberId)
+            .OnDelete(DeleteBehavior.SetNull);
+    }
+}

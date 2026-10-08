@@ -82,7 +82,20 @@ public class HomeController : Controller
 
             TopAchievements = topAchievements,
 
-            ClubInfo = await _db.ClubInfos.FirstOrDefaultAsync()
+            ClubInfo = await _db.ClubInfos.FirstOrDefaultAsync(),
+
+            // ⭐ Lịch tập + cơ sở động từ admin
+            TimeSlots = await _db.TimeSlots
+                .Where(t => t.IsActive)
+                .OrderBy(t => t.SortOrder)
+                .ThenBy(t => t.Id)
+                .ToListAsync(),
+
+            ClubLocations = await _db.ClubLocations
+                .Where(l => l.IsActive)
+                .OrderBy(l => l.SortOrder)
+                .ThenBy(l => l.Id)
+                .ToListAsync()
         };
 
         return View(vm);

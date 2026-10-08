@@ -19,12 +19,19 @@ builder.Services.AddControllersWithViews(options =>
 
 builder.Services.AddHttpContextAccessor();
 
-// Đăng ký Cloudinary
+// ⭐ SESSION — dùng cho CAPTCHA
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+    options.Cookie.Name = ".CLBVo.Session";
+});
+
 builder.Services.Configure<CloudinarySettings>(
     builder.Configuration.GetSection("CloudinarySettings"));
 builder.Services.AddScoped<CloudinaryService>();
 
-// Giữ FileUploadService cũ (xóa sau khi chuyển hết sang Cloudinary)
 builder.Services.AddScoped<FileUploadService>();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
@@ -72,6 +79,9 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 
+// ⭐ Session phải nằm giữa Routing và Authentication
+app.UseSession();
+
 app.UseAuthentication();
 app.UseAuthorization();
 
@@ -79,6 +89,7 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
+// ==================== SEED ADMIN ====================
 try
 {
     using (var scope = app.Services.CreateScope())
@@ -96,6 +107,30 @@ try
 catch (Exception ex)
 {
     Console.WriteLine($"[WARN] Không thể tạo admin lúc khởi động: {ex.Message}");
+}
+
+// ==================== SEED SOCIAL LINKS ====================
+try
+{
+    using (var scope = app.Services.CreateScope())
+    {
+        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+        if (!db.SocialLinks.Any())
+        {
+            db.SocialLinks.AddRange(
+                new SocialLink { Platform = "facebook", Url = "https://facebook.com", DisplayName = "Facebook CLB Vũ Hổ", SortOrder = 1, IsActive = true },
+                new SocialLink { Platform = "zalo", Url = "https://zalo.me/0948660111", DisplayName = "Zalo CLB Vũ Hổ", SortOrder = 2, IsActive = true },
+                new SocialLink { Platform = "tiktok", Url = "https://tiktok.com", DisplayName = "TikTok CLB Vũ Hổ", SortOrder = 3, IsActive = true }
+            );
+            db.SaveChanges();
+            Console.WriteLine("[INFO] Đã seed 3 SocialLinks mặc định.");
+        }
+    }
+}
+catch (Exception ex)
+{
+    Console.WriteLine($"[WARN] Seed SocialLinks lỗi: {ex.Message}");
 }
 
 app.Run();

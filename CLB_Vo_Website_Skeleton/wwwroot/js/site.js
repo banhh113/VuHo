@@ -181,3 +181,52 @@ document.querySelectorAll('form[data-confirm]').forEach(form => {
         if (!confirm(form.dataset.confirm)) e.preventDefault();
     });
 });
+// ==================== 10. Gallery scroll navigation (infinite loop) ====================
+(function () {
+    const scroll = document.getElementById('galleryScroll');
+    const prevBtn = document.getElementById('galleryPrev');
+    const nextBtn = document.getElementById('galleryNext');
+
+    if (!scroll || !prevBtn || !nextBtn) return;
+
+    // Tính pixel để scroll 1 card (bao gồm gap)
+    function getScrollStep() {
+        const firstCard = scroll.querySelector('.gallery-card');
+        if (!firstCard) return 300;
+        const cardWidth = firstCard.getBoundingClientRect().width;
+        const gap = 16;
+        return cardWidth + gap;
+    }
+
+    // Đang ở đầu?
+    function isAtStart() {
+        return scroll.scrollLeft <= 4;
+    }
+
+    // Đang ở cuối?
+    function isAtEnd() {
+        const maxScroll = scroll.scrollWidth - scroll.clientWidth;
+        return scroll.scrollLeft >= maxScroll - 4;
+    }
+
+    // Nút Next: nếu ở cuối → quay về đầu, ngược lại scroll tới
+    nextBtn.addEventListener('click', () => {
+        if (isAtEnd()) {
+            scroll.scrollTo({ left: 0, behavior: 'smooth' });
+        } else {
+            scroll.scrollBy({ left: getScrollStep(), behavior: 'smooth' });
+        }
+    });
+
+    // Nút Prev: nếu ở đầu → nhảy tới cuối, ngược lại scroll lui
+    prevBtn.addEventListener('click', () => {
+        if (isAtStart()) {
+            const maxScroll = scroll.scrollWidth - scroll.clientWidth;
+            scroll.scrollTo({ left: maxScroll, behavior: 'smooth' });
+        } else {
+            scroll.scrollBy({ left: -getScrollStep(), behavior: 'smooth' });
+        }
+    });
+
+    // Swipe cảm ứng trên mobile đã tự hỗ trợ bởi overflow-x + -webkit-overflow-scrolling
+})();
