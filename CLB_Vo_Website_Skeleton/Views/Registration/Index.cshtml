@@ -8,8 +8,10 @@
         <div class="register-box">
             <div class="register-header">
                 <img src="~/images/logo.png" alt="CLB Vũ Hổ" class="register-logo" />
-                <p class="eyebrow">Đăng ký tập thử</p>
-                <h1>Tham gia CLB Vũ Hổ</h1>
+                <p class="section-eyebrow" style="justify-content:center">
+                    <span class="eyebrow-slash">/</span> ĐĂNG KÝ TẬP THỬ
+                </p>
+                <h1 class="section-title" style="font-size:clamp(1.6rem,4vw,2.2rem)">Tham gia CLB Vũ Hổ</h1>
                 <p class="register-desc">
                     Để lại thông tin, chúng tôi sẽ liên hệ tư vấn và sắp xếp buổi tập thử miễn phí cho bạn.
                 </p>
@@ -47,15 +49,15 @@
                 </div>
 
                 <div class="form-group">
-    <label>Thời gian muốn tập</label>
-    <select asp-for="PreferredTime" autocomplete="off">
-        <option value="">-- Chọn khung giờ --</option>
-        @foreach (var slot in (List<CLBVo.Models.TimeSlot>)ViewBag.TimeSlots)
-        {
-            <option value="@slot.Name">@slot.Name</option>
-        }
-    </select>
-</div>
+                    <label>Thời gian muốn tập</label>
+                    <select asp-for="PreferredTime" autocomplete="off">
+                        <option value="">-- Chọn khung giờ --</option>
+                        @foreach (var slot in (List<CLBVo.Models.TimeSlot>)ViewBag.TimeSlots)
+                        {
+                            <option value="@slot.Name">@slot.Name</option>
+                        }
+                    </select>
+                </div>
 
                 <div class="form-group">
                     <label>Lời nhắn</label>
@@ -63,7 +65,7 @@
                               placeholder="VD: Tôi muốn tập thử Boxing, mong CLB tư vấn..."></textarea>
                 </div>
 
-                <button type="submit" class="btn btn-block">
+                <button type="submit" class="btn btn-primary btn-block">
                     📩 Gửi đăng ký
                 </button>
 

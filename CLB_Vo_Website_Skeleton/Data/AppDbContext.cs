@@ -22,19 +22,20 @@ public class AppDbContext : IdentityDbContext<IdentityUser>
     public DbSet<TournamentResult> TournamentResults => Set<TournamentResult>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
-    {
-        base.OnModelCreating(modelBuilder);
+{
+    base.OnModelCreating(modelBuilder);
 
-        modelBuilder.Entity<TournamentResult>()
-            .HasOne(r => r.Tournament)
-            .WithMany(t => t.Results)
-            .HasForeignKey(r => r.TournamentId)
-            .OnDelete(DeleteBehavior.Cascade);
+    // Tournament → Results: SetNull thay vì Cascade (vì TournamentId nullable)
+    modelBuilder.Entity<TournamentResult>()
+        .HasOne(r => r.Tournament)
+        .WithMany(t => t.Results)
+        .HasForeignKey(r => r.TournamentId)
+        .OnDelete(DeleteBehavior.SetNull);
 
-        modelBuilder.Entity<TournamentResult>()
-            .HasOne(r => r.Member)
-            .WithMany()
-            .HasForeignKey(r => r.MemberId)
-            .OnDelete(DeleteBehavior.SetNull);
-    }
-}
+    // Member → Results: SetNull
+    modelBuilder.Entity<TournamentResult>()
+        .HasOne(r => r.Member)
+        .WithMany()
+        .HasForeignKey(r => r.MemberId)
+        .OnDelete(DeleteBehavior.SetNull);
+}}

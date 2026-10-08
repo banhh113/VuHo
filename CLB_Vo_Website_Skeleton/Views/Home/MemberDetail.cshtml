@@ -5,7 +5,7 @@
 
 <section class="section" style="padding-top:140px">
     <div class="container" style="max-width:820px">
-        <a href="/#members" class="back-link">← Quay lại thành viên</a>
+        <a href="/#coaches" class="back-link">← Quay lại thành viên</a>
 
         <div class="member-detail">
             <div class="member-detail-avatar">
@@ -20,21 +20,23 @@
             </div>
 
             <div class="member-detail-info">
-                <p class="eyebrow">Thành viên</p>
-                <h1 style="font-size:clamp(1.8rem,4vw,2.4rem);margin-bottom:10px">
+                <p class="section-eyebrow">
+                    <span class="eyebrow-slash">/</span> THÀNH VIÊN
+                </p>
+                <h1 class="section-title" style="font-size:clamp(1.8rem,4vw,2.4rem);margin-bottom:10px">
                     @Model.FullName
                 </h1>
                 <p class="member-detail-role">@Model.Role</p>
 
                 @if (!string.IsNullOrEmpty(Model.Description))
                 {
-                    <p class="member-detail-desc" style="white-space: pre-line">@Model.Description</p>
+                    <p class="member-detail-desc">@Model.Description</p>
                 }
             </div>
         </div>
 
-        <hr style="border-color:rgba(255,255,255,0.1);margin:50px 0 30px" />
+        <hr style="border:none;border-top:1px solid var(--border);margin:50px 0 30px" />
 
-        <a href="/#members" class="btn btn-outline">← Về trang chủ</a>
+        <a href="/#coaches" class="btn btn-outline-red">← Về trang chủ</a>
     </div>
 </section>

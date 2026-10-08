@@ -10,8 +10,8 @@
         <div style="display:flex;align-items:center;gap:20px;margin:30px 0 20px;flex-wrap:wrap">
             <div class="tournament-year-badge">@Model.Year</div>
             <div>
-                <p class="eyebrow">Giải đấu</p>
-                <h1 style="font-size:clamp(1.6rem,4vw,2.4rem);line-height:1.2;margin:0">
+                <p class="section-eyebrow"><span class="eyebrow-slash">/</span> GIẢI ĐẤU</p>
+                <h1 class="section-title" style="font-size:clamp(1.6rem,4vw,2.4rem);margin:0">
                     @Model.Name
                 </h1>
             </div>
@@ -19,12 +19,12 @@
 
         @if (!string.IsNullOrEmpty(Model.Location))
         {
-            <p style="color:#a0a0a0">📍 @Model.Location</p>
+            <p style="color:var(--gray)">📍 @Model.Location</p>
         }
 
         @if (Model.StartDate.HasValue)
         {
-            <p style="color:#a0a0a0">
+            <p style="color:var(--gray)">
                 📅 @Model.StartDate.Value.ToString("dd/MM/yyyy")
                 @if (Model.EndDate.HasValue && Model.EndDate.Value.Date != Model.StartDate.Value.Date)
                 {
@@ -36,8 +36,7 @@
         @if (!string.IsNullOrEmpty(Model.ImageUrl))
         {
             <img src="@Model.ImageUrl" alt="@Model.Name"
-                 style="width:100%;border-radius:12px;margin:24px 0;
-                        border:2px solid rgba(255,255,255,0.08)" />
+                 style="width:100%;border-radius:12px;margin:24px 0;border:1px solid var(--border)" />
         }
 
         @if (!string.IsNullOrEmpty(Model.Description))
@@ -47,7 +46,7 @@
             </div>
         }
 
-        <h2 style="margin:40px 0 20px;color:#fff">🏅 Thành tích của VĐV</h2>
+        <h2 class="sub-heading" style="margin:40px 0 20px">🏅 Thành tích của VĐV</h2>
 
         @if (Model.Results.Any())
         {
@@ -84,10 +83,10 @@
         }
         else
         {
-            <p style="color:#666;font-style:italic">Chưa có thành tích nào được ghi nhận.</p>
+            <p style="color:var(--gray-mid);font-style:italic">Chưa có thành tích nào được ghi nhận.</p>
         }
 
-        <hr style="border-color:rgba(255,255,255,0.1);margin:50px 0 30px" />
-        <a href="/thanh-tich" class="btn btn-outline">← Về danh sách</a>
+        <hr style="border:none;border-top:1px solid var(--border);margin:50px 0 30px" />
+        <a href="/thanh-tich" class="btn btn-outline-red">← Về danh sách</a>
     </div>
 </section>

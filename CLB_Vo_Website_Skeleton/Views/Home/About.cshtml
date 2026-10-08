@@ -17,16 +17,17 @@
     <div class="container" style="max-width:900px">
         <a href="/" class="back-link">← Về trang chủ</a>
 
-        <p class="eyebrow" style="margin-top:30px">Về chúng tôi</p>
-        <h1 style="font-size:clamp(2rem,4vw,3rem);line-height:1.2;margin-bottom:24px">
-            🐯 Giới thiệu CLB Vũ Hổ
+        <p class="section-eyebrow" style="margin-top:30px">
+            <span class="eyebrow-slash">/</span> VỀ CHÚNG TÔI
+        </p>
+        <h1 class="section-title" style="font-size:clamp(2rem,4vw,3rem);margin-bottom:24px">
+            Giới thiệu CLB Vũ Hổ
         </h1>
 
         @if (!string.IsNullOrEmpty(Model?.ImageUrl))
         {
             <img src="@Model.ImageUrl" alt="CLB Vũ Hổ"
-                 style="width:100%;border-radius:12px;margin-bottom:30px;
-                        border:2px solid rgba(255,255,255,0.08)" />
+                 style="width:100%;border-radius:12px;margin-bottom:30px;border:1px solid var(--border)" />
         }
 
         <div class="about-content">
@@ -36,28 +37,23 @@
             }
             else
             {
-                <p>CLB Vũ Hổ là nơi hội tụ những người yêu thích võ thuật...</p>
+                <p>CLB Vũ Hổ là nơi hội tụ những người yêu thích võ thuật. Chúng tôi hướng đến việc rèn luyện thể chất, kỷ luật và bản lĩnh cho mọi học viên.</p>
             }
         </div>
 
-        <hr style="border-color:rgba(255,255,255,0.1);margin:40px 0 30px" />
+        <hr style="border:none;border-top:1px solid var(--border);margin:40px 0 30px" />
 
-        <!-- Địa chỉ các cơ sở -->
         @if (locations.Any())
         {
-            <div class="about-contact-item" style="margin-bottom:20px">
+            <div class="about-contact-item">
                 <span>📍</span>
                 <div style="flex:1">
                     <small>Địa chỉ</small>
                     @foreach (var loc in locations)
                     {
-                        <div style="margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid rgba(255,255,255,0.05)">
-                            <strong style="color:#f5c518;display:block;margin-bottom:6px;font-size:1rem">
-                                @loc.Name
-                            </strong>
-                            <div style="white-space:pre-line;color:#ddd;margin-bottom:10px;line-height:1.6">
-                                @loc.Address
-                            </div>
+                        <div style="margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid var(--border)">
+                            <strong style="color:var(--gold);display:block;margin-bottom:6px;font-size:1rem">@loc.Name</strong>
+                            <div style="white-space:pre-line;color:#ddd;margin-bottom:10px;line-height:1.6">@loc.Address</div>
                             @if (!string.IsNullOrEmpty(loc.MapUrl))
                             {
                                 <a href="@loc.MapUrl" target="_blank" rel="noopener" class="map-link">
@@ -71,7 +67,7 @@
         }
         else if (!string.IsNullOrEmpty(Model?.Address))
         {
-            <div class="about-contact-item" style="margin-bottom:20px">
+            <div class="about-contact-item">
                 <span>📍</span>
                 <div>
                     <small>Địa chỉ</small>
@@ -80,7 +76,6 @@
             </div>
         }
 
-        <!-- Liên hệ -->
         <div class="about-contact-grid">
             @if (!string.IsNullOrEmpty(Model?.Phone))
             {
@@ -88,7 +83,7 @@
                     <span>📞</span>
                     <div>
                         <small>Điện thoại</small>
-                        <strong style="white-space: pre-line">@Model.Phone</strong>
+                        <strong style="white-space:pre-line">@Model.Phone</strong>
                     </div>
                 </div>
             }
@@ -104,8 +99,8 @@
             }
         </div>
 
-        <hr style="border-color:rgba(255,255,255,0.1);margin:50px 0 30px" />
+        <hr style="border:none;border-top:1px solid var(--border);margin:50px 0 30px" />
 
-        <a href="/" class="btn btn-outline">← Về trang chủ</a>
+        <a href="/" class="btn btn-outline-red">← Về trang chủ</a>
     </div>
 </section>

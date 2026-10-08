@@ -8,8 +8,8 @@
         <a href="/" class="back-link">← Về trang chủ</a>
 
         <div class="section-header" style="margin-top:30px">
-            <p class="eyebrow">Thành tích</p>
-            <h1 style="font-size:clamp(2rem,4vw,3rem)">Dấu ấn của CLB Vũ Hổ</h1>
+            <p class="section-eyebrow"><span class="eyebrow-slash">/</span> THÀNH TÍCH</p>
+            <h1 class="section-title" style="font-size:clamp(2rem,4vw,3rem)">Dấu ấn của CLB Vũ Hổ</h1>
         </div>
 
         <div class="stats" style="margin-bottom:50px">
@@ -33,7 +33,7 @@
 
         @if (Model.Tournaments.Any())
         {
-            <h2 style="margin-bottom:24px;color:#fff">Các giải đấu</h2>
+            <h2 class="sub-heading">Các giải đấu</h2>
             <div class="tournaments-list">
                 @foreach (var t in Model.Tournaments)
                 {
@@ -68,7 +68,7 @@
                                 @if (bronze > 0) { <span class="medal-bronze">🥉 @bronze</span> }
                                 @if (gold + silver + bronze == 0)
                                 {
-                                    <span style="color:#666">Chưa có huy chương</span>
+                                    <span style="color:var(--gray-mid)">Chưa có huy chương</span>
                                 }
                             </div>
                         </div>
@@ -79,7 +79,7 @@
         else
         {
             <div class="admin-panel" style="text-align:center;padding:60px 20px">
-                <p style="color:#666;font-style:italic">Chưa có giải đấu nào được ghi nhận.</p>
+                <p style="color:var(--gray);font-style:italic">Chưa có giải đấu nào được ghi nhận.</p>
             </div>
         }
     </div>

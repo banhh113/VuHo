@@ -1,87 +1,268 @@
 @model CLBVo.ViewModels.HomeViewModel
 @{
     ViewData["Title"] = "Trang chủ";
+
+    var clubDescription = string.IsNullOrEmpty(Model.ClubInfo?.Description)
+        ? "CLB Vũ Hổ là nơi dành cho những ai đam mê võ thuật, muốn rèn luyện sức khỏe, nâng cao kỹ năng và phát triển bản thân trong một môi trường kỷ luật, đoàn kết và chuyên nghiệp."
+        : Model.ClubInfo.Description;
+
+    var clubAddress = string.IsNullOrEmpty(Model.ClubInfo?.Address)
+        ? "Sân tập: Kèm PT Riềng 5h00 đến 7h30"
+        : Model.ClubInfo.Address;
+
+    var clubPhone = string.IsNullOrEmpty(Model.ClubInfo?.Phone)
+        ? "0948 660 111 (Thầy Vinh) | 0971 373 536 (Thầy Huấn)"
+        : Model.ClubInfo.Phone;
 }
 
+<!-- ==================== HERO ==================== -->
 <section class="hero">
-    <div class="container hero-content">
-        <div class="hero-text">
-            <img src="~/images/logo.png" alt="CLB Vũ Hổ" class="hero-logo" />
-            <p class="eyebrow">Câu lạc bộ võ thuật</p>
-            <h1>
-                <span class="small">CLB VŨ HỔ</span>
-                RÈN LUYỆN<br />KỶ LUẬT &amp; BẢN LĨNH
-            </h1>
-            <div class="hero-tagline">
-                <span>Boxing</span>
-                <span>Kickboxing</span>
-                <span>Võ cổ truyền</span>
-                <span>Muay</span>
-            </div>
-            <p class="hero-desc">
-                CLB Vũ Hổ — nơi hun đúc tinh thần võ thuật, rèn luyện thể chất và bản lĩnh cho thế hệ trẻ.
-            </p>
+    <div class="hero-brush"></div>
+    <div class="container hero-inner">
+
+        <div class="hero-left">
+            <p class="hero-eyebrow">CLB VÕ THUẬT</p>
+            <h1 class="hero-title">VŨ HỔ</h1>
+            <p class="hero-tagline">Rèn thân - Luyện chí - Cùng nhau tiến bước</p>
+            <p class="hero-desc">@clubDescription</p>
+
             <div class="hero-actions">
-                <a class="btn" href="/dang-ky">📩 Đăng ký tập thử</a>
-                <a class="btn btn-outline" href="#about">Tìm hiểu CLB</a>
+                <a class="btn btn-primary" asp-controller="Registration" asp-action="Index">
+                    Đăng ký tập thử
+                </a>
+                <a class="btn btn-ghost" href="#about">
+                    <span class="play-icon">
+                        <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg>
+                    </span>
+                    <span>Xem video giới thiệu</span>
+                </a>
             </div>
         </div>
+
+        <div class="hero-right">
+            <div class="hero-media">
+                <img src="~/images/hero.png" alt="CLB Vũ Hổ" loading="eager"
+     onerror="this.style.display='none'; this.nextElementSibling.style.display='block';" />
+                <div class="hero-media-fallback" style="display:none">
+                    <img src="~/images/logo.png" alt="CLB Vũ Hổ" class="hero-logo-huge" />
+                </div>
+                <div class="hero-media-glow"></div>
+            </div>
+
+            <ul class="hero-features">
+                <li>
+                    <span class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                    </span>
+                    <span class="feature-text">Rèn luyện<br />sức khỏe</span>
+                </li>
+                <li>
+                    <span class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                    </span>
+                    <span class="feature-text">Nâng cao<br />kỹ năng</span>
+                </li>
+                <li>
+                    <span class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                    </span>
+                    <span class="feature-text">Kỷ luật<br />&amp; đoàn kết</span>
+                </li>
+                <li>
+                    <span class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+                    </span>
+                    <span class="feature-text">Tự tin<br />vươn lên</span>
+                </li>
+            </ul>
+        </div>
+
     </div>
 </section>
 
-<section id="about" class="section reveal">
-    <div class="container two-col">
-        <div>
-            <p class="eyebrow">Về chúng tôi</p>
-            <h2>🐯 Giới thiệu CLB</h2>
-            <p style="color:#a0a0a0;margin-bottom:18px">
-                @(string.IsNullOrEmpty(Model.ClubInfo?.Description)
-                    ? "CLB Vũ Hổ là nơi hội tụ những người yêu thích võ thuật. Chúng tôi hướng đến việc rèn luyện thể chất, kỷ luật và bản lĩnh cho mọi học viên."
-                    : Model.ClubInfo.Description)
+<!-- ==================== WHY US ==================== -->
+<section class="section why-section">
+    <div class="container why-grid">
+
+        <div class="why-intro reveal">
+            <p class="section-eyebrow">VÌ SAO NÊN CHỌN</p>
+            <h2 class="section-title">CLB VŨ HỔ?</h2>
+            <p class="why-desc">
+                Chúng tôi không chỉ dạy võ, mà còn đồng hành cùng bạn trên hành trình rèn luyện sức khỏe,
+                xây dựng ý chí và phát triển bản thân.
             </p>
+        </div>
+
+        <div class="why-cards">
+            <div class="why-card reveal">
+                <div class="why-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                </div>
+                <h3>Đội ngũ HLV chuyên nghiệp</h3>
+                <p>Có kinh nghiệm, tận tâm, luôn đồng hành cùng học viên.</p>
+            </div>
+
+            <div class="why-card reveal">
+                <div class="why-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"/><line x1="16" y1="8" x2="2" y2="22"/><line x1="17.5" y1="15" x2="9" y2="15"/></svg>
+                </div>
+                <h3>Chương trình đa dạng</h3>
+                <p>Từ cơ bản đến nâng cao, phù hợp với mọi trình độ.</p>
+            </div>
+
+            <div class="why-card reveal">
+                <div class="why-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                </div>
+                <h3>Môi trường thân thiện</h3>
+                <p>Đoàn kết, tôn trọng, cùng nhau tiến bộ.</p>
+            </div>
+
+            <div class="why-card reveal">
+                <div class="why-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                </div>
+                <h3>Địa điểm thuận tiện</h3>
+                <p>Dễ dàng di chuyển, phù hợp cho học sinh, sinh viên và người đi làm.</p>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<!-- ==================== SCHEDULE + SPORTS (white bg) ==================== -->
+<section class="section schedule-section" id="schedule">
+    <div class="container schedule-grid">
+
+        <!-- LỊCH TẬP -->
+        <div class="schedule-col reveal">
+            <p class="section-eyebrow">LỊCH TẬP</p>
+            <h2 class="section-title dark">Cập nhật lịch tập mới nhất của CLB</h2>
+
+            <div class="schedule-cards">
+                <div class="schedule-card">
+                    <div class="schedule-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                    </div>
+                    <div class="schedule-info-card">
+                        <strong>LỊCH TẬP 2, 4, 6</strong>
+                        <span>19h00 - 20h30</span>
+                    </div>
+                </div>
+
+                <div class="schedule-card">
+                    <div class="schedule-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                    </div>
+                    <div class="schedule-info-card">
+                        <strong>LỊCH TẬP 3, 5, 7</strong>
+                        <span>17h30 - 19h00</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="schedule-meta">
+                <p>
+                    <span class="meta-ico">📍</span>
+                    <span>@clubAddress</span>
+                </p>
+                <p>
+                    <span class="meta-ico">📞</span>
+                    <span>@clubPhone</span>
+                </p>
+            </div>
+
+            <a class="btn btn-dark" asp-controller="Registration" asp-action="Index">
+                Đăng ký ngay
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+        </div>
+
+        <!-- CÁC BỘ MÔN -->
+        <div class="sports-col reveal">
+            <p class="section-eyebrow">CÁC BỘ MÔN ĐÀO TẠO</p>
+            <h2 class="section-title dark">Đa dạng bộ môn, phù hợp với mọi mục tiêu</h2>
+
+            <div class="sports-cards">
+                <a href="#boxing" class="sport-card">
+                    <img src="~/images/boxing.jpg" alt="Boxing" loading="lazy"
+                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                    <div class="sport-fallback sport-boxing" style="display:none">BOXING</div>
+                    <div class="sport-overlay">
+                        <strong>BOXING</strong>
+                        <span>Xem chi tiết <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
+                    </div>
+                </a>
+
+                <a href="#kickboxing" class="sport-card">
+                    <img src="~/images/kickboxing.jpg" alt="Kickboxing" loading="lazy"
+                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                    <div class="sport-fallback sport-kickboxing" style="display:none">KICKBOXING</div>
+                    <div class="sport-overlay">
+                        <strong>KICKBOXING</strong>
+                        <span>Xem chi tiết <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<!-- ==================== ABOUT ==================== -->
+<section id="about" class="section section-dark section-about">
+    <div class="container two-col">
+        <div class="reveal">
+            <p class="section-eyebrow">VỀ CHÚNG TÔI</p>
+            <h2 class="section-title">Giới thiệu CLB</h2>
+            <p class="about-text">@clubDescription</p>
             <a class="text-link" asp-controller="Home" asp-action="About">Xem thêm →</a>
         </div>
-        @if (!string.IsNullOrEmpty(Model.ClubInfo?.ImageUrl))
-        {
-            <img src="@Model.ClubInfo.ImageUrl" alt="CLB Vũ Hổ"
-                 style="width:100%;border-radius:12px;border:2px solid rgba(255,255,255,0.08);
-                        box-shadow:0 10px 40px rgba(0,0,0,0.5)" />
-        }
-        else
-        {
-            <div class="placeholder-image">ẢNH CLB</div>
-        }
+        <div class="reveal">
+            @if (!string.IsNullOrEmpty(Model.ClubInfo?.ImageUrl))
+            {
+                <img src="@Model.ClubInfo.ImageUrl" alt="CLB Vũ Hổ" class="about-image" />
+            }
+            else
+            {
+                <div class="about-image about-image-fallback">
+                    <img src="~/images/logo.png" alt="CLB Vũ Hổ" />
+                </div>
+            }
+        </div>
     </div>
 </section>
 
-<section id="news" class="section section-alt reveal">
+<!-- ==================== NEWS ==================== -->
+<section id="news" class="section reveal">
     <div class="container">
         <div class="section-header">
-            <p class="eyebrow">Cập nhật</p>
-            <h2>Tin tức mới nhất</h2>
+            <p class="section-eyebrow">CẬP NHẬT</p>
+            <h2 class="section-title">Tin tức mới nhất</h2>
         </div>
+
         <div class="cards">
             @if (Model.Posts.Any())
             {
-                @foreach (var post in Model.Posts)
+                foreach (var post in Model.Posts.Take(6))
                 {
                     <article class="card">
                         <div class="card-image">
                             @if (!string.IsNullOrEmpty(post.ImageUrl))
                             {
                                 <a href="@post.ImageUrl" class="glightbox" data-gallery="posts" data-title="@post.Title">
-                                    <img src="@post.ImageUrl" alt="@post.Title" />
+                                    <img src="@post.ImageUrl" alt="@post.Title" loading="lazy" />
                                 </a>
                             }
                             else
                             {
-                                <span>ẢNH</span>
+                                <span class="card-img-placeholder">ẢNH</span>
                             }
                         </div>
                         <div class="card-body">
                             <small>@post.CreatedAt.ToString("dd/MM/yyyy")</small>
                             <h3>@post.Title</h3>
-                            <p>@post.Content</p>
+                            <p>@(post.Content.Length > 120 ? post.Content.Substring(0, 120) + "..." : post.Content)</p>
                             <a asp-controller="Home" asp-action="PostDetail" asp-route-id="@post.Id">
                                 Đọc thêm →
                             </a>
@@ -91,61 +272,58 @@
             }
             else
             {
-                <p style="color:#666;grid-column:1/-1;text-align:center">Chưa có bài viết nào.</p>
+                <p class="empty-note">Chưa có bài viết nào.</p>
             }
         </div>
     </div>
 </section>
 
-<section id="events" class="section reveal">
-    <div class="container">
-        <div class="section-header">
-            <p class="eyebrow">Hoạt động</p>
-            <h2>Thông báo &amp; Lịch tập</h2>
-        </div>
-        <div class="event-list">
-            @if (Model.Events.Any())
-            {
-                @foreach (var ev in Model.Events)
+<!-- ==================== EVENTS ==================== -->
+@if (Model.Events.Any())
+{
+    <section id="events" class="section section-alt reveal">
+        <div class="container">
+            <div class="section-header">
+                <p class="section-eyebrow">HOẠT ĐỘNG</p>
+                <h2 class="section-title">Thông báo &amp; Lịch tập</h2>
+            </div>
+            <div class="event-list">
+                @foreach (var ev in Model.Events.Take(5))
                 {
                     <div class="event-item">
                         <strong>@ev.EventDate.Day</strong>
-                        <div style="flex:1">
+                        <div class="event-body">
                             <h3>@ev.Title</h3>
                             <p>Tháng @ev.EventDate.Month/@ev.EventDate.Year • @ev.Location</p>
                         </div>
-                        <a asp-controller="Home" asp-action="EventDetail" asp-route-id="@ev.Id"
-                           class="event-more">Chi tiết →</a>
+                        <a asp-controller="Home" asp-action="EventDetail" asp-route-id="@ev.Id" class="event-more">
+                            Chi tiết →
+                        </a>
                     </div>
                 }
-            }
-            else
-            {
-                <p style="color:#666;text-align:center">Chưa có sự kiện nào sắp diễn ra.</p>
-            }
+            </div>
         </div>
-    </div>
-</section>
+    </section>
+}
 
-<!-- ==================== HLV (đầu tiên) ==================== -->
+<!-- ==================== COACHES ==================== -->
 <section id="coaches" class="section section-dark reveal">
     <div class="container">
         <div class="section-header">
-            <p class="eyebrow">Đội ngũ</p>
-            <h2>🎓 Huấn luyện viên</h2>
+            <p class="section-eyebrow">ĐỘI NGŨ</p>
+            <h2 class="section-title">Huấn luyện viên</h2>
         </div>
         <div class="cards">
             @if (Model.Coaches.Any())
             {
-                @foreach (var m in Model.Coaches)
+                foreach (var m in Model.Coaches)
                 {
-                    <a asp-controller="Home" asp-action="MemberDetail" asp-route-id="@m.Id"
-                       style="text-decoration:none;color:inherit">
+                    <a asp-controller="Home" asp-action="MemberDetail" asp-route-id="@m.Id" class="member-link">
                         <article class="member-card">
                             <div class="avatar">
                                 @if (!string.IsNullOrEmpty(m.AvatarUrl))
                                 {
-                                    <img src="@m.AvatarUrl" alt="@m.FullName" />
+                                    <img src="@m.AvatarUrl" alt="@m.FullName" loading="lazy" />
                                 }
                                 else
                                 {
@@ -160,31 +338,30 @@
             }
             else
             {
-                <p style="color:#666;grid-column:1/-1;text-align:center">Chưa có HLV nào.</p>
+                <p class="empty-note">Chưa có HLV nào.</p>
             }
         </div>
     </div>
 </section>
 
-<!-- ==================== BOXING (thứ hai) ==================== -->
+<!-- ==================== BOXING ==================== -->
 <section id="boxing" class="section reveal">
     <div class="container">
         <div class="section-header">
-            <p class="eyebrow">Bộ môn</p>
-            <h2>🥊 Võ sinh Boxing</h2>
+            <p class="section-eyebrow">BỘ MÔN</p>
+            <h2 class="section-title">Võ sinh Boxing</h2>
         </div>
         <div class="cards">
             @if (Model.BoxingMembers.Any())
             {
-                @foreach (var m in Model.BoxingMembers)
+                foreach (var m in Model.BoxingMembers)
                 {
-                    <a asp-controller="Home" asp-action="MemberDetail" asp-route-id="@m.Id"
-                       style="text-decoration:none;color:inherit">
+                    <a asp-controller="Home" asp-action="MemberDetail" asp-route-id="@m.Id" class="member-link">
                         <article class="member-card">
                             <div class="avatar">
                                 @if (!string.IsNullOrEmpty(m.AvatarUrl))
                                 {
-                                    <img src="@m.AvatarUrl" alt="@m.FullName" />
+                                    <img src="@m.AvatarUrl" alt="@m.FullName" loading="lazy" />
                                 }
                                 else
                                 {
@@ -199,31 +376,30 @@
             }
             else
             {
-                <p style="color:#666;grid-column:1/-1;text-align:center">Chưa có võ sinh Boxing.</p>
+                <p class="empty-note">Chưa có võ sinh Boxing.</p>
             }
         </div>
     </div>
 </section>
 
-<!-- ==================== KICKBOXING (thứ ba) ==================== -->
+<!-- ==================== KICKBOXING ==================== -->
 <section id="kickboxing" class="section section-dark reveal">
     <div class="container">
         <div class="section-header">
-            <p class="eyebrow">Bộ môn</p>
-            <h2>🦵 Võ sinh Kickboxing</h2>
+            <p class="section-eyebrow">BỘ MÔN</p>
+            <h2 class="section-title">Võ sinh Kickboxing</h2>
         </div>
         <div class="cards">
             @if (Model.KickboxingMembers.Any())
             {
-                @foreach (var m in Model.KickboxingMembers)
+                foreach (var m in Model.KickboxingMembers)
                 {
-                    <a asp-controller="Home" asp-action="MemberDetail" asp-route-id="@m.Id"
-                       style="text-decoration:none;color:inherit">
+                    <a asp-controller="Home" asp-action="MemberDetail" asp-route-id="@m.Id" class="member-link">
                         <article class="member-card">
                             <div class="avatar">
                                 @if (!string.IsNullOrEmpty(m.AvatarUrl))
                                 {
-                                    <img src="@m.AvatarUrl" alt="@m.FullName" />
+                                    <img src="@m.AvatarUrl" alt="@m.FullName" loading="lazy" />
                                 }
                                 else
                                 {
@@ -238,49 +414,20 @@
             }
             else
             {
-                <p style="color:#666;grid-column:1/-1;text-align:center">Chưa có võ sinh Kickboxing.</p>
+                <p class="empty-note">Chưa có võ sinh Kickboxing.</p>
             }
         </div>
     </div>
 </section>
 
-<!-- ==================== GALLERY ==================== -->
-<section id="gallery" class="section reveal">
-    <div class="container">
-        <div class="section-header">
-            <p class="eyebrow">Hình ảnh</p>
-            <h2>Thư viện CLB</h2>
-        </div>
-        <div class="gallery">
-            @if (Model.Gallery.Any())
-            {
-                @foreach (var img in Model.Gallery)
-                {
-                    <a href="@img.ImageUrl"
-                       class="gallery-item glightbox"
-                       data-gallery="clb-gallery"
-                       data-title="@img.Title"
-                       data-description="@img.Title">
-                        <img src="@img.ImageUrl" alt="@img.Title" loading="lazy" />
-                    </a>
-                }
-            }
-            else
-            {
-                <p style="color:#666;grid-column:1/-1;text-align:center">
-                    Chưa có ảnh nào trong thư viện.
-                </p>
-            }
-        </div>
-    </div>
-</section>
-
+<!-- ==================== ACHIEVEMENTS ==================== -->
 <section class="section achievement reveal">
     <div class="container">
         <div class="section-header">
-            <p class="eyebrow">Thành tích</p>
-            <h2>Dấu ấn của CLB</h2>
+            <p class="section-eyebrow">THÀNH TÍCH</p>
+            <h2 class="section-title">Dấu ấn của CLB</h2>
         </div>
+
         <div class="stats">
             <div>
                 <strong>🥇 @Model.GoldCount</strong>
@@ -302,10 +449,8 @@
 
         @if (Model.TopAchievements.Any())
         {
-            <div style="margin-top:50px">
-                <h3 style="color:#fff;font-size:1.4rem;margin-bottom:20px">
-                    🌟 Thành tích tiêu biểu
-                </h3>
+            <div class="top-achievements-wrap">
+                <h3 class="sub-heading">🌟 Thành tích tiêu biểu</h3>
                 <div class="top-achievements">
                     @foreach (var a in Model.TopAchievements)
                     {
@@ -330,10 +475,40 @@
                         </div>
                     }
                 </div>
-                <div style="text-align:center;margin-top:24px">
-                    <a href="/thanh-tich" class="btn btn-outline">Xem tất cả thành tích →</a>
+                <div class="center-actions">
+                    <a href="/thanh-tich" class="btn btn-outline-red">Xem tất cả thành tích →</a>
                 </div>
             </div>
         }
+    </div>
+</section>
+
+<!-- ==================== GALLERY ==================== -->
+<section id="gallery" class="section reveal">
+    <div class="container">
+        <div class="section-header">
+            <p class="section-eyebrow">HÌNH ẢNH</p>
+            <h2 class="section-title">Thư viện CLB</h2>
+        </div>
+
+        <div class="gallery">
+            @if (Model.Gallery.Any())
+            {
+                foreach (var img in Model.Gallery)
+                {
+                    <a href="@img.ImageUrl"
+                       class="gallery-item glightbox"
+                       data-gallery="clb-gallery"
+                       data-title="@img.Title"
+                       data-description="@img.Title">
+                        <img src="@img.ImageUrl" alt="@img.Title" loading="lazy" />
+                    </a>
+                }
+            }
+            else
+            {
+                <p class="empty-note">Chưa có ảnh nào trong thư viện.</p>
+            }
+        </div>
     </div>
 </section>
