@@ -40,6 +40,14 @@ public class AdminTournamentsController : Controller
     {
         if (!ModelState.IsValid) return View(model);
 
+        // ⭐ VALIDATE NGÀY
+        if (model.EndDate.HasValue && model.StartDate.HasValue
+            && model.EndDate.Value.Date < model.StartDate.Value.Date)
+        {
+            ModelState.AddModelError("EndDate", "Ngày kết thúc phải lớn hơn hoặc bằng ngày bắt đầu.");
+            return View(model);
+        }
+
         var exists = await _db.Tournaments.AnyAsync(t => t.Name == model.Name && t.Year == model.Year);
         if (exists)
         {
@@ -84,6 +92,14 @@ public class AdminTournamentsController : Controller
     public async Task<IActionResult> Edit(int id, Tournament model, IFormFile? imageFile)
     {
         if (id != model.Id) return NotFound();
+
+        // ⭐ VALIDATE NGÀY
+        if (model.EndDate.HasValue && model.StartDate.HasValue
+            && model.EndDate.Value.Date < model.StartDate.Value.Date)
+        {
+            ModelState.AddModelError("EndDate", "Ngày kết thúc phải lớn hơn hoặc bằng ngày bắt đầu.");
+        }
+
         if (!ModelState.IsValid)
         {
             return View(await _db.Tournaments.Include(t => t.Results).FirstOrDefaultAsync(t => t.Id == id));

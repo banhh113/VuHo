@@ -40,9 +40,16 @@
             </div>
 
             <div class="form-group">
-                <label>Năm *</label>
-                <input asp-for="Year" type="number" required min="1950" max="2100" />
-            </div>
+    <label>Năm *</label>
+    <input asp-for="Year" type="number" id="yearInput"
+           readonly
+           style="cursor:not-allowed;background:#0a0a0a;color:var(--gold);font-weight:700;text-align:center;letter-spacing:1px"
+           min="1950" max="2100" />
+    <span asp-validation-for="Year" class="text-danger"></span>
+    <small style="color:var(--gray-dark);font-size:.76rem">
+        🔒 Tự động lấy theo ngày kết thúc của giải đấu.
+    </small>
+</div>
 
             <div class="form-group">
                 <label>Địa điểm</label>
@@ -50,14 +57,19 @@
             </div>
 
             <div class="form-group">
-                <label>Ngày bắt đầu</label>
-                <input asp-for="StartDate" type="date" />
-            </div>
+    <label>Ngày bắt đầu</label>
+    <input asp-for="StartDate" type="date" id="startDateInput" />
+    <span asp-validation-for="StartDate" class="text-danger"></span>
+</div>
 
-            <div class="form-group">
-                <label>Ngày kết thúc</label>
-                <input asp-for="EndDate" type="date" />
-            </div>
+<div class="form-group">
+    <label>Ngày kết thúc</label>
+    <input asp-for="EndDate" type="date" id="endDateInput" />
+    <span asp-validation-for="EndDate" class="text-danger"></span>
+    <small id="dateError" style="color:var(--red);display:none">
+        ⚠️ Ngày kết thúc phải lớn hơn hoặc bằng ngày bắt đầu.
+    </small>
+</div>
 
             <div class="form-group">
                 <label>Mô tả</label>
@@ -178,3 +190,68 @@
         </div>
     </div>
 </div>
+@section Scripts {
+    <script>
+        (function () {
+            const startInput = document.getElementById('startDateInput');
+            const endInput = document.getElementById('endDateInput');
+            const yearInput = document.getElementById('yearInput');
+            const errorMsg = document.getElementById('dateError');
+
+            if (!startInput || !endInput || !yearInput) return;
+
+            // ⭐ Auto-fill Year từ EndDate (fallback: StartDate)
+            function syncYear() {
+                const endVal = endInput.value;
+                const startVal = startInput.value;
+
+                if (endVal) {
+                    yearInput.value = new Date(endVal).getFullYear();
+                } else if (startVal) {
+                    yearInput.value = new Date(startVal).getFullYear();
+                }
+            }
+
+            // ⭐ Validate EndDate >= StartDate
+            function validate() {
+                if (!errorMsg) return true;
+
+                const start = startInput.value;
+                const end = endInput.value;
+
+                if (start && end) {
+                    if (new Date(end) < new Date(start)) {
+                        errorMsg.style.display = 'block';
+                        endInput.setCustomValidity('Ngày kết thúc phải lớn hơn hoặc bằng ngày bắt đầu.');
+                        return false;
+                    }
+                }
+
+                errorMsg.style.display = 'none';
+                endInput.setCustomValidity('');
+                return true;
+            }
+
+            // Event listeners
+            startInput.addEventListener('change', () => { validate(); syncYear(); });
+            endInput.addEventListener('change', () => { validate(); syncYear(); });
+            endInput.addEventListener('input', () => { validate(); syncYear(); });
+
+            // ⭐ Sync Year lúc load trang (nếu đã có EndDate)
+            if (endInput.value) {
+                syncYear();
+            }
+
+            // Chặn submit nếu invalid
+            const form = endInput.closest('form');
+            if (form) {
+                form.addEventListener('submit', (e) => {
+                    if (!validate()) {
+                        e.preventDefault();
+                        endInput.focus();
+                    }
+                });
+            }
+        })();
+    </script>
+}

@@ -118,20 +118,20 @@ public class HomeController : Controller
     }
 
     [HttpGet("/members/{id:int}")]
-    public async Task<IActionResult> MemberDetail(int id)
-    {
-        var member = await _db.Members.FindAsync(id);
-        if (member == null) return NotFound();
+public async Task<IActionResult> MemberDetail(int id)
+{
+    var member = await _db.Members.FindAsync(id);
+    if (member == null) return NotFound();
 
-        ViewBag.Achievements = await _db.TournamentResults
-            .Include(r => r.Tournament)
-            .Where(r => r.MemberId == id)
-            .OrderByDescending(r => r.Tournament!.Year)
-            .ThenByDescending(r => r.Id)
-            .ToListAsync();
+    ViewBag.Achievements = await _db.TournamentResults
+        .Include(r => r.Tournament)
+        .Where(r => r.MemberId == id)
+        .OrderByDescending(r => r.Tournament!.Year)
+        .ThenByDescending(r => r.Id)
+        .ToListAsync();
 
-        return View(member);
-    }
+    return View(member);
+}
 
     [HttpGet("/about")]
     public async Task<IActionResult> About()

@@ -68,23 +68,55 @@
                                     r.Medal.Contains("🥉") ? "medal-bronze"
                                   : "medal-other";
 
-                    <div class="result-row">
-                        <div class="result-medal @medalClass">
-                            <svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg>
+                    // ⭐ CHỈ LINK NẾU CÓ MemberId
+                    var hasMember = r.MemberId.HasValue && r.MemberId.Value > 0;
+
+                    if (hasMember)
+                    {
+                        <a href="/members/@r.MemberId" class="result-row result-row-link">
+                            <div class="result-medal @medalClass">
+                                <svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg>
+                            </div>
+                            <div class="result-info">
+                                <strong>
+                                    @r.MemberName
+                                    <svg class="ico result-arrow" viewBox="0 0 24 24">
+                                        <line x1="5" y1="12" x2="19" y2="12"/>
+                                        <polyline points="12 5 19 12 12 19"/>
+                                    </svg>
+                                </strong>
+                                @if (!string.IsNullOrEmpty(r.Category))
+                                {
+                                    <div class="result-category">@r.Category</div>
+                                }
+                                @if (!string.IsNullOrEmpty(r.Note))
+                                {
+                                    <div class="result-note">@r.Note</div>
+                                }
+                            </div>
+                            <div class="result-medal-label">@r.Medal</div>
+                        </a>
+                    }
+                    else
+                    {
+                        <div class="result-row">
+                            <div class="result-medal @medalClass">
+                                <svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg>
+                            </div>
+                            <div class="result-info">
+                                <strong>@r.MemberName</strong>
+                                @if (!string.IsNullOrEmpty(r.Category))
+                                {
+                                    <div class="result-category">@r.Category</div>
+                                }
+                                @if (!string.IsNullOrEmpty(r.Note))
+                                {
+                                    <div class="result-note">@r.Note</div>
+                                }
+                            </div>
+                            <div class="result-medal-label">@r.Medal</div>
                         </div>
-                        <div class="result-info">
-                            <strong>@r.MemberName</strong>
-                            @if (!string.IsNullOrEmpty(r.Category))
-                            {
-                                <div class="result-category">@r.Category</div>
-                            }
-                            @if (!string.IsNullOrEmpty(r.Note))
-                            {
-                                <div class="result-note">@r.Note</div>
-                            }
-                        </div>
-                        <div class="result-medal-label">@r.Medal</div>
-                    </div>
+                    }
                 }
             </div>
         }
