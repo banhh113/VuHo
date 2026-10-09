@@ -1,4 +1,5 @@
 using CLBVo.Data;
+using CLBVo.Helpers;
 using CLBVo.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -35,25 +36,23 @@ public class RegistrationController : Controller
     public async Task<IActionResult> Index(Registration model, string? captchaAnswer, string? website)
     {
         // -------- 1. HONEYPOT CHECK --------
-        // Field "website" bị ẩn bằng CSS. Bot tự động fill → chặn
         if (!string.IsNullOrWhiteSpace(website))
         {
-            // Không báo lỗi cụ thể (bot sẽ không học được)
             ModelState.AddModelError("", "Yêu cầu không hợp lệ. Vui lòng thử lại.");
         }
 
         // -------- 2. TIME CHECK --------
-// Chỉ chặn nếu submit quá nhanh (< 1 giây)
-var timeStr = HttpContext.Session.GetString(CaptchaTimeKey);
-if (!string.IsNullOrEmpty(timeStr) &&
-    DateTime.TryParse(timeStr, null, System.Globalization.DateTimeStyles.RoundtripKind, out var issuedAt))
-{
-    var elapsed = (DateTime.UtcNow - issuedAt.ToUniversalTime()).TotalSeconds;
-    if (elapsed < 1)
-    {
-        ModelState.AddModelError("", "Vui lòng đợi vài giây rồi gửi lại.");
-    }
-}
+        var timeStr = HttpContext.Session.GetString(CaptchaTimeKey);
+        if (!string.IsNullOrEmpty(timeStr) &&
+            DateTime.TryParse(timeStr, null,
+                System.Globalization.DateTimeStyles.RoundtripKind, out var issuedAt))
+        {
+            var elapsed = (DateTime.UtcNow - issuedAt.ToUniversalTime()).TotalSeconds;
+            if (elapsed < 1)
+            {
+                ModelState.AddModelError("", "Vui lòng đợi vài giây rồi gửi lại.");
+            }
+        }
 
         // -------- 3. CAPTCHA CHECK --------
         var expectedAnswer = HttpContext.Session.GetString(CaptchaAnswerKey);
@@ -77,7 +76,6 @@ if (!string.IsNullOrEmpty(timeStr) &&
                 .ThenBy(t => t.Id)
                 .ToListAsync();
 
-            // Tạo captcha mới (không dùng lại cái cũ)
             GenerateCaptcha();
             return View(model);
         }
@@ -89,13 +87,14 @@ if (!string.IsNullOrEmpty(timeStr) &&
         model.Message = model.Message ?? "";
         model.PreferredTime = model.PreferredTime ?? "";
         model.Experience = model.Experience ?? "";
-        model.CreatedAt = DateTime.Now;
+
+        // ⭐ Dùng giờ VN bất kể server timezone
+        model.CreatedAt = TimeHelper.NowVN();
         model.Status = RegistrationStatus.New;
 
         _db.Registrations.Add(model);
         await _db.SaveChangesAsync();
 
-        // Xoá captcha sau khi submit thành công
         HttpContext.Session.Remove(CaptchaAnswerKey);
         HttpContext.Session.Remove(CaptchaTimeKey);
 
@@ -118,10 +117,9 @@ if (!string.IsNullOrEmpty(timeStr) &&
     private void GenerateCaptcha()
     {
         var rng = Random.Shared;
-        var a = rng.Next(1, 11);  // 1-10
-        var b = rng.Next(1, 11);  // 1-10
+        var a = rng.Next(1, 11);
+        var b = rng.Next(1, 11);
 
-        // 30% dùng phép trừ (đảm bảo không âm)
         bool useSubtract = rng.Next(0, 10) < 3;
         int answer;
         string expr;

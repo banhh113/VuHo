@@ -1,4 +1,5 @@
 using CLBVo.Data;
+using CLBVo.Helpers;
 using CLBVo.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -62,7 +63,6 @@ public class AdminRegistrationsController : Controller
         return View(reg);
     }
 
-    // ==================== UPDATE STATUS ====================
     [HttpPost("update-status/{id}")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> UpdateStatus(int id, RegistrationStatus status, DateTime? trialDate)
@@ -71,15 +71,14 @@ public class AdminRegistrationsController : Controller
         if (reg == null) return NotFound();
 
         reg.Status = status;
-        reg.UpdatedAt = DateTime.Now;
+        reg.UpdatedAt = TimeHelper.NowVN();
 
         if (status == RegistrationStatus.Contacting && !reg.ContactedAt.HasValue)
-            reg.ContactedAt = DateTime.Now;
+            reg.ContactedAt = TimeHelper.NowVN();
 
         if (status == RegistrationStatus.Confirmed)
-            reg.ConfirmedAt = DateTime.Now;
+            reg.ConfirmedAt = TimeHelper.NowVN();
 
-        // ⭐ Luôn cập nhật TrialDate nếu admin có nhập (không phụ thuộc status)
         if (trialDate.HasValue)
         {
             reg.TrialDate = trialDate;
@@ -90,7 +89,6 @@ public class AdminRegistrationsController : Controller
         return RedirectToAction(nameof(Detail), new { id });
     }
 
-    // ==================== SAVE TRIAL DATE (quick actions) ====================
     [HttpPost("save-trial-date/{id}")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> SaveTrialDate(int id, DateTime? trialDate)
@@ -99,7 +97,7 @@ public class AdminRegistrationsController : Controller
         if (reg == null) return NotFound();
 
         reg.TrialDate = trialDate;
-        reg.UpdatedAt = DateTime.Now;
+        reg.UpdatedAt = TimeHelper.NowVN();
 
         await _db.SaveChangesAsync();
 
@@ -110,7 +108,6 @@ public class AdminRegistrationsController : Controller
         return RedirectToAction(nameof(Detail), new { id });
     }
 
-    // ==================== SAVE NOTE ====================
     [HttpPost("save-note/{id}")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> SaveNote(int id, string? adminNote, DateTime? trialDate)
@@ -120,14 +117,13 @@ public class AdminRegistrationsController : Controller
 
         reg.AdminNote = adminNote ?? "";
         if (trialDate.HasValue) reg.TrialDate = trialDate;
-        reg.UpdatedAt = DateTime.Now;
+        reg.UpdatedAt = TimeHelper.NowVN();
 
         await _db.SaveChangesAsync();
         TempData["Success"] = "Đã lưu ghi chú.";
         return RedirectToAction(nameof(Detail), new { id });
     }
 
-    // ==================== DELETE ====================
     [HttpPost("delete/{id}")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Delete(int id)
