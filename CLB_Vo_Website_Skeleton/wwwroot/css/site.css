@@ -6108,3 +6108,485 @@ header.site-header nav.main-nav a.nav-link:active {
         display: none;
     }
 }
+/* ============================================================
+   FIX MOBILE — 4 vấn đề
+   ============================================================ */
+
+/* ---------- 1. Avatar trợ giảng TO BẰNG HLV ---------- */
+.assistant-avatar,
+.assistant-link .assistant-avatar {
+    width: 150px !important;
+    height: 150px !important;
+    border-width: 3px !important;
+    border-color: var(--gold) !important;
+    margin: 0 auto 20px !important;
+    transition: transform .4s !important;
+}
+
+.assistant-link:hover .assistant-avatar {
+    transform: scale(1.05) !important;
+    box-shadow: 0 0 30px rgba(245,197,24,0.4) !important;
+}
+
+/* Mobile: giữ 150px — KHÔNG nhỏ hơn */
+@media (max-width: 640px) {
+    .assistant-avatar,
+    .assistant-link .assistant-avatar {
+        width: 150px !important;
+        height: 150px !important;
+        margin: 0 auto 18px !important;
+    }
+}
+
+/* ---------- 2. "HỖ TRỢ" eyebrow đỏ ---------- */
+.section-assistants .section-eyebrow {
+    color: var(--red) !important;
+    font-weight: 700 !important;
+    letter-spacing: 3px !important;
+}
+
+/* ---------- 3. Header mobile: 2 nút sát phải ---------- */
+@media (max-width: 1024px) {
+    .header-actions {
+        margin-left: auto !important;
+        gap: 10px !important;
+    }
+}
+
+@media (max-width: 640px) {
+    /* Container rộng hơn để nút sát mép */
+    .site-header .container {
+        width: 96% !important;
+    }
+
+    .header-actions {
+        margin-left: auto !important;
+        gap: 8px !important;
+    }
+
+    .menu-toggle {
+        width: 40px !important;
+        height: 40px !important;
+    }
+
+    /* Nút đăng ký tròn gọn */
+    .btn-cta {
+        padding: 10px 12px !important;
+        border-radius: 50% !important;
+        width: 40px !important;
+        height: 40px !important;
+        justify-content: center !important;
+    }
+
+    .btn-cta svg {
+        width: 18px !important;
+        height: 18px !important;
+    }
+}
+
+/* ---------- 4. Bottom-tab "Trang chủ" đồng bộ ---------- */
+/* Bỏ gạch đỏ ở trên đầu icon active */
+.bottom-tab-item.active::before,
+.bottom-tab-item::before {
+    content: none !important;
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+}
+
+/* Active: chỉ chữ trắng nhẹ, KHÔNG glow mạnh */
+.bottom-tab-item.active {
+    color: #ffffff !important;
+}
+
+.bottom-tab-item.active svg {
+    color: #ffffff !important;
+    filter: none !important;
+    transform: none !important;
+}
+
+.bottom-tab-item.active span {
+    color: #ffffff !important;
+    font-weight: 600 !important;
+    text-shadow: none !important;
+}
+
+/* Item thường: xám nhẹ */
+.bottom-tab-item {
+    color: #b8b8b8 !important;
+}
+
+.bottom-tab-item svg {
+    transform: none !important;
+}
+/* Đồng bộ 100% — không active state */
+.bottom-tab-item.active {
+    color: #b8b8b8 !important;
+}
+
+.bottom-tab-item.active svg {
+    color: #b8b8b8 !important;
+}
+
+.bottom-tab-item.active span {
+    color: #b8b8b8 !important;
+    font-weight: 600 !important;
+}/* ============================================================
+   HERO CINEMATIC — Phase 1
+   Particle + Light beams + Staggered text + Tiger breathing
+   ============================================================ */
+
+/* ---------- Hero container ---------- */
+.hero {
+    position: relative;
+    isolation: isolate;
+}
+
+/* ---------- Particle canvas ---------- */
+.hero-particles {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+}
+
+/* ---------- Light beams ---------- */
+.hero-light-beam {
+    position: absolute;
+    top: -20%;
+    width: 2px;
+    height: 140%;
+    pointer-events: none;
+    opacity: 0.6;
+    filter: blur(1px);
+    z-index: 1;
+}
+
+.hero-light-beam-1 {
+    left: 15%;
+    background: linear-gradient(to bottom,
+        transparent 0%,
+        rgba(230, 57, 70, 0.6) 30%,
+        rgba(230, 57, 70, 0.9) 50%,
+        rgba(230, 57, 70, 0.6) 70%,
+        transparent 100%);
+    transform: rotate(-15deg);
+    transform-origin: top center;
+    box-shadow: 0 0 40px rgba(230, 57, 70, 0.7),
+                0 0 80px rgba(230, 57, 70, 0.4);
+    animation: beamGlow 6s ease-in-out infinite;
+}
+
+.hero-light-beam-2 {
+    right: 20%;
+    background: linear-gradient(to bottom,
+        transparent 0%,
+        rgba(245, 197, 24, 0.4) 30%,
+        rgba(245, 197, 24, 0.7) 50%,
+        rgba(245, 197, 24, 0.4) 70%,
+        transparent 100%);
+    transform: rotate(12deg);
+    transform-origin: top center;
+    box-shadow: 0 0 40px rgba(245, 197, 24, 0.5),
+                0 0 80px rgba(245, 197, 24, 0.3);
+    animation: beamGlow 8s ease-in-out infinite;
+    animation-delay: -3s;
+}
+
+@keyframes beamGlow {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 0.85; }
+}
+
+/* ---------- Staggered text reveal ---------- */
+.hero-reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition:
+        opacity 0.8s cubic-bezier(.22, 1, .36, 1),
+        transform 0.8s cubic-bezier(.22, 1, .36, 1);
+    transition-delay: var(--delay, 0s);
+    will-change: opacity, transform;
+}
+
+.hero-reveal.hero-revealed {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* ---------- Hero title 2 tầng ---------- */
+.hero-title {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 22px;
+    line-height: 1;
+}
+
+.hero-title-main {
+    font-family: var(--font-display);
+    font-size: clamp(4rem, 9vw, 8.5rem);
+    color: var(--red);
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    text-shadow:
+        0 0 40px rgba(230, 57, 70, 0.6),
+        0 0 80px rgba(230, 57, 70, 0.3),
+        4px 4px 0 rgba(139, 10, 31, 0.7);
+    font-weight: 400;
+    line-height: 0.95;
+}
+
+.hero-title-sub {
+    font-family: var(--font-head);
+    font-size: clamp(1rem, 2.2vw, 1.6rem);
+    color: var(--white);
+    letter-spacing: 6px;
+    text-transform: uppercase;
+    font-weight: 800;
+    text-shadow:
+        0 0 20px rgba(255, 255, 255, 0.3),
+        0 0 40px rgba(230, 57, 70, 0.4);
+    position: relative;
+    padding-left: 4px;
+}
+
+/* Gạch đỏ nhỏ trước tagline sub */
+.hero-title-sub::before {
+    content: '';
+    display: inline-block;
+    width: 32px;
+    height: 2px;
+    background: var(--red);
+    vertical-align: middle;
+    margin-right: 14px;
+    box-shadow: 0 0 12px rgba(230, 57, 70, 0.8);
+}
+
+/* ---------- Hero actions 2 nút ---------- */
+.hero-actions {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+}
+
+.hero-actions .btn {
+    padding: 16px 32px;
+    font-size: 0.92rem;
+    font-weight: 800;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Nút chính — đỏ đậm, có pulse glow */
+.hero-actions .btn-primary {
+    background: linear-gradient(135deg, var(--red), var(--red-dark));
+    box-shadow:
+        0 6px 20px rgba(230, 57, 70, 0.4),
+        0 0 0 0 rgba(230, 57, 70, 0.5);
+    animation: ctaPulse 3s ease-in-out infinite;
+}
+
+@keyframes ctaPulse {
+    0%, 100% {
+        box-shadow:
+            0 6px 20px rgba(230, 57, 70, 0.4),
+            0 0 0 0 rgba(230, 57, 70, 0.5);
+    }
+    50% {
+        box-shadow:
+            0 8px 28px rgba(230, 57, 70, 0.6),
+            0 0 0 8px rgba(230, 57, 70, 0);
+    }
+}
+
+.hero-actions .btn-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 32px rgba(230, 57, 70, 0.7);
+    animation: none;
+}
+
+/* Nút phụ — outline đỏ */
+.hero-actions .btn-outline-red {
+    background: rgba(255, 255, 255, 0.02);
+    backdrop-filter: blur(6px);
+    border: 2px solid rgba(230, 57, 70, 0.6);
+    color: var(--white);
+}
+
+.hero-actions .btn-outline-red:hover {
+    background: var(--red);
+    border-color: var(--red);
+    color: var(--white);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 28px rgba(230, 57, 70, 0.5);
+}
+
+.hero-actions .btn .ico {
+    width: 16px;
+    height: 16px;
+}
+
+/* ---------- Tiger breathing (kết hợp float có sẵn) ---------- */
+.hero-media img {
+    animation: float 5s ease-in-out infinite,
+               tigerBreath 6s ease-in-out infinite;
+}
+
+@keyframes tigerBreath {
+    0%, 100% { filter:
+        drop-shadow(0 20px 60px rgba(230, 57, 70, 0.55))
+        drop-shadow(0 0 30px rgba(230, 57, 70, 0.35))
+        brightness(1);
+    }
+    50% { filter:
+        drop-shadow(0 25px 75px rgba(230, 57, 70, 0.7))
+        drop-shadow(0 0 45px rgba(230, 57, 70, 0.5))
+        brightness(1.08);
+    }
+}
+
+/* ---------- Hero media glow to hơn ---------- */
+.hero-media-glow {
+    background: radial-gradient(circle at center,
+        rgba(230, 57, 70, 0.35),
+        rgba(230, 57, 70, 0.1) 40%,
+        transparent 70%);
+    animation: glowPulse 5s ease-in-out infinite;
+}
+
+@keyframes glowPulse {
+    0%, 100% { opacity: 0.8; }
+    50% { opacity: 1; }
+}
+
+/* ---------- Hero eyebrow nhấn mạnh ---------- */
+.hero-eyebrow {
+    position: relative;
+    padding-left: 44px;
+}
+
+.hero-eyebrow::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 32px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--red), var(--gold));
+    box-shadow: 0 0 12px rgba(230, 57, 70, 0.8);
+}
+
+/* ============================================================
+   RESPONSIVE — Mobile
+   ============================================================ */
+
+@media (max-width: 1024px) {
+    .hero-light-beam {
+        opacity: 0.35;
+    }
+
+    .hero-title-main {
+        font-size: clamp(3.5rem, 12vw, 6rem);
+        letter-spacing: 3px;
+    }
+
+    .hero-title-sub {
+        font-size: clamp(0.9rem, 2.5vw, 1.2rem);
+        letter-spacing: 4px;
+    }
+}
+
+@media (max-width: 640px) {
+    .hero-light-beam {
+        opacity: 0.25;
+    }
+
+    .hero-light-beam-1 { left: 8%; }
+    .hero-light-beam-2 { right: 12%; }
+
+    .hero-title {
+        gap: 6px;
+        margin-bottom: 18px;
+    }
+
+    .hero-title-main {
+        font-size: 3.8rem;
+        letter-spacing: 2px;
+        text-shadow:
+            0 0 30px rgba(230, 57, 70, 0.6),
+            3px 3px 0 rgba(139, 10, 31, 0.7);
+    }
+
+    .hero-title-sub {
+        font-size: 0.92rem;
+        letter-spacing: 3.5px;
+        padding-left: 0;
+    }
+
+    .hero-title-sub::before {
+        width: 22px;
+        margin-right: 10px;
+    }
+
+    .hero-eyebrow {
+        padding-left: 36px;
+    }
+
+    .hero-eyebrow::before {
+        width: 24px;
+    }
+
+    .hero-actions {
+        gap: 10px;
+    }
+
+    .hero-actions .btn {
+        padding: 14px 22px;
+        font-size: 0.82rem;
+        letter-spacing: 1px;
+        flex: 1 1 100%;
+        justify-content: center;
+    }
+
+    .hero-actions .btn .ico {
+        width: 15px;
+        height: 15px;
+    }
+
+    /* Giảm particle glow trên mobile */
+    .hero-media-glow {
+        background: radial-gradient(circle at center,
+            rgba(230, 57, 70, 0.25),
+            transparent 65%);
+    }
+}
+
+/* ============================================================
+   REDUCED MOTION
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+    .hero-particles {
+        display: none !important;
+    }
+
+    .hero-light-beam,
+    .hero-media img,
+    .hero-media-glow,
+    .hero-actions .btn-primary {
+        animation: none !important;
+    }
+
+    .hero-reveal {
+        opacity: 1 !important;
+        transform: none !important;
+        transition: none !important;
+    }
+}

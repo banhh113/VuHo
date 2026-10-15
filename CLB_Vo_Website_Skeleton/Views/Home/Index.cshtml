@@ -27,18 +27,48 @@
 
 <!-- ==================== HERO ==================== -->
 <section class="hero">
+    <!-- Lớp nền -->
     <div class="hero-brush"></div>
+    <div class="hero-light-beam hero-light-beam-1"></div>
+    <div class="hero-light-beam hero-light-beam-2"></div>
+
+    <!-- Particle layer -->
+    <canvas id="heroParticles" class="hero-particles" aria-hidden="true"></canvas>
+
+    <!-- Lớp nội dung -->
     <div class="container hero-inner">
 
         <div class="hero-left">
-            <p class="hero-eyebrow">CLB VÕ THUẬT</p>
-            <h1 class="hero-title">VŨ HỔ</h1>
-            <p class="hero-tagline">Rèn thân - Luyện chí - Cùng nhau tiến bước</p>
-            <p class="hero-desc">@clubDescription</p>
+            <p class="hero-eyebrow hero-reveal" style="--delay: 0s">CLB VÕ THUẬT</p>
 
-            <div class="hero-actions">
+            <h1 class="hero-title">
+                <span class="hero-title-main hero-reveal" style="--delay: 0.1s">VŨ HỔ</span>
+                <span class="hero-title-sub hero-reveal" style="--delay: 0.25s">ĐÁNH THỨC BẢN LĨNH</span>
+            </h1>
+
+            <p class="hero-tagline hero-reveal" style="--delay: 0.4s">
+                Rèn thân — Luyện chí — Cùng nhau tiến bước
+            </p>
+
+            <p class="hero-desc hero-reveal" style="--delay: 0.5s">
+                @clubDescription
+            </p>
+
+            <div class="hero-actions hero-reveal" style="--delay: 0.65s">
                 <a class="btn btn-primary" asp-controller="Registration" asp-action="Index">
-                    Đăng ký tập thử
+                    <svg class="ico ico-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                        <circle cx="12" cy="7" r="4"/>
+                    </svg>
+                    ĐĂNG KÝ TẬP LUYỆN
+                </a>
+                <a class="btn btn-outline-red" href="#about">
+                    <svg class="ico ico-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"/>
+                        <polyline points="12 16 16 12 12 8"/>
+                        <line x1="8" y1="12" x2="16" y2="12"/>
+                    </svg>
+                    KHÁM PHÁ CLB
                 </a>
             </div>
         </div>
