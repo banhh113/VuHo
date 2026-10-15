@@ -19,6 +19,9 @@ public class HomeController : Controller
         var kickboxingMembers = allMembers.Where(m => m.Category == "Kickboxing").ToList();
         var coaches = allMembers.Where(m => m.Category == "HLV").ToList();
 
+        // ⭐ Mới: Trợ giảng
+        var assistantCoaches = allMembers.Where(m => m.Category == "Trợ giảng").ToList();
+
         var allResults = await _db.TournamentResults.ToListAsync();
 
         var goldCount = allResults.Count(r =>
@@ -72,6 +75,7 @@ public class HomeController : Controller
             BoxingMembers = boxingMembers,
             KickboxingMembers = kickboxingMembers,
             Coaches = coaches,
+            AssistantCoaches = assistantCoaches,
             Events = await _db.Events.Where(e => e.EventDate >= DateTime.Now).OrderBy(e => e.EventDate).ToListAsync(),
             Gallery = await _db.GalleryImages.OrderByDescending(g => g.CreatedAt).ToListAsync(),
 
@@ -84,7 +88,6 @@ public class HomeController : Controller
 
             ClubInfo = await _db.ClubInfos.FirstOrDefaultAsync(),
 
-            // ⭐ Lịch tập + cơ sở động từ admin
             TimeSlots = await _db.TimeSlots
                 .Where(t => t.IsActive)
                 .OrderBy(t => t.SortOrder)
@@ -99,6 +102,45 @@ public class HomeController : Controller
         };
 
         return View(vm);
+    }
+
+    // ==================== API: MEMBER DATA (cho modal) ====================
+    [HttpGet("/members/{id:int}/data")]
+    public async Task<IActionResult> MemberData(int id)
+    {
+        var member = await _db.Members.FindAsync(id);
+        if (member == null) return NotFound();
+
+        var achievements = await _db.TournamentResults
+            .Include(r => r.Tournament)
+            .Where(r => r.MemberId == id)
+            .OrderByDescending(r => r.Tournament!.Year)
+            .ThenByDescending(r => r.Id)
+            .Select(r => new
+            {
+                r.Id,
+                r.Medal,
+                r.Category,
+                r.Note,
+                TournamentName = r.Tournament != null ? r.Tournament.Name : r.TournamentNameText,
+                Year = r.Tournament != null ? r.Tournament.Year : (int?)null,
+                Location = r.Tournament != null ? r.Tournament.Location : null
+            })
+            .ToListAsync();
+
+        return Json(new
+        {
+            member = new
+            {
+                member.Id,
+                member.FullName,
+                member.Role,
+                member.Category,
+                member.Description,
+                member.AvatarUrl
+            },
+            achievements
+        });
     }
 
     [HttpGet("/news/{id:int}")]
@@ -118,20 +160,20 @@ public class HomeController : Controller
     }
 
     [HttpGet("/members/{id:int}")]
-public async Task<IActionResult> MemberDetail(int id)
-{
-    var member = await _db.Members.FindAsync(id);
-    if (member == null) return NotFound();
+    public async Task<IActionResult> MemberDetail(int id)
+    {
+        var member = await _db.Members.FindAsync(id);
+        if (member == null) return NotFound();
 
-    ViewBag.Achievements = await _db.TournamentResults
-        .Include(r => r.Tournament)
-        .Where(r => r.MemberId == id)
-        .OrderByDescending(r => r.Tournament!.Year)
-        .ThenByDescending(r => r.Id)
-        .ToListAsync();
+        ViewBag.Achievements = await _db.TournamentResults
+            .Include(r => r.Tournament)
+            .Where(r => r.MemberId == id)
+            .OrderByDescending(r => r.Tournament!.Year)
+            .ThenByDescending(r => r.Id)
+            .ToListAsync();
 
-    return View(member);
-}
+        return View(member);
+    }
 
     [HttpGet("/about")]
     public async Task<IActionResult> About()

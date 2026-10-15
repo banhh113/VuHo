@@ -27,6 +27,35 @@
     --font-body: 'Be Vietnam Pro', Arial, sans-serif;
     --font-display: 'Bungee', 'Be Vietnam Pro', sans-serif;
     --header-h: 76px;
+
+    /* ---------- 3D Depth tokens ---------- */
+    --depth-1: 0 1px 2px rgba(0,0,0,0.3);
+    --depth-2: 0 4px 12px rgba(0,0,0,0.4);
+    --depth-3: 0 12px 32px rgba(0,0,0,0.5);
+    --depth-4: 0 24px 64px rgba(0,0,0,0.6);
+    --depth-red: 0 12px 40px rgba(230,57,70,0.35);
+    --depth-gold: 0 12px 40px rgba(245,197,24,0.35);
+
+    /* ---------- Glow ---------- */
+    --glow-red: 0 0 24px rgba(230,57,70,0.6);
+    --glow-gold: 0 0 24px rgba(245,197,24,0.6);
+
+    /* ---------- Spotlight ---------- */
+    --spotlight-red: radial-gradient(circle at 50% 0%, rgba(230,57,70,0.2), transparent 60%);
+
+    /* ---------- Easing ---------- */
+    --ease-out: cubic-bezier(.22, 1, .36, 1);
+    --ease-in-out: cubic-bezier(.65, 0, .35, 1);
+
+    /* ---------- Duration ---------- */
+    --t-fast: .2s;
+    --t-base: .35s;
+    --t-slow: .6s;
+    --t-reveal: .8s;
+
+    /* ---------- Perspective ---------- */
+    --perspective-card: 1200px;
+    --perspective-section: 1500px;
 }
 
 html { scroll-behavior: smooth; scroll-padding-top: var(--header-h); }
@@ -119,30 +148,6 @@ h1, h2, h3, h4 {
     gap: 26px;
     margin-left: auto;
 }
-
-.nav-link {
-    font-size: .85rem;
-    font-weight: 600;
-    color: #ddd;
-    position: relative;
-    padding: 8px 0;
-    white-space: nowrap;
-}
-
-.nav-link::after {
-    content: '';
-    position: absolute;
-    bottom: 0; left: 0;
-    width: 0; height: 2px;
-    background: var(--red);
-    transition: width .3s;
-}
-
-.nav-link:hover,
-.nav-link.active { color: var(--white); }
-.nav-link:hover::after,
-.nav-link.active::after { width: 100%; }
-.nav-link.active { color: var(--red); }
 
 .header-actions {
     display: flex;
@@ -439,9 +444,7 @@ h1, h2, h3, h4 {
     transform: translateY(-2px);
 }
 
-/* ============================================================
-   HERO RIGHT — Ảnh hổ bay tự do (không khung)
-   ============================================================ */
+/* HERO RIGHT — Ảnh hổ bay tự do */
 .hero-right {
     display: grid;
     grid-template-columns: 1fr auto;
@@ -680,6 +683,13 @@ h1, h2, h3, h4 {
 .schedule-section .section-title { color: #0a0a0a; }
 .schedule-section .section-eyebrow { color: var(--red); }
 
+.schedule-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 14px;
+    margin-bottom: 22px;
+}
+
 .schedule-card {
     background: #fff;
     border: 1.5px solid rgba(230,57,70,0.25);
@@ -719,7 +729,88 @@ h1, h2, h3, h4 {
     font-size: .9rem;
     color: #0a0a0a;
     letter-spacing: .5px;
-    margin-bottom: 4px;
+    line-height: 1.35;
+}
+
+.schedule-info-block {
+    display: flex;
+    gap: 14px;
+    padding: 14px 0;
+    border-top: 1px solid rgba(0,0,0,0.08);
+    font-size: .88rem;
+    color: #333;
+    line-height: 1.6;
+}
+
+.schedule-info-block:last-of-type {
+    border-bottom: 1px solid rgba(0,0,0,0.08);
+}
+
+.schedule-info-label {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    flex-shrink: 0;
+    color: var(--red);
+    font-weight: 700;
+    font-size: .74rem;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    min-width: 80px;
+    padding-top: 2px;
+}
+
+.schedule-info-label .ico {
+    width: 16px;
+    height: 16px;
+    margin-top: 1px;
+    color: var(--red);
+}
+
+.schedule-info-content {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.schedule-location-item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.schedule-location-item strong {
+    color: var(--red);
+    font-size: .86rem;
+    font-weight: 700;
+    font-family: var(--font-head);
+    letter-spacing: .3px;
+}
+
+.schedule-location-item span {
+    color: #333;
+    font-size: .86rem;
+    line-height: 1.5;
+}
+
+.schedule-phone-item {
+    color: #333;
+    font-size: .88rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.schedule-phone-item::before {
+    content: '';
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--red);
+    flex-shrink: 0;
 }
 
 /* Sports cards */
@@ -1134,13 +1225,22 @@ h1, h2, h3, h4 {
 }
 
 .stats strong {
-    display: block;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
     font-family: var(--font-head);
     font-size: 2.6rem;
     color: var(--gold);
     line-height: 1;
     margin-bottom: 12px;
     font-weight: 900;
+}
+
+.stats strong .ico {
+    width: 2.4rem;
+    height: 2.4rem;
+    stroke-width: 1.8;
 }
 
 .stats span {
@@ -1176,7 +1276,32 @@ h1, h2, h3, h4 {
     box-shadow: 0 8px 24px rgba(230,57,70,0.2);
 }
 
-.top-achievement-medal { font-size: 2rem; flex-shrink: 0; }
+.top-achievement-medal {
+    width: 52px;
+    height: 52px;
+    border-radius: 12px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    transition: all .25s;
+}
+
+.top-achievement-medal .ico {
+    width: 26px;
+    height: 26px;
+    stroke-width: 1.8;
+}
+
+.top-achievement-medal.medal-gold { color: #f5c518; background: rgba(245,197,24,0.08); border-color: rgba(245,197,24,0.3); }
+.top-achievement-medal.medal-silver { color: #c0c0c0; background: rgba(192,192,192,0.08); border-color: rgba(192,192,192,0.3); }
+.top-achievement-medal.medal-bronze { color: #cd7f32; background: rgba(205,127,50,0.08); border-color: rgba(205,127,50,0.3); }
+.top-achievement-medal.medal-other { color: var(--gold); background: rgba(245,197,24,0.08); border-color: rgba(245,197,24,0.3); }
+
+.top-achievement-card:hover .top-achievement-medal {
+    transform: scale(1.05);
+}
 
 .top-achievement-info { flex: 1; min-width: 0; }
 
@@ -1208,6 +1333,16 @@ h1, h2, h3, h4 {
     text-align: center;
     font-style: italic;
     padding: 30px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.empty-note .ico {
+    width: 20px;
+    height: 20px;
+    color: var(--gray);
 }
 
 /* ============================================================
@@ -1289,8 +1424,18 @@ h1, h2, h3, h4 {
     border: 1px solid rgba(255,255,255,0.15);
     display: grid;
     place-items: center;
-    color: var(--gray);
+    color: #d0d0d0;
     transition: all .25s;
+}
+
+.footer-social a svg {
+    width: 20px;
+    height: 20px;
+    transition: transform .25s;
+}
+
+.footer-social a svg path {
+    fill: currentColor;
 }
 
 .footer-social a:hover {
@@ -1301,7 +1446,9 @@ h1, h2, h3, h4 {
     box-shadow: 0 6px 16px rgba(230,57,70,0.4);
 }
 
-.footer-social svg { width: 18px; height: 18px; }
+.footer-social a:hover svg {
+    transform: scale(1.15);
+}
 
 .footer-bottom {
     border-top: 1px solid var(--border);
@@ -1363,18 +1510,50 @@ h1, h2, h3, h4 {
     align-items: center;
     gap: 4px;
     padding: 8px 4px;
-    color: var(--gray);
+    color: #b8b8b8;
     font-size: .68rem;
     font-weight: 600;
-    transition: color .2s;
+    transition: color .25s, transform .25s;
+    position: relative;
 }
 
 .bottom-tab-item svg {
     width: 22px;
     height: 22px;
+    transition: transform .25s, filter .25s;
 }
 
-.bottom-tab-item.active { color: var(--red); }
+.bottom-tab-item.active { color: #ffffff; }
+
+.bottom-tab-item.active svg {
+    color: #ffffff;
+    filter: drop-shadow(0 0 8px rgba(230,57,70,0.85))
+            drop-shadow(0 0 3px rgba(255,255,255,0.4));
+    transform: scale(1.08);
+}
+
+.bottom-tab-item.active span {
+    color: #ffffff;
+    font-weight: 800;
+    text-shadow: 0 0 8px rgba(230,57,70,0.6);
+}
+
+.bottom-tab-item.active::before {
+    content: '';
+    position: absolute;
+    top: -6px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 28px;
+    height: 3px;
+    border-radius: 0 0 3px 3px;
+    background: var(--red);
+    box-shadow: 0 0 10px rgba(230,57,70,0.8);
+}
+
+.bottom-tab-item:active svg {
+    transform: scale(0.92);
+}
 
 /* ============================================================
    ANIMATIONS
@@ -1384,20 +1563,194 @@ h1, h2, h3, h4 {
     50% { transform: translateY(-14px); }
 }
 
+@keyframes float-3d {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-14px) rotate(-1deg); }
+}
+
+@keyframes float-slow {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+}
+
 @keyframes slideUp {
     from { opacity: 0; transform: translateY(40px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
+@keyframes glow-pulse {
+    0%, 100% { box-shadow: 0 0 20px rgba(230,57,70,0.4); }
+    50% { box-shadow: 0 0 40px rgba(230,57,70,0.7); }
+}
+
+@keyframes trialPulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(16,185,129,0.4); }
+    50% { box-shadow: 0 0 0 12px rgba(16,185,129,0); }
+}
+
+@keyframes captchaBlink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.55; }
+}
+
 .reveal {
     opacity: 0;
-    transform: translateY(30px);
-    transition: opacity .7s ease, transform .7s ease;
+    transform: translateY(36px) scale(0.98);
+    transition:
+        opacity var(--t-reveal) var(--ease-out),
+        transform var(--t-reveal) var(--ease-out);
+    will-change: opacity, transform;
 }
 
 .reveal.active {
     opacity: 1;
+    transform: translateY(0) scale(1);
+}
+
+.reveal-stagger > * {
+    opacity: 0;
+    transform: translateY(24px);
+    transition:
+        opacity var(--t-reveal) var(--ease-out),
+        transform var(--t-reveal) var(--ease-out);
+}
+
+.reveal-stagger.active > * {
+    opacity: 1;
     transform: translateY(0);
+}
+
+.reveal-stagger.active > *:nth-child(1) { transition-delay: .05s; }
+.reveal-stagger.active > *:nth-child(2) { transition-delay: .12s; }
+.reveal-stagger.active > *:nth-child(3) { transition-delay: .19s; }
+.reveal-stagger.active > *:nth-child(4) { transition-delay: .26s; }
+.reveal-stagger.active > *:nth-child(5) { transition-delay: .33s; }
+.reveal-stagger.active > *:nth-child(6) { transition-delay: .40s; }
+.reveal-stagger.active > *:nth-child(7) { transition-delay: .47s; }
+.reveal-stagger.active > *:nth-child(8) { transition-delay: .54s; }
+
+.float-3d { animation: float-3d 6s ease-in-out infinite; }
+.float-slow { animation: float-slow 8s ease-in-out infinite; }
+.glow-pulse { animation: glow-pulse 3s ease-in-out infinite; }
+
+/* ============================================================
+   3D SPORT DESIGN SYSTEM
+   ============================================================ */
+
+.tilt-3d {
+    position: relative;
+    transform-style: preserve-3d;
+    perspective: var(--perspective-card);
+    transition: transform var(--t-base) var(--ease-out);
+    will-change: transform;
+}
+
+.tilt-3d > * {
+    transform-style: preserve-3d;
+    transform: translateZ(0);
+}
+
+.tilt-3d.tilting {
+    transition: transform .1s linear;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .tilt-3d:not(.js-enabled):hover {
+        transform: translateY(-6px);
+    }
+}
+
+.depth-card {
+    position: relative;
+    transition:
+        transform var(--t-base) var(--ease-out),
+        box-shadow var(--t-base) var(--ease-out);
+    box-shadow: var(--depth-2);
+}
+
+.depth-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--depth-4), var(--depth-red);
+}
+
+.spotlight {
+    position: relative;
+    overflow: hidden;
+}
+
+.spotlight::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(
+        circle 400px at var(--mouse-x, 50%) var(--mouse-y, 50%),
+        rgba(230,57,70,0.12),
+        transparent 60%
+    );
+    opacity: 0;
+    transition: opacity var(--t-base) var(--ease-out);
+    pointer-events: none;
+    z-index: 1;
+}
+
+.spotlight:hover::before {
+    opacity: 1;
+}
+
+.parallax-layer {
+    will-change: transform;
+    transition: transform .1s linear;
+}
+
+.section-divider {
+    position: relative;
+    height: 80px;
+    overflow: hidden;
+    background: transparent;
+}
+
+.section-divider::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) skewX(-12deg);
+    width: 60%;
+    height: 2px;
+    background: linear-gradient(90deg,
+        transparent,
+        var(--red),
+        var(--gold),
+        var(--red),
+        transparent);
+    opacity: 0.6;
+}
+
+.section-divider::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) skewX(-12deg);
+    width: 15%;
+    height: 4px;
+    background: var(--red);
+    box-shadow: 0 0 24px rgba(230,57,70,0.7);
+}
+
+.heading-3d {
+    text-shadow:
+        0 1px 0 rgba(139,10,31,0.6),
+        0 2px 0 rgba(139,10,31,0.5),
+        0 3px 0 rgba(139,10,31,0.4),
+        0 8px 24px rgba(0,0,0,0.5);
+}
+
+.glass {
+    background: rgba(22, 22, 22, 0.7);
+    backdrop-filter: blur(16px) saturate(1.2);
+    -webkit-backdrop-filter: blur(16px) saturate(1.2);
+    border: 1px solid rgba(255,255,255,0.08);
 }
 
 /* ============================================================
@@ -1570,7 +1923,6 @@ h1, h2, h3, h4 {
     border-left: 4px solid var(--red);
 }
 
-/* Autofill fix */
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus {
@@ -1585,6 +1937,82 @@ input::-webkit-contacts-auto-fill-button,
 input::-webkit-credentials-auto-fill-button {
     visibility: hidden;
     display: none !important;
+}
+
+/* ============================================================
+   DATE / TIME INPUTS — icon lịch sáng
+   ============================================================ */
+.form-group input[type="date"],
+.form-group input[type="datetime-local"],
+.form-group input[type="time"],
+.form-group input[type="month"],
+.form-group input[type="week"],
+input[type="date"],
+input[type="datetime-local"],
+input[type="time"],
+input[type="month"],
+input[type="week"] {
+    color-scheme: dark;
+    color: var(--white);
+}
+
+.form-group input[type="date"]::-webkit-calendar-picker-indicator,
+.form-group input[type="datetime-local"]::-webkit-calendar-picker-indicator,
+.form-group input[type="time"]::-webkit-calendar-picker-indicator,
+.form-group input[type="month"]::-webkit-calendar-picker-indicator,
+.form-group input[type="week"]::-webkit-calendar-picker-indicator {
+    filter: invert(78%) sepia(85%) saturate(1000%) hue-rotate(2deg) brightness(102%) contrast(98%);
+    opacity: 0.85;
+    cursor: pointer;
+    transition: opacity .2s, transform .2s;
+    padding: 4px;
+}
+
+.form-group input[type="date"]::-webkit-calendar-picker-indicator:hover,
+.form-group input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover,
+.form-group input[type="time"]::-webkit-calendar-picker-indicator:hover,
+.form-group input[type="month"]::-webkit-calendar-picker-indicator:hover,
+.form-group input[type="week"]::-webkit-calendar-picker-indicator:hover {
+    opacity: 1;
+    transform: scale(1.15);
+}
+
+.form-group input[type="date"]::-webkit-datetime-edit,
+.form-group input[type="date"]::-webkit-datetime-edit-fields-wrapper,
+.form-group input[type="date"]::-webkit-datetime-edit-text,
+.form-group input[type="date"]::-webkit-datetime-edit-month-field,
+.form-group input[type="date"]::-webkit-datetime-edit-day-field,
+.form-group input[type="date"]::-webkit-datetime-edit-year-field,
+.form-group input[type="datetime-local"]::-webkit-datetime-edit,
+.form-group input[type="datetime-local"]::-webkit-datetime-edit-fields-wrapper,
+.form-group input[type="datetime-local"]::-webkit-datetime-edit-text,
+.form-group input[type="datetime-local"]::-webkit-datetime-edit-month-field,
+.form-group input[type="datetime-local"]::-webkit-datetime-edit-day-field,
+.form-group input[type="datetime-local"]::-webkit-datetime-edit-year-field,
+.form-group input[type="datetime-local"]::-webkit-datetime-edit-hour-field,
+.form-group input[type="datetime-local"]::-webkit-datetime-edit-minute-field,
+.form-group input[type="time"]::-webkit-datetime-edit,
+.form-group input[type="time"]::-webkit-datetime-edit-fields-wrapper {
+    color: var(--white);
+}
+
+.form-group input[type="date"]::-webkit-datetime-edit-month-field:focus,
+.form-group input[type="date"]::-webkit-datetime-edit-day-field:focus,
+.form-group input[type="date"]::-webkit-datetime-edit-year-field:focus,
+.form-group input[type="datetime-local"]::-webkit-datetime-edit-month-field:focus,
+.form-group input[type="datetime-local"]::-webkit-datetime-edit-day-field:focus,
+.form-group input[type="datetime-local"]::-webkit-datetime-edit-year-field:focus,
+.form-group input[type="datetime-local"]::-webkit-datetime-edit-hour-field:focus,
+.form-group input[type="datetime-local"]::-webkit-datetime-edit-minute-field:focus {
+    background: var(--gold);
+    color: var(--black);
+    outline: none;
+    border-radius: 3px;
+}
+
+.form-group input[type="date"]::-moz-focus-inner,
+.form-group input[type="datetime-local"]::-moz-focus-inner {
+    border: 0;
 }
 
 /* ============================================================
@@ -2515,7 +2943,31 @@ body.admin-body {
     border-radius: 10px;
 }
 
-.meta-icon { font-size: 1.6rem; flex-shrink: 0; }
+.meta-ico,
+.meta-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: rgba(230,57,70,0.1);
+    border: 1px solid rgba(230,57,70,0.3);
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    color: var(--red);
+}
+
+.meta-ico .ico,
+.meta-icon .ico {
+    width: 16px;
+    height: 16px;
+    stroke-width: 2;
+}
+
+.schedule-meta .meta-ico {
+    background: rgba(230,57,70,0.08);
+    border-color: rgba(230,57,70,0.25);
+}
+
 .meta-item small { display: block; color: var(--gray); font-size: .75rem; text-transform: uppercase; letter-spacing: 1.2px; margin-bottom: 3px; }
 .meta-item strong { color: var(--white); font-size: .95rem; }
 
@@ -2555,7 +3007,23 @@ body.admin-body {
     margin-bottom: 16px;
 }
 
-.about-contact-item > span:first-child { font-size: 1.8rem; flex-shrink: 0; }
+.about-contact-item > span:first-child {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    background: rgba(230,57,70,0.1);
+    border: 1px solid rgba(230,57,70,0.3);
+    display: grid;
+    place-items: center;
+    color: var(--red);
+    flex-shrink: 0;
+}
+
+.about-contact-item > span:first-child .ico {
+    width: 22px;
+    height: 22px;
+}
+
 .about-contact-item small { display: block; color: var(--gray); font-size: .75rem; text-transform: uppercase; letter-spacing: 1.2px; margin-bottom: 4px; }
 .about-contact-item strong { color: var(--white); font-size: .95rem; }
 
@@ -2579,6 +3047,38 @@ body.admin-body {
     border-color: var(--gold);
     transform: translateY(-2px);
     box-shadow: 0 6px 16px rgba(245,197,24,0.4);
+}
+
+.detail-meta {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--gray);
+    font-size: .9rem;
+    margin-bottom: 8px;
+}
+
+.detail-meta .ico {
+    width: 16px;
+    height: 16px;
+    color: var(--red);
+    stroke-width: 2.2;
+}
+
+.tournament-meta-row {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--gray);
+    font-size: .92rem;
+    margin-bottom: 8px;
+    margin-right: 16px;
+}
+
+.tournament-meta-row .ico {
+    width: 16px;
+    height: 16px;
+    color: var(--red);
 }
 
 /* Tournament */
@@ -2613,7 +3113,7 @@ body.admin-body {
 }
 
 .tournament-card-body h3 { color: var(--white); font-size: 1.15rem; margin: 0; text-transform: none; }
-.tournament-card-body p { color: var(--gray); font-size: .85rem; margin: 0; }
+.tournament-card-body p { color: var(--gray); font-size: .85rem; margin: 0; display: inline-flex; align-items: center; gap: 6px; }
 
 .tournament-medals {
     display: flex;
@@ -2623,6 +3123,17 @@ body.admin-body {
     border-top: 1px solid var(--border);
     font-size: .85rem;
     font-weight: 700;
+}
+
+.tournament-medals span {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.tournament-medals .ico {
+    width: 14px;
+    height: 14px;
 }
 
 .medal-gold { color: #f5c518; }
@@ -2658,7 +3169,35 @@ body.admin-body {
 }
 
 .result-row:hover { border-left-color: var(--red); transform: translateX(4px); background: #161616; }
-.result-medal { font-size: 2rem; flex-shrink: 0; }
+
+.result-medal {
+    width: 52px;
+    height: 52px;
+    border-radius: 12px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    color: var(--gold);
+    transition: all .25s;
+}
+
+.result-medal .ico {
+    width: 26px;
+    height: 26px;
+    stroke-width: 1.8;
+}
+
+.result-medal.medal-gold { color: #f5c518; background: rgba(245,197,24,0.08); border-color: rgba(245,197,24,0.3); }
+.result-medal.medal-silver { color: #c0c0c0; background: rgba(192,192,192,0.08); border-color: rgba(192,192,192,0.3); }
+.result-medal.medal-bronze { color: #cd7f32; background: rgba(205,127,50,0.08); border-color: rgba(205,127,50,0.3); }
+.result-medal.medal-other { color: var(--gold); background: rgba(245,197,24,0.08); border-color: rgba(245,197,24,0.3); }
+
+.result-row:hover .result-medal {
+    transform: scale(1.05);
+}
+
 .result-info { flex: 1; min-width: 0; }
 .result-info strong { color: var(--white); font-size: 1rem; display: block; }
 .result-category { color: #a0a0a0; font-size: .82rem; margin-top: 2px; }
@@ -2673,6 +3212,52 @@ body.admin-body {
     border-radius: 6px;
     white-space: nowrap;
     flex-shrink: 0;
+}
+
+/* Result row clickable link */
+.result-row-link {
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+    position: relative;
+}
+
+.result-row-link .result-info strong {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: color .25s;
+}
+
+.result-row-link:hover .result-info strong {
+    color: var(--gold);
+}
+
+.result-arrow {
+    width: 16px;
+    height: 16px;
+    color: var(--red);
+    opacity: 0;
+    transform: translateX(-6px);
+    transition: opacity .25s, transform .25s;
+    flex-shrink: 0;
+}
+
+.result-row-link:hover .result-arrow {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.result-row-link:hover {
+    border-left-color: var(--red);
+    background: rgba(230,57,70,0.06);
+}
+
+@media (max-width: 640px) {
+    .result-arrow {
+        opacity: 0.7;
+        transform: translateX(0);
+    }
 }
 
 /* ============================================================
@@ -2702,316 +3287,6 @@ body.admin-body {
 .register-desc { color: var(--gray); font-size: .95rem; line-height: 1.6; max-width: 460px; margin: 0 auto; }
 .register-note { color: var(--gray-dark); font-size: .78rem; text-align: center; margin-top: 14px; font-style: italic; }
 
-.thankyou-box {
-    background: var(--black-card);
-    border: 1px solid var(--border);
-    border-top: 4px solid #10b981;
-    border-radius: 16px;
-    padding: 50px 36px;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
-}
-
-.thankyou-icon { font-size: 4rem; margin-bottom: 20px; animation: float 3s ease-in-out infinite; }
-.thankyou-box h1 { color: var(--white); font-size: clamp(1.6rem, 4vw, 2.2rem); margin-bottom: 16px; text-transform: none; }
-.thankyou-desc { color: var(--gray); line-height: 1.7; margin-bottom: 30px; }
-.thankyou-desc strong { color: var(--gold); }
-.thankyou-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
-
-/* ============================================================
-   RESPONSIVE
-   ============================================================ */
-@media (max-width: 1280px) {
-    .stats-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-}
-
-@media (max-width: 1024px) {
-    .main-nav { display: none; }
-    .menu-toggle { display: flex; }
-    .mobile-menu { display: block; }
-    .admin-quick-link { display: none !important; }
-    .hero-inner { grid-template-columns: 1fr; gap: 40px; }
-    .hero-right { grid-template-columns: 1fr; max-width: 520px; margin: 0 auto; }
-    .hero-features { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-    .why-grid, .schedule-grid { grid-template-columns: 1fr; gap: 40px; }
-    .schedule-cards { grid-template-columns: 1fr 1fr; }
-    .footer-top { grid-template-columns: 1fr; gap: 26px; text-align: center; }
-    .footer-brand { justify-content: center; }
-    .footer-social { justify-content: center; }
-    .footer-nav { justify-content: center; }
-    .admin-two-col { grid-template-columns: 1fr; }
-    .stats-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    .quick-actions-grid { grid-template-columns: repeat(2, 1fr); }
-}
-
-@media (hover: none) and (pointer: coarse) {
-    .admin-quick-link { display: none !important; }
-}
-
-@media (max-width: 900px) {
-    .two-col { grid-template-columns: 1fr; gap: 40px; }
-    .cards { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
-    .gallery { grid-template-columns: repeat(2, 1fr); }
-    .stats { grid-template-columns: repeat(2, 1fr); }
-    .section { padding: 70px 0; }
-    .sports-cards { grid-template-columns: 1fr 1fr; }
-
-    .admin-sidebar {
-        width: 260px; min-width: 260px; max-width: 260px;
-        transform: translateX(-100%);
-        transition: transform .3s;
-    }
-    .admin-sidebar.open { transform: translateX(0); }
-    .admin-sidebar:hover { box-shadow: none; width: 260px; min-width: 260px; max-width: 260px; }
-    .admin-main-wrapper { margin-left: 0; }
-    .admin-sidebar:hover ~ .admin-main-wrapper { margin-left: 0; }
-    .admin-toggle { display: flex; align-items: center; justify-content: center; }
-    .admin-main { padding: 20px; }
-    .admin-topbar { padding: 12px 18px; }
-    .admin-sidebar .admin-brand div,
-    .admin-sidebar .admin-nav-item .nav-label,
-    .admin-sidebar .user-info,
-    .admin-sidebar .btn-logout .logout-label { opacity: 1 !important; transform: none !important; pointer-events: auto !important; display: block !important; }
-    .admin-sidebar .btn-logout { justify-content: flex-start; padding: 12px 14px; gap: 14px; }
-    .admin-sidebar .admin-user { justify-content: flex-start; padding: 10px; gap: 12px; }
-}
-
-@media (max-width: 640px) {
-    :root { --header-h: 66px; }
-    .container { width: 94%; }
-    .brand-text small { display: none; }
-    .brand-text strong { font-size: .92rem; }
-    .brand-logo { width: 40px; height: 40px; }
-    .btn-cta span { display: none; }
-    .btn-cta { padding: 10px 12px; }
-    .hero { padding: calc(var(--header-h) + 40px) 0 60px; }
-    .hero-title { font-size: 3.5rem; letter-spacing: 2px; }
-    .hero-features { grid-template-columns: 1fr; }
-    .feature-icon { width: 40px; height: 40px; }
-    .section { padding: 56px 0; }
-    .gallery, .stats { grid-template-columns: 1fr; }
-    .event-item { flex-direction: column; align-items: flex-start; gap: 12px; }
-    .event-item strong { font-size: 2rem; min-width: auto; }
-    .event-more { align-self: flex-start; }
-    .schedule-cards { grid-template-columns: 1fr; }
-    .sports-cards { grid-template-columns: 1fr; }
-    .footer-bottom { padding-bottom: 90px; }
-    .bottom-tab { display: flex; }
-    .scroll-top { bottom: 90px; right: 16px; width: 40px; height: 40px; }
-    .member-detail { grid-template-columns: 1fr; text-align: center; gap: 24px; }
-    .member-detail-avatar { width: 200px; height: 200px; margin: 0 auto; }
-    .admin-table { font-size: .82rem; }
-    .admin-table th, .admin-table td { padding: 10px 12px; }
-    .admin-page-header h1 { font-size: 1.3rem; }
-    .admin-form { padding: 20px; }
-    .stats-grid { grid-template-columns: 1fr; }
-    .admin-main { padding: 16px; }
-    .quick-actions-grid { grid-template-columns: 1fr; }
-    .register-box { padding: 28px 20px; }
-    .thankyou-box { padding: 36px 24px; }
-    .thankyou-actions { flex-direction: column; }
-    .thankyou-actions .btn { width: 100%; }
-}
-
-/* Scrollbar */
-::-webkit-scrollbar { width: 10px; }
-::-webkit-scrollbar-track { background: var(--black); }
-::-webkit-scrollbar-thumb { background: var(--red-deep); border-radius: 5px; }
-::-webkit-scrollbar-thumb:hover { background: var(--red); }
-
-::selection { background: var(--red); color: var(--white); }
-
-/* ============================================================
-   ICON SYSTEM — Monochrome SVG
-   ============================================================ */
-
-.ico {
-    display: inline-block;
-    width: 1em;
-    height: 1em;
-    vertical-align: -0.125em;
-    stroke: currentColor;
-    stroke-width: 2;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-    fill: none;
-    flex-shrink: 0;
-    transition: transform .25s, color .25s;
-}
-
-.ico-xs { width: .75em; height: .75em; }
-.ico-sm { width: .875em; height: .875em; }
-.ico-lg { width: 1.25em; height: 1.25em; }
-.ico-xl { width: 1.5em; height: 1.5em; }
-.ico-2xl { width: 2em; height: 2em; }
-.ico-3xl { width: 2.5em; height: 2.5em; }
-
-.btn .ico,
-.btn-cta .ico,
-.btn-sm .ico {
-    vertical-align: middle;
-}
-
-/* ---------- Stats ---------- */
-.stats strong {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-}
-
-.stats strong .ico {
-    width: 2.4rem;
-    height: 2.4rem;
-    stroke-width: 1.8;
-}
-
-/* ---------- Top achievements medal ---------- */
-.top-achievement-medal {
-    width: 52px;
-    height: 52px;
-    border-radius: 12px;
-    background: rgba(255,255,255,0.04);
-    border: 1px solid var(--border);
-    display: grid;
-    place-items: center;
-    flex-shrink: 0;
-    transition: all .25s;
-}
-
-.top-achievement-medal .ico {
-    width: 26px;
-    height: 26px;
-    stroke-width: 1.8;
-}
-
-.top-achievement-medal.medal-gold { color: #f5c518; background: rgba(245,197,24,0.08); border-color: rgba(245,197,24,0.3); }
-.top-achievement-medal.medal-silver { color: #c0c0c0; background: rgba(192,192,192,0.08); border-color: rgba(192,192,192,0.3); }
-.top-achievement-medal.medal-bronze { color: #cd7f32; background: rgba(205,127,50,0.08); border-color: rgba(205,127,50,0.3); }
-.top-achievement-medal.medal-other { color: var(--gold); background: rgba(245,197,24,0.08); border-color: rgba(245,197,24,0.3); }
-
-.top-achievement-card:hover .top-achievement-medal {
-    transform: scale(1.05);
-}
-
-/* ---------- Meta items ---------- */
-.meta-ico,
-.meta-icon {
-    width: 32px;
-    height: 32px;
-    border-radius: 8px;
-    background: rgba(230,57,70,0.1);
-    border: 1px solid rgba(230,57,70,0.3);
-    display: grid;
-    place-items: center;
-    flex-shrink: 0;
-    color: var(--red);
-}
-
-.meta-ico .ico,
-.meta-icon .ico {
-    width: 16px;
-    height: 16px;
-    stroke-width: 2;
-}
-
-.schedule-meta .meta-ico {
-    background: rgba(230,57,70,0.08);
-    border-color: rgba(230,57,70,0.25);
-}
-
-/* ---------- About contact items ---------- */
-.about-contact-item > span:first-child {
-    width: 44px;
-    height: 44px;
-    border-radius: 10px;
-    background: rgba(230,57,70,0.1);
-    border: 1px solid rgba(230,57,70,0.3);
-    display: grid;
-    place-items: center;
-    color: var(--red);
-    flex-shrink: 0;
-}
-
-.about-contact-item > span:first-child .ico {
-    width: 22px;
-    height: 22px;
-}
-
-/* ---------- Detail meta ---------- */
-.detail-meta {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    color: var(--gray);
-    font-size: .9rem;
-    margin-bottom: 8px;
-}
-
-.detail-meta .ico {
-    width: 16px;
-    height: 16px;
-    color: var(--red);
-    stroke-width: 2.2;
-}
-
-.tournament-meta-row {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    color: var(--gray);
-    font-size: .92rem;
-    margin-bottom: 8px;
-    margin-right: 16px;
-}
-
-.tournament-meta-row .ico {
-    width: 16px;
-    height: 16px;
-    color: var(--red);
-}
-
-/* ---------- Tournament medals ---------- */
-.tournament-medals span {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-}
-
-.tournament-medals .ico {
-    width: 14px;
-    height: 14px;
-}
-
-/* ---------- Result rows ---------- */
-.result-medal {
-    width: 52px;
-    height: 52px;
-    border-radius: 12px;
-    background: rgba(255,255,255,0.04);
-    border: 1px solid var(--border);
-    display: grid;
-    place-items: center;
-    flex-shrink: 0;
-    color: var(--gold);
-    transition: all .25s;
-}
-
-.result-medal .ico {
-    width: 26px;
-    height: 26px;
-    stroke-width: 1.8;
-}
-
-.result-medal.medal-gold { color: #f5c518; background: rgba(245,197,24,0.08); border-color: rgba(245,197,24,0.3); }
-.result-medal.medal-silver { color: #c0c0c0; background: rgba(192,192,192,0.08); border-color: rgba(192,192,192,0.3); }
-.result-medal.medal-bronze { color: #cd7f32; background: rgba(205,127,50,0.08); border-color: rgba(205,127,50,0.3); }
-.result-medal.medal-other { color: var(--gold); background: rgba(245,197,24,0.08); border-color: rgba(245,197,24,0.3); }
-
-.result-row:hover .result-medal {
-    transform: scale(1.05);
-}
-
-/* ---------- Register / Thank-you ---------- */
 .register-form .btn-block {
     display: flex;
     align-items: center;
@@ -3022,6 +3297,15 @@ body.admin-body {
 .register-form .btn-block .ico {
     width: 18px;
     height: 18px;
+}
+
+.thankyou-box {
+    background: var(--black-card);
+    border: 1px solid var(--border);
+    border-top: 4px solid #10b981;
+    border-radius: 16px;
+    padding: 50px 36px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
 }
 
 .thankyou-icon {
@@ -3043,6 +3327,10 @@ body.admin-body {
     stroke-width: 2.5;
 }
 
+.thankyou-box h1 { color: var(--white); font-size: clamp(1.6rem, 4vw, 2.2rem); margin-bottom: 16px; text-transform: none; }
+.thankyou-desc { color: var(--gray); line-height: 1.7; margin-bottom: 30px; }
+.thankyou-desc strong { color: var(--gold); }
+.thankyou-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
 .thankyou-actions .btn {
     display: inline-flex;
     align-items: center;
@@ -3050,932 +3338,8 @@ body.admin-body {
 }
 
 /* ============================================================
-   GALLERY SECTION — VMMAF STYLE
-   ============================================================ */
-
-.gallery-section {
-    background: var(--black);
-    border-top: 1px solid var(--border);
-}
-
-.gallery-hero {
-    display: grid;
-    grid-template-columns: 1fr 1.35fr;
-    border-radius: 16px;
-    overflow: hidden;
-    margin-bottom: 28px;
-    min-height: 460px;
-    background: var(--black-card);
-    border: 1px solid var(--border);
-}
-
-.gallery-hero-left {
-    padding: 56px 48px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    background: linear-gradient(135deg, #0a0a0a 0%, #161616 100%);
-    position: relative;
-    z-index: 1;
-}
-
-.gallery-hero-left::before {
-    content: '';
-    position: absolute;
-    right: -30px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 320px;
-    height: 320px;
-    background: radial-gradient(circle, rgba(230,57,70,0.15), transparent 70%);
-    pointer-events: none;
-    z-index: -1;
-}
-
-.gallery-hero-title {
-    font-family: var(--font-head);
-    font-size: clamp(2.4rem, 5vw, 3.6rem);
-    color: var(--white);
-    text-transform: uppercase;
-    letter-spacing: 2.5px;
-    line-height: 1.05;
-    margin: 14px 0 22px;
-    font-weight: 900;
-}
-
-.gallery-hero-desc {
-    color: var(--gray);
-    font-size: .98rem;
-    line-height: 1.75;
-    margin-bottom: 34px;
-    max-width: 420px;
-}
-
-.gallery-tabs {
-    display: flex;
-    gap: 14px;
-    flex-wrap: wrap;
-}
-
-.gallery-tab {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 14px 36px;
-    background: transparent;
-    color: var(--gold);
-    border: 2px solid var(--gold);
-    font-family: var(--font-head);
-    font-weight: 800;
-    font-size: .85rem;
-    letter-spacing: 2.5px;
-    text-transform: uppercase;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: all .3s;
-    text-decoration: none;
-    min-width: 150px;
-}
-
-.gallery-tab.active,
-.gallery-tab:not([disabled]):hover {
-    background: var(--gold);
-    color: var(--black);
-    box-shadow: 0 10px 28px rgba(245,197,24,0.45);
-    transform: translateY(-2px);
-}
-
-.gallery-tab[disabled] {
-    opacity: 0.35;
-    cursor: not-allowed;
-    color: var(--gray);
-    border-color: rgba(245,197,24,0.3);
-}
-
-.gallery-hero-right {
-    position: relative;
-    overflow: hidden;
-    background: linear-gradient(135deg, #1a0508, #2a0a10);
-}
-
-.gallery-hero-img {
-    display: block;
-    width: 100%;
-    height: 100%;
-    min-height: 460px;
-    position: relative;
-    cursor: zoom-in;
-}
-
-.gallery-hero-img img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform .7s ease;
-    filter: contrast(1.08) saturate(0.92) brightness(0.95);
-}
-
-.gallery-hero-img:hover img {
-    transform: scale(1.06);
-    filter: contrast(1.12) saturate(1);
-}
-
-.gallery-hero-img::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(90deg, rgba(10,10,10,0.55) 0%, transparent 45%);
-    z-index: 1;
-    pointer-events: none;
-}
-
-.gallery-hero-empty {
-    display: grid;
-    place-items: center;
-    padding: 40px;
-    cursor: default;
-}
-
-.gallery-hero-empty img {
-    max-width: 220px;
-    filter: drop-shadow(0 10px 40px rgba(230,57,70,0.5));
-}
-
-/* Dải ảnh cuộn ngang */
-.gallery-scroll {
-    display: flex;
-    gap: 16px;
-    overflow-x: auto;
-    padding: 8px 4px 22px;
-    scroll-snap-type: x mandatory;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: thin;
-    scrollbar-color: var(--red-deep) transparent;
-}
-
-.gallery-scroll::-webkit-scrollbar {
-    height: 6px;
-}
-
-.gallery-scroll::-webkit-scrollbar-track {
-    background: rgba(255,255,255,0.03);
-    border-radius: 10px;
-}
-
-.gallery-scroll::-webkit-scrollbar-thumb {
-    background: var(--red-deep);
-    border-radius: 10px;
-}
-
-.gallery-scroll::-webkit-scrollbar-thumb:hover {
-    background: var(--red);
-}
-
-.gallery-card {
-    flex: 0 0 300px;
-    aspect-ratio: 16 / 11;
-    border-radius: 12px;
-    overflow: hidden;
-    position: relative;
-    background: var(--black-card);
-    cursor: zoom-in;
-    scroll-snap-align: start;
-    transition: transform .35s, box-shadow .35s;
-    text-decoration: none;
-    display: block;
-    border: 1px solid var(--border);
-}
-
-.gallery-card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 16px 40px rgba(230,57,70,0.35);
-    border-color: rgba(230,57,70,0.4);
-}
-
-.gallery-card > img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform .55s ease;
-}
-
-.gallery-card:hover > img {
-    transform: scale(1.1);
-}
-
-.gallery-card-overlay {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(to top,
-        rgba(0,0,0,0.95) 0%,
-        rgba(0,0,0,0.55) 45%,
-        transparent 75%);
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    padding: 16px 16px 18px;
-    color: var(--white);
-    z-index: 2;
-}
-
-.gallery-card-title {
-    color: var(--white);
-    font-size: .95rem;
-    font-weight: 700;
-    line-height: 1.35;
-    text-transform: none;
-    letter-spacing: 0;
-    margin: 0;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    line-clamp: 2;   
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    transition: opacity .25s;
-}
-
-.gallery-card-icon {
-    position: absolute;
-    bottom: 14px;
-    left: 14px;
-    width: 38px;
-    height: 38px;
-    border-radius: 10px;
-    background: var(--gold);
-    color: var(--black);
-    display: grid;
-    place-items: center;
-    opacity: 0;
-    transform: translateY(10px);
-    transition: all .3s;
-    box-shadow: 0 4px 14px rgba(245,197,24,0.5);
-    z-index: 3;
-}
-
-.gallery-card-icon .ico {
-    width: 18px;
-    height: 18px;
-    stroke-width: 2.5;
-}
-
-.gallery-card:hover .gallery-card-icon {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-.gallery-card:hover .gallery-card-title {
-    opacity: 0;
-}
-
-/* Gallery responsive */
-@media (max-width: 1024px) {
-    .gallery-hero {
-        grid-template-columns: 1fr;
-        min-height: auto;
-    }
-
-    .gallery-hero-left {
-        padding: 44px 32px;
-        order: 1;
-    }
-
-    .gallery-hero-right {
-        order: 0;
-    }
-
-    .gallery-hero-img {
-        min-height: 340px;
-    }
-
-    .gallery-hero-img::before {
-        background: linear-gradient(to top, rgba(10,10,10,0.65) 0%, transparent 55%);
-    }
-
-    .gallery-card {
-        flex: 0 0 260px;
-    }
-
-    .gallery-hero-title {
-        font-size: 2.2rem;
-    }
-}
-
-@media (max-width: 640px) {
-    .gallery-hero {
-        border-radius: 12px;
-    }
-
-    .gallery-hero-left {
-        padding: 32px 22px;
-    }
-
-    .gallery-hero-title {
-        font-size: 1.9rem;
-        letter-spacing: 1.5px;
-        margin: 10px 0 16px;
-    }
-
-    .gallery-hero-desc {
-        font-size: .88rem;
-        margin-bottom: 24px;
-    }
-
-    .gallery-hero-img {
-        min-height: 240px;
-    }
-
-    .gallery-card {
-        flex: 0 0 220px;
-    }
-
-    .gallery-scroll {
-        gap: 12px;
-    }
-
-    .gallery-card-title {
-        font-size: .85rem;
-    }
-
-    .gallery-card-tag {
-        font-size: .62rem;
-    }
-}
-/* ============================================================
-   GALLERY STRIP — Header + Nav buttons
-   ============================================================ */
-
-.gallery-strip-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 16px;
-    margin-bottom: 18px;
-    padding: 0 4px;
-}
-
-.gallery-strip-title {
-    font-family: var(--font-head);
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: var(--white);
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    margin: 0;
-    position: relative;
-    padding-left: 18px;
-}
-
-.gallery-strip-title::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 4px;
-    height: 22px;
-    background: var(--red);
-    border-radius: 2px;
-}
-
-.gallery-nav {
-    display: flex;
-    gap: 10px;
-}
-
-.gallery-nav-btn {
-    width: 44px;
-    height: 44px;
-    border-radius: 10px;
-    background: var(--black-card);
-    border: 1.5px solid var(--border);
-    color: var(--gold);
-    display: grid;
-    place-items: center;
-    cursor: pointer;
-    transition: all .25s;
-    padding: 0;
-    flex-shrink: 0;
-}
-
-.gallery-nav-btn svg {
-    width: 20px;
-    height: 20px;
-    transition: transform .25s;
-}
-
-.gallery-nav-btn:hover {
-    background: var(--gold);
-    color: var(--black);
-    border-color: var(--gold);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(245,197,24,0.4);
-}
-
-.gallery-nav-btn:active {
-    transform: translateY(0);
-}
-
-.gallery-nav-btn:disabled,
-.gallery-nav-btn[disabled] {
-    opacity: 0.35;
-    cursor: not-allowed;
-    background: var(--black-card);
-    color: var(--gray);
-    border-color: var(--border);
-}
-
-.gallery-nav-btn:disabled:hover {
-    background: var(--black-card);
-    color: var(--gray);
-    border-color: var(--border);
-    transform: none;
-    box-shadow: none;
-}
-
-/* Ẩn scrollbar của gallery-scroll — dùng nút để chuyển */
-.gallery-scroll {
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-    scroll-behavior: smooth;
-}
-
-.gallery-scroll::-webkit-scrollbar {
-    display: none;
-    height: 0;
-}
-
-/* Mobile: nút to hơn, dễ bấm */
-@media (max-width: 640px) {
-    .gallery-strip-header {
-        margin-bottom: 14px;
-    }
-
-    .gallery-strip-title {
-        font-size: .95rem;
-        letter-spacing: 1px;
-        padding-left: 14px;
-    }
-
-    .gallery-strip-title::before {
-        height: 18px;
-        width: 3px;
-    }
-
-    .gallery-nav {
-        gap: 8px;
-    }
-
-    .gallery-nav-btn {
-        width: 46px;
-        height: 46px;
-        border-radius: 12px;
-    }
-
-    .gallery-nav-btn svg {
-        width: 22px;
-        height: 22px;
-    }
-}
-/* ============================================================
-   SCHEDULE — Lịch tập động + Địa chỉ + SĐT
-   ============================================================ */
-
-/* Grid tự động: 2 cột trên desktop, 1 cột mobile */
-.schedule-cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-    gap: 14px;
-    margin-bottom: 22px;
-}
-
-.schedule-info-card strong {
-    display: block;
-    font-family: var(--font-head);
-    font-size: .9rem;
-    color: #0a0a0a;
-    letter-spacing: .5px;
-    line-height: 1.35;
-}
-
-/* ---------- Block địa chỉ / SĐT ---------- */
-.schedule-info-block {
-    display: flex;
-    gap: 14px;
-    padding: 14px 0;
-    border-top: 1px solid rgba(0,0,0,0.08);
-    font-size: .88rem;
-    color: #333;
-    line-height: 1.6;
-}
-
-.schedule-info-block:last-of-type {
-    border-bottom: 1px solid rgba(0,0,0,0.08);
-}
-
-.schedule-info-label {
-    display: flex;
-    align-items: flex-start;
-    gap: 8px;
-    flex-shrink: 0;
-    color: var(--red);
-    font-weight: 700;
-    font-size: .74rem;
-    letter-spacing: 1.2px;
-    text-transform: uppercase;
-    min-width: 80px;
-    padding-top: 2px;
-}
-
-.schedule-info-label .ico {
-    width: 16px;
-    height: 16px;
-    margin-top: 1px;
-    color: var(--red);
-}
-
-.schedule-info-content {
-    flex: 1;
-    min-width: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.schedule-info-content > * + * {
-    margin-top: 0;
-}
-
-.schedule-location-item {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-}
-
-.schedule-location-item strong {
-    color: var(--red);
-    font-size: .86rem;
-    font-weight: 700;
-    font-family: var(--font-head);
-    letter-spacing: .3px;
-}
-
-.schedule-location-item span {
-    color: #333;
-    font-size: .86rem;
-    line-height: 1.5;
-}
-
-.schedule-phone-item {
-    color: #333;
-    font-size: .88rem;
-    font-weight: 500;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.schedule-phone-item::before {
-    content: '';
-    width: 4px;
-    height: 4px;
-    border-radius: 50%;
-    background: var(--red);
-    flex-shrink: 0;
-}
-
-/* Mobile */
-@media (max-width: 640px) {
-    .schedule-cards {
-        grid-template-columns: 1fr;
-        gap: 12px;
-    }
-
-    .schedule-info-block {
-        flex-direction: column;
-        gap: 8px;
-        padding: 12px 0;
-    }
-
-    .schedule-info-label {
-        min-width: auto;
-        padding-top: 0;
-    }
-
-    .schedule-location-item strong,
-    .schedule-phone-item {
-        font-size: .85rem;
-    }
-}
-/* ============================================================
-   TRIAL DATE BANNER + QUICK ACTIONS
-   ============================================================ */
-
-/* ---------- Banner nổi bật khi có TrialDate ---------- */
-.trial-banner {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    padding: 20px 26px;
-    border-radius: 14px;
-    margin-bottom: 24px;
-    position: relative;
-    overflow: hidden;
-    border: 2px solid;
-    transition: all .3s;
-}
-
-.trial-banner::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(circle at 90% 50%, currentColor, transparent 70%);
-    opacity: 0.06;
-    pointer-events: none;
-}
-
-.trial-banner-icon {
-    width: 60px;
-    height: 60px;
-    border-radius: 14px;
-    display: grid;
-    place-items: center;
-    flex-shrink: 0;
-    background: rgba(255,255,255,0.06);
-    color: currentColor;
-}
-
-.trial-banner-info {
-    flex: 1;
-    min-width: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-}
-
-.trial-banner-label {
-    font-size: .72rem;
-    font-weight: 700;
-    letter-spacing: 1.8px;
-    text-transform: uppercase;
-    opacity: .8;
-}
-
-.trial-banner-date {
-    font-family: var(--font-head);
-    font-size: 1.35rem;
-    font-weight: 800;
-    color: var(--white);
-    line-height: 1.2;
-    letter-spacing: .3px;
-}
-
-.trial-banner-sub {
-    font-size: .85rem;
-    color: #bbb;
-    margin-top: 2px;
-}
-
-.trial-banner-countdown {
-    flex-shrink: 0;
-    padding: 10px 18px;
-    background: rgba(0,0,0,0.35);
-    border-radius: 10px;
-    text-align: center;
-    min-width: 130px;
-}
-
-.trial-banner-countdown strong {
-    font-family: var(--font-head);
-    font-size: 1.05rem;
-    font-weight: 900;
-    letter-spacing: .5px;
-    color: currentColor;
-    line-height: 1;
-}
-
-/* Color states */
-.trial-past {
-    background: linear-gradient(135deg, rgba(120,120,120,0.15), rgba(120,120,120,0.05));
-    border-color: rgba(120,120,120,0.5);
-    color: #999;
-}
-
-.trial-today {
-    background: linear-gradient(135deg, rgba(16,185,129,0.18), rgba(16,185,129,0.05));
-    border-color: rgba(16,185,129,0.6);
-    color: #34d399;
-    animation: trialPulse 2s ease-in-out infinite;
-}
-
-.trial-urgent {
-    background: linear-gradient(135deg, rgba(230,57,70,0.18), rgba(230,57,70,0.05));
-    border-color: rgba(230,57,70,0.6);
-    color: #f87171;
-}
-
-.trial-soon {
-    background: linear-gradient(135deg, rgba(245,197,24,0.15), rgba(245,197,24,0.05));
-    border-color: rgba(245,197,24,0.5);
-    color: var(--gold);
-}
-
-.trial-future {
-    background: linear-gradient(135deg, rgba(59,130,246,0.15), rgba(59,130,246,0.05));
-    border-color: rgba(59,130,246,0.5);
-    color: #60a5fa;
-}
-
-.trial-none {
-    background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
-    border-color: var(--border);
-    color: var(--gray);
-}
-
-@keyframes trialPulse {
-    0%, 100% { box-shadow: 0 0 0 0 rgba(16,185,129,0.4); }
-    50% { box-shadow: 0 0 0 12px rgba(16,185,129,0); }
-}
-
-/* ---------- Quick action buttons ---------- */
-.trial-quick-actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-}
-
-.trial-quick-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 11px 18px;
-    background: rgba(255,255,255,0.04);
-    border: 1.5px solid var(--border);
-    border-radius: 10px;
-    color: #ddd;
-    font-family: var(--font-body);
-    font-weight: 600;
-    font-size: .88rem;
-    cursor: pointer;
-    transition: all .2s;
-    white-space: nowrap;
-}
-
-.trial-quick-btn .ico {
-    color: var(--gold);
-    transition: color .2s;
-}
-
-.trial-quick-btn:hover {
-    background: rgba(245,197,24,0.1);
-    border-color: var(--gold);
-    color: var(--gold);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 18px rgba(245,197,24,0.2);
-}
-
-.trial-quick-btn:hover .ico {
-    color: var(--gold);
-}
-
-.trial-quick-btn:active {
-    transform: translateY(0);
-}
-
-.trial-quick-clear {
-    color: #f87171;
-    border-color: rgba(230,57,70,0.4);
-}
-
-.trial-quick-clear .ico {
-    color: #f87171;
-}
-
-.trial-quick-clear:hover {
-    background: rgba(230,57,70,0.12);
-    border-color: var(--red);
-    color: var(--red);
-    box-shadow: 0 6px 18px rgba(230,57,70,0.3);
-}
-
-/* ---------- Responsive ---------- */
-@media (max-width: 640px) {
-    .trial-banner {
-        flex-direction: column;
-        text-align: center;
-        gap: 14px;
-        padding: 18px 20px;
-    }
-
-    .trial-banner-info {
-        align-items: center;
-    }
-
-    .trial-banner-date {
-        font-size: 1.1rem;
-    }
-
-    .trial-banner-countdown {
-        width: 100%;
-    }
-
-    .trial-quick-actions {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 8px;
-    }
-
-    .trial-quick-btn {
-        justify-content: center;
-        padding: 12px 10px;
-        font-size: .82rem;
-    }
-}
-/* ============================================================
-   DATE / TIME INPUTS — làm sáng icon lịch
-   Fix: Chrome render icon lịch màu đen trên nền tối
-   ============================================================ */
-
-/* Bước 1: Đổi color-scheme → Chrome tự render icon native màu sáng */
-.form-group input[type="date"],
-.form-group input[type="datetime-local"],
-.form-group input[type="time"],
-.form-group input[type="month"],
-.form-group input[type="week"],
-input[type="date"],
-input[type="datetime-local"],
-input[type="time"],
-input[type="month"],
-input[type="week"] {
-    color-scheme: dark;
-    color: var(--white);
-}
-
-/* Bước 2: Ép icon lịch sang màu VÀNG khớp theme */
-.form-group input[type="date"]::-webkit-calendar-picker-indicator,
-.form-group input[type="datetime-local"]::-webkit-calendar-picker-indicator,
-.form-group input[type="time"]::-webkit-calendar-picker-indicator,
-.form-group input[type="month"]::-webkit-calendar-picker-indicator,
-.form-group input[type="week"]::-webkit-calendar-picker-indicator {
-    filter: invert(78%) sepia(85%) saturate(1000%) hue-rotate(2deg) brightness(102%) contrast(98%);
-    opacity: 0.85;
-    cursor: pointer;
-    transition: opacity .2s, transform .2s;
-    padding: 4px;
-}
-
-.form-group input[type="date"]::-webkit-calendar-picker-indicator:hover,
-.form-group input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover,
-.form-group input[type="time"]::-webkit-calendar-picker-indicator:hover,
-.form-group input[type="month"]::-webkit-calendar-picker-indicator:hover,
-.form-group input[type="week"]::-webkit-calendar-picker-indicator:hover {
-    opacity: 1;
-    transform: scale(1.15);
-}
-
-/* Bước 3: Field ngày giờ — chữ trắng đậm dễ đọc */
-.form-group input[type="date"]::-webkit-datetime-edit,
-.form-group input[type="date"]::-webkit-datetime-edit-fields-wrapper,
-.form-group input[type="date"]::-webkit-datetime-edit-text,
-.form-group input[type="date"]::-webkit-datetime-edit-month-field,
-.form-group input[type="date"]::-webkit-datetime-edit-day-field,
-.form-group input[type="date"]::-webkit-datetime-edit-year-field,
-.form-group input[type="datetime-local"]::-webkit-datetime-edit,
-.form-group input[type="datetime-local"]::-webkit-datetime-edit-fields-wrapper,
-.form-group input[type="datetime-local"]::-webkit-datetime-edit-text,
-.form-group input[type="datetime-local"]::-webkit-datetime-edit-month-field,
-.form-group input[type="datetime-local"]::-webkit-datetime-edit-day-field,
-.form-group input[type="datetime-local"]::-webkit-datetime-edit-year-field,
-.form-group input[type="datetime-local"]::-webkit-datetime-edit-hour-field,
-.form-group input[type="datetime-local"]::-webkit-datetime-edit-minute-field,
-.form-group input[type="time"]::-webkit-datetime-edit,
-.form-group input[type="time"]::-webkit-datetime-edit-fields-wrapper {
-    color: var(--white);
-}
-
-/* Field được chọn → nền vàng, chữ đen */
-.form-group input[type="date"]::-webkit-datetime-edit-month-field:focus,
-.form-group input[type="date"]::-webkit-datetime-edit-day-field:focus,
-.form-group input[type="date"]::-webkit-datetime-edit-year-field:focus,
-.form-group input[type="datetime-local"]::-webkit-datetime-edit-month-field:focus,
-.form-group input[type="datetime-local"]::-webkit-datetime-edit-day-field:focus,
-.form-group input[type="datetime-local"]::-webkit-datetime-edit-year-field:focus,
-.form-group input[type="datetime-local"]::-webkit-datetime-edit-hour-field:focus,
-.form-group input[type="datetime-local"]::-webkit-datetime-edit-minute-field:focus {
-    background: var(--gold);
-    color: var(--black);
-    outline: none;
-    border-radius: 3px;
-}
-
-/* Firefox — icon sáng */
-.form-group input[type="date"]::-moz-focus-inner,
-.form-group input[type="datetime-local"]::-moz-focus-inner {
-    border: 0;
-}
-/* ============================================================
    CONTACT SECTION
    ============================================================ */
-
 .contact-section {
     background: linear-gradient(180deg, var(--black) 0%, var(--black-soft) 100%);
     border-top: 1px solid var(--border);
@@ -3994,7 +3358,6 @@ input[type="week"] {
     pointer-events: none;
 }
 
-/* ---------- Cards grid ---------- */
 .contact-cards {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -4078,7 +3441,6 @@ input[type="week"] {
     font-size: .95rem;
 }
 
-/* ---------- Location items ---------- */
 .contact-location {
     display: flex;
     flex-direction: column;
@@ -4137,7 +3499,6 @@ input[type="week"] {
     box-shadow: 0 4px 14px rgba(230,57,70,0.4);
 }
 
-/* ---------- Phone items ---------- */
 .contact-phone-item {
     display: flex;
     align-items: center;
@@ -4171,7 +3532,6 @@ input[type="week"] {
     color: var(--gold);
 }
 
-/* ---------- Email item ---------- */
 .contact-email-item {
     display: inline-flex;
     align-items: center;
@@ -4205,7 +3565,6 @@ input[type="week"] {
     color: var(--gold);
 }
 
-/* ---------- Hours / generic line ---------- */
 .contact-hours {
     display: flex;
     flex-direction: column;
@@ -4231,7 +3590,6 @@ input[type="week"] {
     margin-top: 8px;
 }
 
-/* ---------- CTA at bottom ---------- */
 .contact-cta {
     display: flex;
     flex-direction: column;
@@ -4277,85 +3635,487 @@ input[type="week"] {
     height: 16px;
 }
 
-/* ---------- Responsive ---------- */
-@media (max-width: 900px) {
-    .contact-cards {
-        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-        gap: 16px;
-    }
-
-    .contact-card {
-        padding: 24px 20px;
-    }
-}
-
-@media (max-width: 640px) {
-    .contact-cards {
-        grid-template-columns: 1fr;
-        gap: 14px;
-    }
-
-    .contact-card {
-        padding: 22px 18px;
-    }
-
-    .contact-card-title {
-        font-size: .88rem;
-        margin-bottom: 12px;
-    }
-
-    .contact-card-icon {
-        width: 46px;
-        height: 46px;
-        margin-bottom: 14px;
-    }
-
-    .contact-card-icon .ico {
-        width: 20px;
-        height: 20px;
-    }
-
-    .contact-cta {
-        padding: 30px 18px;
-    }
-
-    .contact-cta-text {
-        font-size: 1.05rem;
-    }
-
-    .contact-cta .btn {
-        width: 100%;
-        justify-content: center;
-        padding: 14px 24px;
-        font-size: .9rem;
-    }
-}
 /* ============================================================
-   FOOTER SOCIAL — làm sáng icon, tăng hover
+   GALLERY VMMAF STYLE
    ============================================================ */
-
-.footer-social a {
-    color: #d0d0d0;
+.gallery-section {
+    background: var(--black);
+    border-top: 1px solid var(--border);
 }
 
-.footer-social a svg {
+.gallery-hero {
+    display: grid;
+    grid-template-columns: 1fr 1.35fr;
+    border-radius: 16px;
+    overflow: hidden;
+    margin-bottom: 28px;
+    min-height: 460px;
+    background: var(--black-card);
+    border: 1px solid var(--border);
+}
+
+.gallery-hero-left {
+    padding: 56px 48px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background: linear-gradient(135deg, #0a0a0a 0%, #161616 100%);
+    position: relative;
+    z-index: 1;
+}
+
+.gallery-hero-left::before {
+    content: '';
+    position: absolute;
+    right: -30px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 320px;
+    height: 320px;
+    background: radial-gradient(circle, rgba(230,57,70,0.15), transparent 70%);
+    pointer-events: none;
+    z-index: -1;
+}
+
+.gallery-hero-title {
+    font-family: var(--font-head);
+    font-size: clamp(2.4rem, 5vw, 3.6rem);
+    color: var(--white);
+    text-transform: uppercase;
+    letter-spacing: 2.5px;
+    line-height: 1.05;
+    margin: 14px 0 22px;
+    font-weight: 900;
+}
+
+.gallery-hero-desc {
+    color: var(--gray);
+    font-size: .98rem;
+    line-height: 1.75;
+    margin-bottom: 34px;
+    max-width: 420px;
+}
+
+.gallery-hero-right {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(135deg, #1a0508, #2a0a10);
+}
+
+.gallery-hero-img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    min-height: 460px;
+    position: relative;
+    cursor: zoom-in;
+}
+
+.gallery-hero-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform .7s ease;
+    filter: contrast(1.08) saturate(0.92) brightness(0.95);
+}
+
+.gallery-hero-img:hover img {
+    transform: scale(1.06);
+    filter: contrast(1.12) saturate(1);
+}
+
+.gallery-hero-img::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, rgba(10,10,10,0.55) 0%, transparent 45%);
+    z-index: 1;
+    pointer-events: none;
+}
+
+.gallery-hero-empty {
+    display: grid;
+    place-items: center;
+    padding: 40px;
+    cursor: default;
+}
+
+.gallery-hero-empty img {
+    max-width: 220px;
+    filter: drop-shadow(0 10px 40px rgba(230,57,70,0.5));
+}
+
+/* Gallery strip header + nav */
+.gallery-strip-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 18px;
+    padding: 0 4px;
+}
+
+.gallery-strip-title {
+    font-family: var(--font-head);
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--white);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin: 0;
+    position: relative;
+    padding-left: 18px;
+}
+
+.gallery-strip-title::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 22px;
+    background: var(--red);
+    border-radius: 2px;
+}
+
+.gallery-nav {
+    display: flex;
+    gap: 10px;
+}
+
+.gallery-nav-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    background: var(--black-card);
+    border: 1.5px solid var(--border);
+    color: var(--gold);
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    transition: all .25s;
+    padding: 0;
+    flex-shrink: 0;
+}
+
+.gallery-nav-btn svg {
     width: 20px;
     height: 20px;
     transition: transform .25s;
 }
 
-.footer-social a:hover svg {
-    transform: scale(1.15);
+.gallery-nav-btn:hover {
+    background: var(--gold);
+    color: var(--black);
+    border-color: var(--gold);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(245,197,24,0.4);
 }
 
-/* Icon trong suốt → ăn màu currentColor */
-.footer-social a svg path {
-    fill: currentColor;
+.gallery-nav-btn:active {
+    transform: translateY(0);
 }
+
+/* Dải ảnh cuộn ngang */
+.gallery-scroll {
+    display: flex;
+    gap: 16px;
+    overflow-x: auto;
+    padding: 8px 4px 22px;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.gallery-scroll::-webkit-scrollbar {
+    display: none;
+    height: 0;
+}
+
+.gallery-card {
+    flex: 0 0 300px;
+    aspect-ratio: 16 / 11;
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+    background: var(--black-card);
+    cursor: zoom-in;
+    scroll-snap-align: start;
+    transition: transform .35s, box-shadow .35s;
+    text-decoration: none;
+    display: block;
+    border: 1px solid var(--border);
+}
+
+.gallery-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 16px 40px rgba(230,57,70,0.35);
+    border-color: rgba(230,57,70,0.4);
+}
+
+.gallery-card > img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform .55s ease;
+}
+
+.gallery-card:hover > img {
+    transform: scale(1.1);
+}
+
+.gallery-card-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top,
+        rgba(0,0,0,0.95) 0%,
+        rgba(0,0,0,0.55) 45%,
+        transparent 75%);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 16px 16px 18px;
+    color: var(--white);
+    z-index: 2;
+}
+
+.gallery-card-title {
+    color: var(--white);
+    font-size: .95rem;
+    font-weight: 700;
+    line-height: 1.35;
+    text-transform: none;
+    letter-spacing: 0;
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    transition: opacity .25s;
+}
+
+.gallery-card-icon {
+    position: absolute;
+    bottom: 14px;
+    left: 14px;
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    background: var(--gold);
+    color: var(--black);
+    display: grid;
+    place-items: center;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all .3s;
+    box-shadow: 0 4px 14px rgba(245,197,24,0.5);
+    z-index: 3;
+}
+
+.gallery-card-icon .ico {
+    width: 18px;
+    height: 18px;
+    stroke-width: 2.5;
+}
+
+.gallery-card:hover .gallery-card-icon {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.gallery-card:hover .gallery-card-title {
+    opacity: 0;
+}
+
 /* ============================================================
-   CAPTCHA — Math captcha chống bot
+   TRIAL DATE BANNER
    ============================================================ */
+.trial-banner {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 20px 26px;
+    border-radius: 14px;
+    margin-bottom: 24px;
+    position: relative;
+    overflow: hidden;
+    border: 2px solid;
+    transition: all .3s;
+}
 
+.trial-banner::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 90% 50%, currentColor, transparent 70%);
+    opacity: 0.06;
+    pointer-events: none;
+}
+
+.trial-banner-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 14px;
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    background: rgba(255,255,255,0.06);
+    color: currentColor;
+}
+
+.trial-banner-info {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.trial-banner-label {
+    font-size: .72rem;
+    font-weight: 700;
+    letter-spacing: 1.8px;
+    text-transform: uppercase;
+    opacity: .8;
+}
+
+.trial-banner-date {
+    font-family: var(--font-head);
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: var(--white);
+    line-height: 1.2;
+    letter-spacing: .3px;
+}
+
+.trial-banner-sub {
+    font-size: .85rem;
+    color: #bbb;
+    margin-top: 2px;
+}
+
+.trial-banner-countdown {
+    flex-shrink: 0;
+    padding: 10px 18px;
+    background: rgba(0,0,0,0.35);
+    border-radius: 10px;
+    text-align: center;
+    min-width: 130px;
+}
+
+.trial-banner-countdown strong {
+    font-family: var(--font-head);
+    font-size: 1.05rem;
+    font-weight: 900;
+    letter-spacing: .5px;
+    color: currentColor;
+    line-height: 1;
+}
+
+.trial-past {
+    background: linear-gradient(135deg, rgba(120,120,120,0.15), rgba(120,120,120,0.05));
+    border-color: rgba(120,120,120,0.5);
+    color: #999;
+}
+
+.trial-today {
+    background: linear-gradient(135deg, rgba(16,185,129,0.18), rgba(16,185,129,0.05));
+    border-color: rgba(16,185,129,0.6);
+    color: #34d399;
+    animation: trialPulse 2s ease-in-out infinite;
+}
+
+.trial-urgent {
+    background: linear-gradient(135deg, rgba(230,57,70,0.18), rgba(230,57,70,0.05));
+    border-color: rgba(230,57,70,0.6);
+    color: #f87171;
+}
+
+.trial-soon {
+    background: linear-gradient(135deg, rgba(245,197,24,0.15), rgba(245,197,24,0.05));
+    border-color: rgba(245,197,24,0.5);
+    color: var(--gold);
+}
+
+.trial-future {
+    background: linear-gradient(135deg, rgba(59,130,246,0.15), rgba(59,130,246,0.05));
+    border-color: rgba(59,130,246,0.5);
+    color: #60a5fa;
+}
+
+.trial-none {
+    background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
+    border-color: var(--border);
+    color: var(--gray);
+}
+
+.trial-quick-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.trial-quick-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 11px 18px;
+    background: rgba(255,255,255,0.04);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    color: #ddd;
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: .88rem;
+    cursor: pointer;
+    transition: all .2s;
+    white-space: nowrap;
+}
+
+.trial-quick-btn .ico {
+    color: var(--gold);
+    transition: color .2s;
+}
+
+.trial-quick-btn:hover {
+    background: rgba(245,197,24,0.1);
+    border-color: var(--gold);
+    color: var(--gold);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(245,197,24,0.2);
+}
+
+.trial-quick-btn:hover .ico {
+    color: var(--gold);
+}
+
+.trial-quick-btn:active {
+    transform: translateY(0);
+}
+
+.trial-quick-clear {
+    color: #f87171;
+    border-color: rgba(230,57,70,0.4);
+}
+
+.trial-quick-clear .ico {
+    color: #f87171;
+}
+
+.trial-quick-clear:hover {
+    background: rgba(230,57,70,0.12);
+    border-color: var(--red);
+    color: var(--red);
+    box-shadow: 0 6px 18px rgba(230,57,70,0.3);
+}
+
+/* ============================================================
+   CAPTCHA
+   ============================================================ */
 .captcha-group {
     margin-top: 4px;
 }
@@ -4406,11 +4166,6 @@ input[type="week"] {
     color: var(--red);
     font-size: 1.5rem;
     animation: captchaBlink 1.6s ease-in-out infinite;
-}
-
-@keyframes captchaBlink {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.55; }
 }
 
 .captcha-input {
@@ -4478,7 +4233,6 @@ input[type="week"] {
     cursor: wait;
 }
 
-/* Honeypot field — ẩn khỏi user nhưng bot vẫn thấy */
 .hp-field {
     position: absolute !important;
     left: -9999px !important;
@@ -4495,86 +4249,9 @@ input[type="week"] {
     display: none !important;
 }
 
-/* Responsive */
-@media (max-width: 480px) {
-    .captcha-question {
-        min-width: 110px;
-        padding: 0 12px;
-        font-size: 1.15rem;
-        gap: 6px;
-    }
-
-    .captcha-eq {
-        font-size: .95rem;
-    }
-
-    .captcha-qmark {
-        font-size: 1.3rem;
-    }
-
-    .captcha-reload {
-        width: 44px;
-    }
-}
 /* ============================================================
-   BOTTOM TAB MOBILE — làm sáng icon Trang chủ + các item khác
+   MEMBER ACHIEVEMENTS
    ============================================================ */
-
-/* Item không active: xám sáng hơn */
-.bottom-tab-item {
-    color: #b8b8b8;
-    transition: color .25s, transform .25s;
-}
-
-.bottom-tab-item svg {
-    transition: transform .25s, filter .25s;
-}
-
-/* Item active (Trang chủ): trắng sáng + glow đỏ */
-.bottom-tab-item.active {
-    color: #ffffff;
-}
-
-.bottom-tab-item.active svg {
-    color: #ffffff;
-    filter: drop-shadow(0 0 8px rgba(230,57,70,0.85))
-            drop-shadow(0 0 3px rgba(255,255,255,0.4));
-    transform: scale(1.08);
-}
-
-.bottom-tab-item.active span {
-    color: #ffffff;
-    font-weight: 800;
-    text-shadow: 0 0 8px rgba(230,57,70,0.6);
-}
-
-/* Vạch đỏ nhỏ phía trên item active (indicator) */
-.bottom-tab-item.active::before {
-    content: '';
-    position: absolute;
-    top: -6px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 28px;
-    height: 3px;
-    border-radius: 0 0 3px 3px;
-    background: var(--red);
-    box-shadow: 0 0 10px rgba(230,57,70,0.8);
-}
-
-/* Item cần position relative để vạch đỏ hiển thị đúng */
-.bottom-tab-item {
-    position: relative;
-}
-
-/* Tap feedback: hơi nhún xuống */
-.bottom-tab-item:active svg {
-    transform: scale(0.92);
-}
-/* ============================================================
-   MEMBER ACHIEVEMENTS — Thành tích trên trang chi tiết thành viên
-   ============================================================ */
-
 .member-achievements {
     margin-top: 50px;
     padding-top: 40px;
@@ -4601,7 +4278,6 @@ input[type="week"] {
     letter-spacing: .5px;
 }
 
-/* ---------- Tổng kết huy chương ---------- */
 .member-medal-summary {
     display: flex;
     gap: 10px;
@@ -4644,7 +4320,6 @@ input[type="week"] {
     box-shadow: 0 6px 16px rgba(0,0,0,0.3);
 }
 
-/* ---------- Danh sách thành tích ---------- */
 .member-achievements-list {
     display: flex;
     flex-direction: column;
@@ -4665,27 +4340,12 @@ input[type="week"] {
     overflow: hidden;
 }
 
-.member-achievement-item::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(circle at 0% 50%, currentColor, transparent 60%);
-    opacity: 0.04;
-    pointer-events: none;
-}
-
 .member-achievement-item:hover {
     transform: translateX(6px);
     border-left-color: var(--red);
     box-shadow: 0 10px 30px rgba(0,0,0,0.5);
 }
 
-.member-achievement-item:has(.member-achievement-medal.medal-gold) { border-left-color: #f5c518; }
-.member-achievement-item:has(.member-achievement-medal.medal-silver) { border-left-color: #c0c0c0; }
-.member-achievement-item:has(.member-achievement-medal.medal-bronze) { border-left-color: #cd7f32; }
-.member-achievement-item:has(.member-achievement-medal.medal-other) { border-left-color: var(--gold); }
-
-/* ---------- Huy chương icon ---------- */
 .member-achievement-medal {
     width: 56px;
     height: 56px;
@@ -4735,7 +4395,6 @@ input[type="week"] {
     transform: scale(1.08) rotate(-5deg);
 }
 
-/* ---------- Info ---------- */
 .member-achievement-info {
     flex: 1;
     min-width: 0;
@@ -4780,7 +4439,6 @@ input[type="week"] {
     flex-shrink: 0;
 }
 
-/* ---------- Label huy chương ---------- */
 .member-achievement-medal-label {
     flex-shrink: 0;
     padding: 8px 16px;
@@ -4817,7 +4475,6 @@ input[type="week"] {
     border-color: rgba(245,197,24,0.4);
 }
 
-/* ---------- Empty state ---------- */
 .member-achievements-empty {
     margin-top: 50px;
     padding: 50px 20px;
@@ -4836,7 +4493,218 @@ input[type="week"] {
     margin: 0;
 }
 
-/* ---------- Responsive ---------- */
+/* ============================================================
+   ICON SYSTEM — Monochrome SVG
+   ============================================================ */
+.ico {
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    vertical-align: -0.125em;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    fill: none;
+    flex-shrink: 0;
+    transition: transform .25s, color .25s;
+}
+
+.ico-xs { width: .75em; height: .75em; }
+.ico-sm { width: .875em; height: .875em; }
+.ico-lg { width: 1.25em; height: 1.25em; }
+.ico-xl { width: 1.5em; height: 1.5em; }
+.ico-2xl { width: 2em; height: 2em; }
+.ico-3xl { width: 2.5em; height: 2.5em; }
+
+.btn .ico,
+.btn-cta .ico,
+.btn-sm .ico {
+    vertical-align: middle;
+}
+
+/* ============================================================
+   NAV LINK — GẠCH CHÂN ĐỎ KHI HOVER (block duy nhất)
+   Mặc định: chữ xám, không gạch
+   Hover: chữ trắng + gạch đỏ chạy từ giữa ra + nhô lên 2px
+   ============================================================ */
+header.site-header nav.main-nav a.nav-link {
+    position: relative;
+    display: inline-block;
+    padding: 8px 0;
+    font-size: .85rem;
+    font-weight: 600;
+    color: #d0d0d0 !important;
+    white-space: nowrap;
+    text-decoration: none !important;
+    background: transparent !important;
+    transition: color .3s ease, transform .3s ease;
+    will-change: color, transform;
+}
+
+header.site-header nav.main-nav a.nav-link.active,
+header.site-header nav.main-nav a.nav-link:visited,
+header.site-header nav.main-nav a.nav-link:focus {
+    color: #d0d0d0 !important;
+}
+
+header.site-header nav.main-nav a.nav-link::after {
+    content: '' !important;
+    position: absolute !important;
+    bottom: 0 !important;
+    left: 50% !important;
+    width: 0 !important;
+    height: 2px !important;
+    background: var(--red) !important;
+    border-radius: 2px !important;
+    transform: translateX(-50%) !important;
+    transition: width .35s cubic-bezier(.22, 1, .36, 1) !important;
+    display: block !important;
+    pointer-events: none !important;
+    box-shadow: 0 0 8px rgba(230, 57, 70, 0.6) !important;
+}
+
+header.site-header nav.main-nav a.nav-link:hover,
+header.site-header nav.main-nav a.nav-link:focus {
+    color: #ffffff !important;
+    transform: translateY(-2px);
+}
+
+header.site-header nav.main-nav a.nav-link:hover::after,
+header.site-header nav.main-nav a.nav-link:focus::after {
+    width: 100% !important;
+}
+
+header.site-header nav.main-nav a.nav-link:active {
+    transform: translateY(0);
+    transition: transform .1s ease;
+}
+
+/* Mobile menu hover */
+.mobile-menu nav a {
+    position: relative;
+    transition: all .25s ease;
+}
+
+.mobile-menu nav a::before {
+    content: '' !important;
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0;
+    height: 60%;
+    background: linear-gradient(180deg, var(--red), var(--red-dark));
+    border-radius: 0 3px 3px 0;
+    transition: width .3s cubic-bezier(.22, 1, .36, 1);
+    pointer-events: none;
+}
+
+.mobile-menu nav a:hover::before,
+.mobile-menu nav a:focus::before {
+    width: 3px;
+}
+
+.mobile-menu nav a:hover {
+    background: rgba(230, 57, 70, 0.08);
+    padding-left: 22px;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 1280px) {
+    .stats-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+@media (max-width: 1024px) {
+    .main-nav { display: none; }
+    .menu-toggle { display: flex; }
+    .mobile-menu { display: block; }
+    .admin-quick-link { display: none !important; }
+    .hero-inner { grid-template-columns: 1fr; gap: 40px; }
+    .hero-right { grid-template-columns: 1fr; max-width: 520px; margin: 0 auto; }
+    .hero-features { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .why-grid, .schedule-grid { grid-template-columns: 1fr; gap: 40px; }
+    .schedule-cards { grid-template-columns: 1fr 1fr; }
+    .footer-top { grid-template-columns: 1fr; gap: 26px; text-align: center; }
+    .footer-brand { justify-content: center; }
+    .footer-social { justify-content: center; }
+    .footer-nav { justify-content: center; }
+    .admin-two-col { grid-template-columns: 1fr; }
+    .stats-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .quick-actions-grid { grid-template-columns: repeat(2, 1fr); }
+
+    .gallery-hero {
+        grid-template-columns: 1fr;
+        min-height: auto;
+    }
+
+    .gallery-hero-left {
+        padding: 44px 32px;
+        order: 1;
+    }
+
+    .gallery-hero-right {
+        order: 0;
+    }
+
+    .gallery-hero-img {
+        min-height: 340px;
+    }
+
+    .gallery-hero-img::before {
+        background: linear-gradient(to top, rgba(10,10,10,0.65) 0%, transparent 55%);
+    }
+
+    .gallery-card {
+        flex: 0 0 260px;
+    }
+
+    .gallery-hero-title {
+        font-size: 2.2rem;
+    }
+}
+
+@media (hover: none) and (pointer: coarse) {
+    .admin-quick-link { display: none !important; }
+}
+
+@media (max-width: 900px) {
+    .two-col { grid-template-columns: 1fr; gap: 40px; }
+    .cards { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+    .gallery { grid-template-columns: repeat(2, 1fr); }
+    .stats { grid-template-columns: repeat(2, 1fr); }
+    .section { padding: 70px 0; }
+    .sports-cards { grid-template-columns: 1fr 1fr; }
+
+    .contact-cards {
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 16px;
+    }
+
+    .contact-card { padding: 24px 20px; }
+
+    .admin-sidebar {
+        width: 260px; min-width: 260px; max-width: 260px;
+        transform: translateX(-100%);
+        transition: transform .3s;
+    }
+    .admin-sidebar.open { transform: translateX(0); }
+    .admin-sidebar:hover { box-shadow: none; width: 260px; min-width: 260px; max-width: 260px; }
+    .admin-main-wrapper { margin-left: 0; }
+    .admin-sidebar:hover ~ .admin-main-wrapper { margin-left: 0; }
+    .admin-toggle { display: flex; align-items: center; justify-content: center; }
+    .admin-main { padding: 20px; }
+    .admin-topbar { padding: 12px 18px; }
+    .admin-sidebar .admin-brand div,
+    .admin-sidebar .admin-nav-item .nav-label,
+    .admin-sidebar .user-info,
+    .admin-sidebar .btn-logout .logout-label { opacity: 1 !important; transform: none !important; pointer-events: auto !important; display: block !important; }
+    .admin-sidebar .btn-logout { justify-content: flex-start; padding: 12px 14px; gap: 14px; }
+    .admin-sidebar .admin-user { justify-content: flex-start; padding: 10px; gap: 12px; }
+}
+
 @media (max-width: 768px) {
     .member-achievements-header {
         flex-direction: column;
@@ -4850,98 +4718,1393 @@ input[type="week"] {
         padding: 16px;
     }
 
-    .member-achievement-info {
-        width: 100%;
+    .member-achievement-info { width: 100%; }
+
+    .member-achievement-medal-label { align-self: flex-start; }
+
+    .member-achievement-tournament { font-size: .95rem; }
+
+    .member-achievement-meta { font-size: .8rem; gap: 10px; }
+}
+
+@media (max-width: 640px) {
+    :root { --header-h: 66px; }
+    .container { width: 94%; }
+    .brand-text small { display: none; }
+    .brand-text strong { font-size: .92rem; }
+    .brand-logo { width: 40px; height: 40px; }
+    .btn-cta span { display: none; }
+    .btn-cta { padding: 10px 12px; }
+    .hero { padding: calc(var(--header-h) + 40px) 0 60px; }
+    .hero-title { font-size: 3.5rem; letter-spacing: 2px; }
+    .hero-features { grid-template-columns: 1fr; }
+    .feature-icon { width: 40px; height: 40px; }
+    .section { padding: 56px 0; }
+    .gallery, .stats { grid-template-columns: 1fr; }
+    .event-item { flex-direction: column; align-items: flex-start; gap: 12px; }
+    .event-item strong { font-size: 2rem; min-width: auto; }
+    .event-more { align-self: flex-start; }
+    .schedule-cards { grid-template-columns: 1fr; gap: 12px; }
+    .sports-cards { grid-template-columns: 1fr; }
+    .footer-bottom { padding-bottom: 90px; }
+    .bottom-tab { display: flex; }
+    .scroll-top { bottom: 90px; right: 16px; width: 40px; height: 40px; }
+    .member-detail { grid-template-columns: 1fr; text-align: center; gap: 24px; }
+    .member-detail-avatar { width: 200px; height: 200px; margin: 0 auto; }
+    .admin-table { font-size: .82rem; }
+    .admin-table th, .admin-table td { padding: 10px 12px; }
+    .admin-page-header h1 { font-size: 1.3rem; }
+    .admin-form { padding: 20px; }
+    .stats-grid { grid-template-columns: 1fr; }
+    .admin-main { padding: 16px; }
+    .quick-actions-grid { grid-template-columns: 1fr; }
+    .register-box { padding: 28px 20px; }
+    .thankyou-box { padding: 36px 24px; }
+    .thankyou-actions { flex-direction: column; }
+    .thankyou-actions .btn { width: 100%; }
+
+    .schedule-info-block {
+        flex-direction: column;
+        gap: 8px;
+        padding: 12px 0;
     }
 
-    .member-achievement-medal-label {
-        align-self: flex-start;
+    .schedule-info-label {
+        min-width: auto;
+        padding-top: 0;
     }
 
-    .member-achievement-tournament {
-        font-size: .95rem;
-    }
+    .schedule-location-item strong,
+    .schedule-phone-item { font-size: .85rem; }
 
-    .member-achievement-meta {
-        font-size: .8rem;
-        gap: 10px;
+    .gallery-hero { border-radius: 12px; }
+    .gallery-hero-left { padding: 32px 22px; }
+    .gallery-hero-title { font-size: 1.9rem; letter-spacing: 1.5px; margin: 10px 0 16px; }
+    .gallery-hero-desc { font-size: .88rem; margin-bottom: 24px; }
+    .gallery-hero-img { min-height: 240px; }
+    .gallery-card { flex: 0 0 220px; }
+    .gallery-scroll { gap: 12px; }
+    .gallery-card-title { font-size: .85rem; }
+
+    .gallery-strip-header { margin-bottom: 14px; }
+    .gallery-strip-title { font-size: .95rem; letter-spacing: 1px; padding-left: 14px; }
+    .gallery-strip-title::before { height: 18px; width: 3px; }
+    .gallery-nav { gap: 8px; }
+    .gallery-nav-btn { width: 46px; height: 46px; border-radius: 12px; }
+    .gallery-nav-btn svg { width: 22px; height: 22px; }
+
+    .contact-cards { grid-template-columns: 1fr; gap: 14px; }
+    .contact-card { padding: 22px 18px; }
+    .contact-card-title { font-size: .88rem; margin-bottom: 12px; }
+    .contact-card-icon { width: 46px; height: 46px; margin-bottom: 14px; }
+    .contact-card-icon .ico { width: 20px; height: 20px; }
+    .contact-cta { padding: 30px 18px; }
+    .contact-cta-text { font-size: 1.05rem; }
+    .contact-cta .btn { width: 100%; justify-content: center; padding: 14px 24px; font-size: .9rem; }
+
+    .trial-banner {
+        flex-direction: column;
+        text-align: center;
+        gap: 14px;
+        padding: 18px 20px;
+    }
+    .trial-banner-info { align-items: center; }
+    .trial-banner-date { font-size: 1.1rem; }
+    .trial-banner-countdown { width: 100%; }
+    .trial-quick-actions {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+    }
+    .trial-quick-btn {
+        justify-content: center;
+        padding: 12px 10px;
+        font-size: .82rem;
     }
 }
 
 @media (max-width: 480px) {
-    .member-achievement-medal {
-        width: 46px;
-        height: 46px;
+    .captcha-question {
+        min-width: 110px;
+        padding: 0 12px;
+        font-size: 1.15rem;
+        gap: 6px;
+    }
+    .captcha-eq { font-size: .95rem; }
+    .captcha-qmark { font-size: 1.3rem; }
+    .captcha-reload { width: 44px; }
+
+    .member-achievement-medal { width: 46px; height: 46px; }
+    .member-achievement-medal .ico { width: 22px; height: 22px; }
+    .member-medal-summary { width: 100%; justify-content: flex-start; }
+    .member-medal-badge { font-size: .74rem; padding: 6px 10px; }
+    .member-achievement-medal-label { font-size: .7rem; padding: 6px 12px; }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 10px; }
+::-webkit-scrollbar-track { background: var(--black); }
+::-webkit-scrollbar-thumb { background: var(--red-deep); border-radius: 5px; }
+::-webkit-scrollbar-thumb:hover { background: var(--red); }
+
+::selection { background: var(--red); color: var(--white); }
+
+/* ============================================================
+   PREFERS-REDUCED-MOTION — tắt mọi animation
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
     }
 
-    .member-achievement-medal .ico {
-        width: 22px;
-        height: 22px;
+    .reveal {
+        opacity: 1;
+        transform: none;
     }
 
-    .member-medal-summary {
-        width: 100%;
-        justify-content: flex-start;
+    .reveal-stagger > * {
+        opacity: 1;
+        transform: none;
     }
 
-    .member-medal-badge {
-        font-size: .74rem;
-        padding: 6px 10px;
+    .float-3d,
+    .float-slow,
+    .glow-pulse,
+    .trial-today {
+        animation: none;
     }
 
-    .member-achievement-medal-label {
-        font-size: .7rem;
-        padding: 6px 12px;
+    .tilt-3d:hover {
+        transform: none;
+    }
+
+    .parallax-layer {
+        transform: none !important;
+    }
+
+    header.site-header nav.main-nav a.nav-link,
+    header.site-header nav.main-nav a.nav-link::after,
+    .mobile-menu nav a,
+    .mobile-menu nav a::before {
+        transition: none !important;
+    }
+
+    header.site-header nav.main-nav a.nav-link:hover {
+        transform: none !important;
     }
 }
 /* ============================================================
-   RESULT ROW — Clickable member link
+   ADMIN SIDEBAR — SVG icon monochrome
    ============================================================ */
 
-.result-row-link {
-    text-decoration: none;
-    color: inherit;
-    cursor: pointer;
-    position: relative;
-}
-
-.result-row-link .result-info strong {
-    display: inline-flex;
+/* ---------- Nav item icons ---------- */
+.admin-nav-item .nav-icon {
+    width: 24px;
+    height: 24px;
+    display: flex;
     align-items: center;
-    gap: 8px;
-    transition: color .25s;
+    justify-content: center;
+    flex-shrink: 0;
+    color: currentColor;
+    transition: color .25s, transform .25s;
 }
 
-.result-row-link:hover .result-info strong {
+.admin-nav-item .nav-icon svg {
+    width: 20px;
+    height: 20px;
+    display: block;
+    stroke: currentColor;
+    fill: none;
+    transition: stroke .25s;
+}
+
+/* Khi hover: icon sáng lên theo màu chữ */
+.admin-nav-item:hover .nav-icon svg {
+    transform: scale(1.05);
+}
+
+/* Active: icon chuyển vàng */
+.admin-nav-item.active .nav-icon {
     color: var(--gold);
 }
 
-/* Mũi tên chỉ hiện khi hover */
-.result-arrow {
-    width: 16px;
-    height: 16px;
+.admin-nav-item.active .nav-icon svg {
+    filter: drop-shadow(0 0 6px rgba(245,197,24,0.5));
+}
+
+/* ---------- User avatar ---------- */
+.admin-user .user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: rgba(230,57,70,0.08);
+    border: 1px solid rgba(230,57,70,0.4);
     color: var(--red);
-    opacity: 0;
-    transform: translateX(-6px);
-    transition: opacity .25s, transform .25s;
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    transition: all .25s;
+}
+
+.admin-user .user-avatar svg {
+    width: 20px;
+    height: 20px;
+    stroke: currentColor;
+    fill: none;
+}
+
+.admin-user:hover .user-avatar {
+    border-color: var(--red);
+    background: rgba(230,57,70,0.15);
+    box-shadow: 0 0 12px rgba(230,57,70,0.3);
+}
+
+/* ---------- Logout / Change password icons ---------- */
+.btn-logout .logout-icon {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: currentColor;
+}
+
+.btn-logout .logout-icon svg {
+    width: 18px;
+    height: 18px;
+    stroke: currentColor;
+    fill: none;
+    transition: transform .25s;
+}
+
+.btn-logout:hover .logout-icon svg {
+    transform: scale(1.1);
+}
+
+/* ---------- Sidebar collapsed: chỉ hiện icon, căn giữa ---------- */
+.admin-sidebar:not(:hover) .admin-nav-item {
+    justify-content: center;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.admin-sidebar:not(:hover) .admin-nav-item .nav-icon {
+    margin: 0 auto;
+}
+
+/* Đảm bảo SVG không có fill mặc định */
+.admin-nav-item svg,
+.user-avatar svg,
+.logout-icon svg {
+    shape-rendering: geometricPrecision;
+}
+
+/* ---------- Mobile: icon to hơn chút ---------- */
+@media (max-width: 900px) {
+    .admin-nav-item .nav-icon svg {
+        width: 22px;
+        height: 22px;
+    }
+}
+
+/* ---------- Reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+    .admin-nav-item .nav-icon,
+    .admin-nav-item .nav-icon svg,
+    .btn-logout .logout-icon svg {
+        transition: none !important;
+    }
+
+    .admin-nav-item:hover .nav-icon svg,
+    .btn-logout:hover .logout-icon svg {
+        transform: none !important;
+    }
+}
+/* ============================================================
+   ADMIN WELCOME BANNER — đổi 🐯 emoji thành ảnh hổ
+   Dùng cùng ảnh với hero trang chủ (/images/hero.png)
+   ============================================================ */
+
+.welcome-banner::before {
+    content: '' !important;
+    position: absolute !important;
+    right: -20px !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    width: 220px !important;
+    height: 220px !important;
+    background-image: url('/images/hero.png') !important;
+    background-size: contain !important;
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+    opacity: 0.18 !important;
+    pointer-events: none !important;
+    filter: drop-shadow(0 0 40px rgba(230, 57, 70, 0.5)) !important;
+    font-size: 0 !important;
+}
+
+/* Nếu ảnh của bạn là .jpg (nền tối) → thêm blend mode để hoà vào banner */
+.welcome-banner::before {
+    mix-blend-mode: screen;
+}
+
+/* Đảm bảo banner chứa ảnh đúng */
+.welcome-banner {
+    position: relative !important;
+    overflow: hidden !important;
+}
+
+.welcome-banner > * {
+    position: relative;
+    z-index: 1;
+}
+/* ============================================================
+   ADMIN DASHBOARD — SVG icon monochrome
+   ============================================================ */
+
+/* ---------- Welcome banner: icon vẫy tay ---------- */
+.welcome-text h1 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.welcome-wave {
+    width: 22px;
+    height: 22px;
+    color: var(--gold);
+    flex-shrink: 0;
+    animation: waveHand 2.5s ease-in-out infinite;
+    transform-origin: 70% 70%;
+}
+
+@keyframes waveHand {
+    0%, 60%, 100% { transform: rotate(0deg); }
+    10%, 30% { transform: rotate(14deg); }
+    20% { transform: rotate(-8deg); }
+}
+
+/* ---------- Stat card icons ---------- */
+.stat-icon {
+    font-size: 0;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(230,57,70,0.1);
+    border-radius: 10px;
+    flex-shrink: 0;
+    transition: all .3s;
+}
+
+.stat-icon svg {
+    width: 22px;
+    height: 22px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 2;
+    color: #d0d0d0;
+}
+
+.stat-card-blue .stat-icon svg { color: #60a5fa; }
+.stat-card-green .stat-icon svg { color: #34d399; }
+.stat-card-red .stat-icon svg { color: #f87171; }
+.stat-card-purple .stat-icon svg { color: #c084fc; }
+.stat-card-gold .stat-icon svg { color: var(--gold); }
+
+.stat-card:hover .stat-icon {
+    transform: scale(1.05);
+}
+
+.stat-card:hover .stat-icon svg {
+    stroke-width: 2.2;
+}
+
+/* ---------- Quick actions icon ---------- */
+.quick-actions h3 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.quick-actions h3 .ico {
+    width: 18px;
+    height: 18px;
+    color: var(--gold);
+    stroke-width: 2;
+}
+
+.quick-action-icon {
+    font-size: 0;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, rgba(230,57,70,0.2), rgba(245,197,24,0.15));
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    transition: all .3s;
+}
+
+.quick-action-icon svg {
+    width: 22px;
+    height: 22px;
+    stroke: var(--gold);
+    fill: none;
+    stroke-width: 2;
+    transition: stroke .25s, transform .25s;
+}
+
+.quick-action:hover .quick-action-icon {
+    background: linear-gradient(135deg, var(--red), var(--gold));
+    box-shadow: 0 4px 16px rgba(245,197,24,0.4);
+}
+
+.quick-action:hover .quick-action-icon svg {
+    stroke: var(--white);
+    transform: scale(1.08);
+}
+
+/* ---------- Panel header icons ---------- */
+.panel-header h2 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.panel-header h2 .ico {
+    width: 18px;
+    height: 18px;
+    color: var(--gold);
+    stroke-width: 2;
     flex-shrink: 0;
 }
 
-.result-row-link:hover .result-arrow {
-    opacity: 1;
-    transform: translateX(0);
+/* ---------- Topbar: menu toggle + trang chủ ---------- */
+.admin-toggle {
+    display: none;
+    width: 38px;
+    height: 38px;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--white);
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    transition: all .25s;
 }
 
-/* Viền trái đổi màu khi hover */
-.result-row-link:hover {
+.admin-toggle svg {
+    stroke: currentColor;
+    fill: none;
+}
+
+.admin-toggle:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+}
+
+.topbar-actions a {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.topbar-actions a svg {
+    stroke: currentColor;
+    fill: none;
+    flex-shrink: 0;
+}
+
+/* ---------- Mobile: hiện toggle ---------- */
+@media (max-width: 900px) {
+    .admin-toggle {
+        display: flex;
+    }
+}
+
+/* ---------- Reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+    .welcome-wave {
+        animation: none;
+    }
+
+    .stat-icon,
+    .quick-action-icon,
+    .quick-action-icon svg {
+        transition: none !important;
+    }
+}
+/* ============================================================
+   ADMIN — TỰ ĐỘNG ĐỔI EMOJI → SVG ĐƠN SẮC
+   Chỉ dùng CSS, không cần sửa HTML. Áp dụng cho mọi admin view.
+   ============================================================ */
+
+/* ---------- Base: các span icon trong bảng admin ---------- */
+.admin-table .btn-sm .icon,
+.admin-table .btn-edit .icon,
+.admin-table .btn-delete .icon,
+.admin-table td.actions .btn-sm .icon {
+    font-size: 0 !important;
+    line-height: 0 !important;
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    position: relative;
+    flex-shrink: 0;
+}
+
+/* Ẩn ký tự emoji gốc */
+.admin-table .btn-sm .icon > *,
+.admin-table .btn-sm .icon::before {
+    font-size: 0 !important;
+}
+
+/* ---------- Icon SỬA (✏️) → SVG bút chì ---------- */
+.admin-table .btn-edit .icon::before {
+    content: '' !important;
+    display: block !important;
+    width: 16px !important;
+    height: 16px !important;
+    background-color: currentColor;
+    -webkit-mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7'/><path d='M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z'/></svg>");
+    mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7'/><path d='M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z'/></svg>");
+    -webkit-mask-size: contain;
+    mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    mask-position: center;
+}
+
+/* ---------- Icon XÓA (🗑️) → SVG thùng rác ---------- */
+.admin-table .btn-delete .icon::before {
+    content: '' !important;
+    display: block !important;
+    width: 16px !important;
+    height: 16px !important;
+    background-color: currentColor;
+    -webkit-mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='3 6 5 6 21 6'/><path d='M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2'/><line x1='10' y1='11' x2='10' y2='17'/><line x1='14' y1='11' x2='14' y2='17'/></svg>");
+    mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='3 6 5 6 21 6'/><path d='M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2'/><line x1='10' y1='11' x2='10' y2='17'/><line x1='14' y1='11' x2='14' y2='17'/></svg>");
+    -webkit-mask-size: contain;
+    mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    mask-position: center;
+}
+
+/* ============================================================
+   NÚT HÀNH ĐỘNG KHÁC — SỬA/XEM/THÊM/LƯU
+   ============================================================ */
+
+/* Nút XEM (👁️) — thường dùng cho detail page */
+.btn-sm .icon:has-text("👁️"),
+.admin-table .btn-sm[href*="/detail"] .icon,
+.admin-table .btn-sm[href*="/Detail"] .icon {
+    font-size: 0 !important;
+}
+
+.admin-table .btn-sm[href*="/detail"] .icon::before,
+.admin-table .btn-sm[href*="/Detail"] .icon::before {
+    content: '' !important;
+    display: block !important;
+    width: 16px !important;
+    height: 16px !important;
+    background-color: currentColor;
+    -webkit-mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z'/><circle cx='12' cy='12' r='3'/></svg>");
+    mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z'/><circle cx='12' cy='12' r='3'/></svg>");
+    -webkit-mask-size: contain;
+    mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    mask-position: center;
+}
+/* ============================================================
+   3D EFFECTS — Phase B: Hero + Why Cards
+   ============================================================ */
+
+/* ---------- Hero media: hổ nghiêng theo chuột ---------- */
+.hero-media {
+    transform-style: preserve-3d;
+    will-change: transform;
+    cursor: default;
+}
+
+.hero-media img {
+    transition: filter .3s, transform .3s;
+    transform: translateZ(20px);
+}
+
+.hero-media.tilting img {
+    filter: drop-shadow(0 25px 80px rgba(230,57,70,0.7))
+            drop-shadow(0 0 45px rgba(230,57,70,0.5));
+}
+
+/* ---------- Why cards: tilt + spotlight + glare ---------- */
+.why-card {
+    position: relative;
+    transform-style: preserve-3d;
+    will-change: transform;
+    transition: border-color .3s ease, box-shadow .3s ease;
+}
+
+.why-card.tilting {
+    border-color: rgba(230,57,70,0.5);
+    box-shadow:
+        0 20px 50px rgba(0,0,0,0.6),
+        0 0 40px rgba(230,57,70,0.15);
+    z-index: 10;
+}
+
+/* Icon và text bên trong card nổi lên trên lớp nền 3D */
+.why-card .why-icon,
+.why-card h3,
+.why-card p {
+    transform: translateZ(30px);
+    transform-style: preserve-3d;
+    transition: transform .3s ease;
+}
+
+.why-card.tilting .why-icon {
+    transform: translateZ(50px) scale(1.05);
+}
+
+/* Lớp glare (ánh sáng lướt) — được JS tự tạo */
+.tilt-glare {
+    border-radius: inherit;
+    z-index: 5;
+}
+
+/* ---------- Spotlight red cho why-card ---------- */
+.why-card.spotlight::before {
+    border-radius: inherit;
+}
+
+/* ---------- Magnetic button ---------- */
+.hero-actions .btn-primary {
+    transition: transform .4s cubic-bezier(.22, 1, .36, 1),
+                background .25s,
+                box-shadow .25s;
+    will-change: transform;
+}
+
+
+
+/* ---------- Reduced motion: tắt hết ---------- */
+@media (prefers-reduced-motion: reduce) {
+    .hero-media,
+    .why-card,
+    .why-card .why-icon,
+    .why-card h3,
+    .why-card p,
+    .hero-actions .btn-primary {
+        transform: none !important;
+        transition: none !important;
+    }
+
+    .tilt-glare {
+        display: none !important;
+    }
+}
+
+
+
+/* ---------- Mobile: tắt hết 3D ---------- */
+@media (hover: none), (pointer: coarse) {
+    .hero-media,
+    .why-card {
+        transform: none !important;
+    }
+
+    .tilt-glare {
+        display: none !important;
+    }
+
+    .why-card .why-icon,
+    .why-card h3,
+    .why-card p {
+        transform: none !important;
+    }
+}
+/* ============================================================
+   3D EFFECTS — BLOCK GỘP DUY NHẤT (B + C + D + E)
+   Đây là block 3D duy nhất trong file — không trùng lặp
+   ============================================================ */
+
+/* ---------- HERO: ảnh hổ tilt ---------- */
+.hero-media {
+    transform-style: preserve-3d;
+    will-change: transform;
+}
+
+.hero-media img {
+    transition: filter .3s, transform .3s;
+    transform: translateZ(20px);
+}
+
+.hero-media.tilting img {
+    filter: drop-shadow(0 25px 80px rgba(230,57,70,0.7))
+            drop-shadow(0 0 45px rgba(230,57,70,0.5));
+}
+
+/* ---------- WHY cards: tilt + spotlight + glare ---------- */
+.why-card {
+    position: relative;
+    transform-style: preserve-3d;
+    will-change: transform;
+    transition: border-color .3s ease, box-shadow .3s ease;
+}
+
+.why-card.tilting {
+    border-color: rgba(230,57,70,0.5);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.6), 0 0 40px rgba(230,57,70,0.15);
+    z-index: 10;
+}
+
+.why-card .why-icon,
+.why-card h3,
+.why-card p {
+    transform: translateZ(30px);
+    transform-style: preserve-3d;
+    transition: transform .3s ease;
+}
+
+.why-card.tilting .why-icon {
+    transform: translateZ(50px) scale(1.05);
+}
+
+.why-card.spotlight::before {
+    border-radius: inherit;
+}
+
+/* ---------- SPORT cards (Boxing / Kickboxing) ---------- */
+.sport-card {
+    transform-style: preserve-3d;
+    will-change: transform;
+    transition: transform .3s ease, box-shadow .3s ease;
+}
+
+.sport-card.tilting {
+    box-shadow: 0 24px 60px rgba(230,57,70,0.5), 0 0 40px rgba(230,57,70,0.25);
+    z-index: 5;
+}
+
+.sport-card.tilting img {
+    transform: scale(1.1);
+}
+
+.sport-card.tilting .sport-overlay strong {
+    letter-spacing: 2px;
+    text-shadow: 0 2px 20px rgba(0,0,0,0.9);
+}
+
+/* ---------- MEMBER cards ---------- */
+.member-link {
+    transform-style: preserve-3d;
+    will-change: transform;
+    transition: transform .3s ease;
+}
+
+.member-link.tilting .member-card {
+    border-color: var(--gold);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5), 0 0 40px rgba(245,197,24,0.3);
+}
+
+.member-link.tilting .avatar {
+    transform: scale(1.1) translateZ(40px);
+    box-shadow: 0 0 30px rgba(245,197,24,0.5);
+}
+
+.member-link.tilting .member-card h3 {
+    color: var(--gold);
+    text-shadow: 0 0 20px rgba(245,197,24,0.5);
+}
+
+/* ---------- TOURNAMENT cards ---------- */
+.tournament-card {
+    transform-style: preserve-3d;
+    will-change: transform;
+}
+
+.tournament-card.tilting {
+    border-color: var(--gold);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5), 0 0 40px rgba(245,197,24,0.2);
+}
+
+/* ---------- TOP ACHIEVEMENT cards ---------- */
+.top-achievement-card {
+    transform-style: preserve-3d;
+    will-change: transform;
+}
+
+.top-achievement-card.tilting {
     border-left-color: var(--red);
-    background: rgba(230,57,70,0.06);
+    box-shadow: 0 12px 30px rgba(230,57,70,0.3);
 }
 
-/* Mobile: hiện mũi tên luôn để user biết click */
+/* ---------- STATS: 3D flip khi scroll vào ---------- */
+.stats > div.stats-3d-enter {
+    animation: statsFlipIn 0.9s cubic-bezier(.22, 1, .36, 1) both;
+}
+
+@keyframes statsFlipIn {
+    0%   { opacity: 0; transform: perspective(800px) rotateY(45deg) translateY(30px) scale(0.85); }
+    60%  { opacity: 1; transform: perspective(800px) rotateY(-8deg) translateY(0) scale(1.02); }
+    100% { opacity: 1; transform: perspective(800px) rotateY(0) translateY(0) scale(1); }
+}
+
+.stats > div.stats-3d-enter strong .ico {
+    animation: medalSpin 1s cubic-bezier(.22, 1, .36, 1) 0.2s both;
+}
+
+@keyframes medalSpin {
+    0%   { transform: rotate(-180deg) scale(0.5); opacity: 0; }
+    60%  { transform: rotate(20deg) scale(1.15); opacity: 1; }
+    100% { transform: rotate(0deg) scale(1); opacity: 1; }
+}
+
+/* ---------- GALLERY cards ---------- */
+.gallery-card {
+    transform-style: preserve-3d;
+    will-change: transform;
+}
+
+.gallery-card.tilting {
+    box-shadow: 0 24px 60px rgba(230,57,70,0.5), 0 0 40px rgba(230,57,70,0.2);
+    border-color: rgba(230,57,70,0.6);
+    z-index: 5;
+}
+
+.gallery-card.tilting .gallery-card-icon {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.gallery-hero-img {
+    transform-style: preserve-3d;
+    will-change: transform;
+}
+
+/* ---------- CONTACT cards: magnetic ---------- */
+.contact-card {
+    will-change: transform;
+}
+
+.contact-card:hover .contact-card-icon {
+    transform: scale(1.1) rotate(-5deg);
+}
+
+/* ---------- MAGNETIC buttons ---------- */
+.hero-actions .btn-primary {
+    transition: transform .4s cubic-bezier(.22, 1, .36, 1),
+                background .25s, box-shadow .25s;
+    will-change: transform;
+}
+
+/* ---------- GLARE overlay (JS tự tạo) ---------- */
+.tilt-glare {
+    border-radius: inherit;
+    z-index: 5;
+}
+
+/* ---------- ADMIN stat cards: subtle ---------- */
+.admin-body .stat-card {
+    transform-style: preserve-3d;
+    will-change: transform;
+}
+
+.admin-body .stat-card.tilting {
+    border-color: var(--gold);
+    box-shadow: 0 12px 30px rgba(245,197,24,0.25);
+}
+
+.admin-body .quick-action {
+    transform-style: preserve-3d;
+    will-change: transform;
+}
+
+.admin-body .quick-action.tilting {
+    border-color: var(--gold);
+    box-shadow: 0 12px 30px rgba(245,197,24,0.25);
+}
+
+.admin-table tbody tr {
+    transition: transform .2s ease, background .2s ease;
+}
+
+.admin-table tbody tr:hover {
+    transform: translateX(2px);
+}
+
+.admin-nav-item:active {
+    transform: translateX(2px) scale(0.98);
+}
+
+/* ============================================================
+   REDUCED MOTION — tắt hết 3D
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+    .stats > div.stats-3d-enter,
+    .stats > div.stats-3d-enter strong .ico {
+        animation: none !important;
+        opacity: 1 !important;
+        transform: none !important;
+    }
+
+    .hero-media,
+    .why-card,
+    .why-card .why-icon,
+    .why-card h3,
+    .why-card p,
+    .sport-card,
+    .member-link,
+    .tournament-card,
+    .top-achievement-card,
+    .gallery-card,
+    .gallery-hero-img,
+    .contact-card,
+    .hero-actions .btn-primary,
+    .admin-body .stat-card,
+    .admin-body .quick-action {
+        transform: none !important;
+        transition: none !important;
+    }
+
+    .tilt-glare {
+        display: none !important;
+    }
+
+    .admin-table tbody tr:hover {
+        transform: none !important;
+    }
+}
+
+/* ============================================================
+   MOBILE — tắt hết 3D
+   ============================================================ */
+@media (hover: none), (pointer: coarse) {
+    .hero-media,
+    .why-card,
+    .why-card .why-icon,
+    .why-card h3,
+    .why-card p,
+    .sport-card,
+    .member-link,
+    .tournament-card,
+    .top-achievement-card,
+    .gallery-card,
+    .gallery-hero-img,
+    .contact-card,
+    .admin-body .stat-card,
+    .admin-body .quick-action {
+        transform: none !important;
+    }
+
+    .tilt-glare {
+        display: none !important;
+    }
+
+    .stats > div.stats-3d-enter {
+        animation: statsFlipIn 0.6s ease-out both;
+    }
+}
+/* ============================================================
+   SECTION: TRỢ GIẢNG — phân cấp dưới HLV
+   Style nhỏ hơn, tối giản hơn section Huấn luyện viên
+   ============================================================ */
+
+.section-assistants {
+    background: var(--black);
+    padding: 70px 0 90px;
+    position: relative;
+    border-top: 1px solid var(--border);
+}
+
+.section-assistants .section-header {
+    margin-bottom: 40px;
+}
+
+.section-assistants .section-eyebrow {
+    color: var(--gray);
+    letter-spacing: 3px;
+}
+
+.section-assistants .section-title {
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    color: #d0d0d0;
+    letter-spacing: 1px;
+}
+
+/* Container cho cards — căn giữa, cho phép số card lẻ */
+.assistants-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 22px;
+    max-width: 900px;
+}
+
+/* Card trợ giảng — nhỏ hơn, mờ hơn */
+.assistant-card {
+    padding: 24px 18px;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    transition: all .35s;
+    opacity: 0.92;
+}
+
+.assistant-link:hover .assistant-card {
+    transform: translateY(-6px);
+    border-color: rgba(245,197,24,0.5);
+    box-shadow:
+        0 15px 35px rgba(0,0,0,0.4),
+        0 0 30px rgba(245,197,24,0.15);
+    opacity: 1;
+    background: rgba(245,197,24,0.03);
+}
+
+/* Avatar nhỏ hơn HLV chính */
+.assistant-avatar {
+    width: 120px;
+    height: 120px;
+    margin: 0 auto 18px;
+    border: 2px solid rgba(245,197,24,0.5);
+    transition: transform .35s, box-shadow .35s;
+}
+
+.assistant-link:hover .assistant-avatar {
+    transform: scale(1.06);
+    border-color: var(--gold);
+    box-shadow: 0 0 25px rgba(245,197,24,0.4);
+}
+
+.assistant-card h3 {
+    color: #e0e0e0;
+    font-size: 1rem;
+    margin-bottom: 6px;
+}
+
+.assistant-card p {
+    color: #a0a0a0;
+    font-size: .72rem;
+    letter-spacing: 1.2px;
+}
+
+.assistant-link:hover .assistant-card h3 {
+    color: var(--gold);
+}
+
+/* Badge nhỏ "Trợ giảng" ở góc — tuỳ chọn */
+.assistant-card::before {
+    content: '';
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba(245,197,24,0.6);
+    box-shadow: 0 0 8px rgba(245,197,24,0.6);
+}
+
+/* Đảm bảo card position relative để badge hoạt động */
+.assistant-card {
+    position: relative;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+
+@media (max-width: 900px) {
+    .section-assistants {
+        padding: 60px 0 70px;
+    }
+
+    .assistants-cards {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 18px;
+    }
+
+    .assistant-avatar {
+        width: 110px;
+        height: 110px;
+    }
+}
+
 @media (max-width: 640px) {
-    .result-arrow {
-        opacity: 0.7;
-        transform: translateX(0);
+    .section-assistants {
+        padding: 50px 0 60px;
+    }
+
+    .section-assistants .section-title {
+        font-size: 1.4rem;
+    }
+
+    .assistants-cards {
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        gap: 14px;
+    }
+
+    .assistant-card {
+        padding: 20px 14px;
+    }
+
+    .assistant-avatar {
+        width: 90px;
+        height: 90px;
+        margin-bottom: 14px;
+    }
+
+    .assistant-card h3 {
+        font-size: .92rem;
+    }
+
+    .assistant-card p {
+        font-size: .68rem;
+    }
+}
+/* ============================================================
+   FIX: Xóa chấm vàng ở góc card trợ giảng
+   ============================================================ */
+
+.assistant-card::before,
+.assistant-link .assistant-card::before {
+    content: none !important;
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+}/* ============================================================
+   FIX: Đồng bộ màu chữ card Trợ giảng với các card khác
+   Tên: trắng sáng | Vai trò: vàng
+   ============================================================ */
+
+/* Tên trợ giảng — trắng sáng như các card khác */
+.assistant-card h3,
+.assistant-link .assistant-card h3 {
+    color: var(--white) !important;
+    font-weight: 800;
+    text-shadow: none;
+}
+
+/* Vai trò trợ giảng — vàng như các card khác */
+.assistant-card p,
+.assistant-link .assistant-card p {
+    color: var(--gold) !important;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+}
+
+/* Hover: giữ nguyên màu + thêm glow vàng cho tên */
+.assistant-link:hover .assistant-card h3 {
+    color: var(--white) !important;
+    text-shadow: 0 0 12px rgba(245,197,24,0.4);
+}
+
+.assistant-link:hover .assistant-card p {
+    color: var(--gold) !important;
+    text-shadow: 0 0 10px rgba(245,197,24,0.5);
+}
+/* ============================================================
+   FLOATING SOCIAL ICONS — góc phải dưới, ngay trên scroll-top
+   Icon có màu brand của từng nền tảng
+   ============================================================ */
+
+.floating-social {
+    position: fixed;
+    right: 24px;
+    bottom: 80px;         /* Cách scroll-top (44px) + 12px gap */
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 901;         /* Thấp hơn scroll-top (900) 1 chút */
+}
+
+.floating-social-link {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    color: #ffffff;
+    transition: all .3s cubic-bezier(.22, 1, .36, 1);
+    text-decoration: none;
+    position: relative;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+}
+
+.floating-social-link svg {
+    width: 20px;
+    height: 20px;
+    display: block;
+    fill: currentColor;
+    transition: transform .3s;
+}
+
+/* ---------- Brand colors ---------- */
+.floating-social-facebook {
+    background: linear-gradient(135deg, #1877F2, #0d5dbf);
+}
+
+.floating-social-zalo {
+    background: linear-gradient(135deg, #0068FF, #0052cc);
+}
+
+.floating-social-youtube {
+    background: linear-gradient(135deg, #FF0000, #cc0000);
+}
+
+.floating-social-tiktok {
+    background: linear-gradient(135deg, #2b2b2b, #000000);
+}
+
+.floating-social-instagram {
+    background: linear-gradient(135deg, #f09433, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888);
+}
+
+/* Default (không có class riêng) */
+.floating-social-link:not([class*="floating-social-facebook"]):not([class*="floating-social-zalo"]):not([class*="floating-social-youtube"]):not([class*="floating-social-tiktok"]):not([class*="floating-social-instagram"]) {
+    background: linear-gradient(135deg, var(--red), var(--red-dark));
+}
+
+/* ---------- Hover effect ---------- */
+.floating-social-link:hover {
+    transform: translateY(-3px) scale(1.08);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+    filter: brightness(1.15);
+}
+
+.floating-social-link:hover svg {
+    transform: scale(1.1);
+}
+
+/* Pulse ring khi hover */
+.floating-social-link::after {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    border: 2px solid currentColor;
+    opacity: 0;
+    transform: scale(0.8);
+    transition: opacity .3s, transform .3s;
+    pointer-events: none;
+}
+
+.floating-social-link:hover::after {
+    opacity: 0.3;
+    transform: scale(1.15);
+}
+
+/* ---------- Label tooltip khi hover (bên trái icon) ---------- */
+.floating-social-link::before {
+    content: attr(title);
+    position: absolute;
+    right: calc(100% + 12px);
+    top: 50%;
+    transform: translateY(-50%) translateX(6px);
+    background: rgba(22, 22, 22, 0.95);
+    backdrop-filter: blur(8px);
+    color: #ffffff;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: .78rem;
+    font-weight: 600;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .25s, transform .25s;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+}
+
+.floating-social-link:hover::before {
+    opacity: 1;
+    transform: translateY(-50%) translateX(0);
+}
+
+/* ---------- Khi không có social nào active ---------- */
+.floating-social:empty {
+    display: none;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+
+/* Tablet */
+@media (max-width: 900px) {
+    .floating-social {
+        right: 18px;
+        bottom: 76px;
+        gap: 8px;
+    }
+
+    .floating-social-link {
+        width: 40px;
+        height: 40px;
+    }
+
+    .floating-social-link svg {
+        width: 18px;
+        height: 18px;
+    }
+}
+
+/* Mobile: đẩy social lên trên bottom-tab bar */
+@media (max-width: 640px) {
+    .floating-social {
+        right: 14px;
+        bottom: 140px;   /* Above bottom-tab (~66px) + scroll-top (~60px) */
+        gap: 8px;
+    }
+
+    .floating-social-link {
+        width: 38px;
+        height: 38px;
+    }
+
+    .floating-social-link svg {
+        width: 16px;
+        height: 16px;
+    }
+
+    /* Ẩn tooltip trên mobile (không có hover) */
+    .floating-social-link::before {
+        display: none;
+    }
+}
+
+/* ---------- Reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+    .floating-social-link {
+        transition: none !important;
+    }
+
+    .floating-social-link:hover {
+        transform: none !important;
+    }
+
+    .floating-social-link::after {
+        display: none;
+    }
+
+    .floating-social-link::before {
+        display: none;
     }
 }

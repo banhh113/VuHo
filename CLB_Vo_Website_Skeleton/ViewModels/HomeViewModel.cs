@@ -8,6 +8,10 @@ public class HomeViewModel
     public List<Member> BoxingMembers { get; set; } = new();
     public List<Member> KickboxingMembers { get; set; } = new();
     public List<Member> Coaches { get; set; } = new();
+
+    // ⭐ Mới: Trợ giảng
+    public List<Member> AssistantCoaches { get; set; } = new();
+
     public List<ClubEvent> Events { get; set; } = new();
     public List<GalleryImage> Gallery { get; set; } = new();
 
@@ -20,7 +24,6 @@ public class HomeViewModel
 
     public ClubInfo? ClubInfo { get; set; }
 
-    // ⭐ Data cho section "Lịch tập" — động từ admin
     public List<TimeSlot> TimeSlots { get; set; } = new();
     public List<ClubLocation> ClubLocations { get; set; } = new();
 }

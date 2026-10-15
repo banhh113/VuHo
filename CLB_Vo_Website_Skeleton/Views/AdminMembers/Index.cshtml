@@ -29,6 +29,9 @@
     <a asp-action="Index" asp-route-category="Kickboxing" class="@(catFilter == "Kickboxing" ? "active" : "")">
         🦵 Kickboxing (@ViewBag.CountKickboxing)
     </a>
+    <a asp-action="Index" asp-route-category="Trợ giảng" class="@(catFilter == "Trợ giảng" ? "active" : "")">
+    📋 Trợ giảng (@ViewBag.CountAssistant)
+</a>
     <a asp-action="Index" asp-route-category="HLV" class="@(catFilter == "HLV" ? "active" : "")">
         🎓 HLV (@ViewBag.CountHLV)
     </a>

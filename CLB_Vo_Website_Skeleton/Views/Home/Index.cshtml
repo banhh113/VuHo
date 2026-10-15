@@ -352,7 +352,7 @@
     </section>
 }
 
-<!-- ==================== COACHES ==================== -->
+<!-- ==================== COACHES (HLV chính) ==================== -->
 <section id="coaches" class="section section-dark reveal">
     <div class="container">
         <div class="section-header">
@@ -364,7 +364,7 @@
             {
                 foreach (var m in Model.Coaches)
                 {
-                    <a asp-controller="Home" asp-action="MemberDetail" asp-route-id="@m.Id" class="member-link">
+                    <a href="/members/@m.Id" class="member-link js-member-modal" data-member-id="@m.Id">
                         <article class="member-card">
                             <div class="avatar">
                                 @if (!string.IsNullOrEmpty(m.AvatarUrl))
@@ -389,6 +389,40 @@
         </div>
     </div>
 </section>
+
+<!-- ==================== ASSISTANT COACHES (Trợ giảng) ==================== -->
+@if (Model.AssistantCoaches.Any())
+{
+    <section id="assistants" class="section section-assistants reveal">
+        <div class="container">
+            <div class="section-header">
+                <p class="section-eyebrow">HỖ TRỢ</p>
+                <h2 class="section-title">Trợ giảng</h2>
+            </div>
+            <div class="cards assistants-cards">
+                @foreach (var m in Model.AssistantCoaches)
+                {
+                    <a href="/members/@m.Id" class="member-link js-member-modal assistant-link" data-member-id="@m.Id">
+                        <article class="member-card assistant-card">
+                            <div class="avatar assistant-avatar">
+                                @if (!string.IsNullOrEmpty(m.AvatarUrl))
+                                {
+                                    <img src="@m.AvatarUrl" alt="@m.FullName" loading="lazy" />
+                                }
+                                else
+                                {
+                                    <span>ẢNH</span>
+                                }
+                            </div>
+                            <h3>@m.FullName</h3>
+                            <p>@m.Role</p>
+                        </article>
+                    </a>
+                }
+            </div>
+        </div>
+    </section>
+}
 
 <!-- ==================== BOXING ==================== -->
 <section id="boxing" class="section reveal">

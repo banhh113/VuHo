@@ -36,7 +36,9 @@ public class AdminMembersController : Controller
         ViewBag.CountAll = await _db.Members.CountAsync();
         ViewBag.CountBoxing = await _db.Members.CountAsync(m => m.Category == "Boxing");
         ViewBag.CountKickboxing = await _db.Members.CountAsync(m => m.Category == "Kickboxing");
+        ViewBag.CountAssistant = await _db.Members.CountAsync(m => m.Category == "Trợ giảng");
         ViewBag.CountHLV = await _db.Members.CountAsync(m => m.Category == "HLV");
+
 
         return View(members);
     }
