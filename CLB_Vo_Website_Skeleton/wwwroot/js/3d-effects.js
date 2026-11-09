@@ -1,233 +1,205 @@
 // ============================================================
-// CLB VŨ HỔ — 3D EFFECTS (B + C + D + E)
-// Vanilla JS — không thư viện ngoài
-// Tự tắt trên mobile + prefers-reduced-motion
+// CLB VŨ HỔ — HERO CINEMATIC
+// Particle + Light beams + Staggered text reveal
+// Tự tắt particle trên mobile để tránh lag
 // ============================================================
 
 (function () {
     'use strict';
 
-    const supportsHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const isMobile = window.matchMedia('(hover: none), (max-width: 768px)').matches;
+    const isLowEndDevice = navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4;
 
-    if (!supportsHover || prefersReducedMotion) {
-        console.log('%c[3D Effects] Bỏ qua — mobile hoặc reduced-motion', 'color:#888');
-        return;
+    // ============================================================
+    // 1. PARTICLE SYSTEM (Canvas 2D) — chỉ desktop
+    // ============================================================
+    function initParticles() {
+        const canvas = document.getElementById('heroParticles');
+        if (!canvas) return;
+
+        // TẮT particle trên mobile, reduced-motion, hoặc máy yếu
+        if (prefersReducedMotion || isMobile || isLowEndDevice) {
+            canvas.style.display = 'none';
+            return;
+        }
+
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return;
+
+        const COUNT = 30;
+        const COLORS = [
+            { r: 230, g: 57, b: 70, a: 0.55 },
+            { r: 245, g: 197, b: 24, a: 0.45 },
+            { r: 255, g: 255, b: 255, a: 0.3 }
+        ];
+
+        let W = 0, H = 0, DPR = 1;
+        let particles = [];
+        let rafId = null;
+        let isVisible = true;
+
+        function resize() {
+            const rect = canvas.getBoundingClientRect();
+            DPR = Math.min(window.devicePixelRatio || 1, 2);
+            W = rect.width;
+            H = rect.height;
+            canvas.width = W * DPR;
+            canvas.height = H * DPR;
+            ctx.setTransform(1, 0, 0, 1, 0, 0);
+            ctx.scale(DPR, DPR);
+        }
+
+        function makeParticle(initial = false) {
+            const color = COLORS[Math.floor(Math.random() * COLORS.length)];
+            return {
+                x: Math.random() * W,
+                y: initial ? Math.random() * H : H + 20,
+                size: 1 + Math.random() * 2.5,
+                speedY: -(0.15 + Math.random() * 0.5),
+                speedX: (Math.random() - 0.5) * 0.3,
+                drift: Math.random() * Math.PI * 2,
+                driftSpeed: 0.005 + Math.random() * 0.015,
+                opacity: initial ? color.a : 0,
+                targetOpacity: color.a,
+                fadeIn: !initial,
+                color
+            };
+        }
+
+        function init() {
+            particles = [];
+            for (let i = 0; i < COUNT; i++) {
+                particles.push(makeParticle(true));
+            }
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, W, H);
+
+            for (const p of particles) {
+                p.drift += p.driftSpeed;
+                p.x += p.speedX + Math.sin(p.drift) * 0.3;
+                p.y += p.speedY;
+
+                if (p.fadeIn) {
+                    p.opacity += 0.01;
+                    if (p.opacity >= p.targetOpacity) {
+                        p.opacity = p.targetOpacity;
+                        p.fadeIn = false;
+                    }
+                } else if (p.y < H * 0.15) {
+                    p.opacity -= 0.005;
+                }
+
+                const c = p.color;
+                const gradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.size * 3);
+                gradient.addColorStop(0, `rgba(${c.r}, ${c.g}, ${c.b}, ${p.opacity})`);
+                gradient.addColorStop(1, `rgba(${c.r}, ${c.g}, ${c.b}, 0)`);
+                ctx.fillStyle = gradient;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size * 3, 0, Math.PI * 2);
+                ctx.fill();
+
+                if (p.y < -20 || p.opacity <= 0) {
+                    Object.assign(p, makeParticle(false));
+                }
+            }
+        }
+
+        function loop() {
+            if (!isVisible) { rafId = null; return; }
+            draw();
+            rafId = requestAnimationFrame(loop);
+        }
+
+        function start() { if (!rafId) rafId = requestAnimationFrame(loop); }
+        function stop() { if (rafId) { cancelAnimationFrame(rafId); rafId = null; } }
+
+        resize();
+        init();
+        start();
+
+        let resizeTimer;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(() => { resize(); init(); }, 200);
+        });
+
+        if ('IntersectionObserver' in window) {
+            const io = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    isVisible = entry.isIntersecting;
+                    if (isVisible) start(); else stop();
+                });
+            }, { threshold: 0 });
+            io.observe(canvas);
+        }
     }
 
-    console.log('%c[3D Effects] Đã kích hoạt', 'color:#f5c518;font-weight:bold');
+    // ============================================================
+    // 2. STAGGERED TEXT REVEAL (nhẹ, chạy cả mobile)
+    // ============================================================
+    function initTextReveal() {
+        const items = document.querySelectorAll('.hero-reveal');
+        if (!items.length) return;
 
-    function rafThrottle(fn) {
+        if (prefersReducedMotion || !('IntersectionObserver' in window)) {
+            items.forEach(el => el.classList.add('hero-revealed'));
+            return;
+        }
+
+        const io = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('hero-revealed');
+                    io.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+        items.forEach(el => io.observe(el));
+    }
+
+    // ============================================================
+    // 3. TIGER BREATHING — chỉ desktop
+    // ============================================================
+    function initTigerBreathing() {
+        const tiger = document.querySelector('.hero-media img');
+        if (!tiger || prefersReducedMotion || isMobile) return;
+        tiger.style.transformOrigin = 'center bottom';
+    }
+
+    // ============================================================
+    // 4. PARALLAX LIGHT BEAMS — chỉ desktop
+    // ============================================================
+    function initBeamParallax() {
+        const beams = document.querySelectorAll('.hero-light-beam');
+        if (!beams.length || prefersReducedMotion || isMobile) return;
+
         let ticking = false;
-        return function (...args) {
+        function onScroll() {
             if (!ticking) {
                 window.requestAnimationFrame(() => {
-                    fn.apply(this, args);
+                    const y = window.scrollY;
+                    beams.forEach((beam, i) => {
+                        const speed = 0.15 + i * 0.08;
+                        beam.style.transform = `translateY(${y * speed}px) rotate(${i === 0 ? -15 : 12}deg)`;
+                    });
                     ticking = false;
                 });
                 ticking = true;
             }
-        };
-    }
-
-    // ========== TILT 3D ==========
-    function attachTilt(el, options = {}) {
-        if (!el) return;
-
-        const maxTilt = options.maxTilt ?? 8;
-        const scale = options.scale ?? 1.02;
-        const perspective = options.perspective ?? 1000;
-        const speed = options.speed ?? 0.35;
-        const glareOpacity = options.glareOpacity ?? 0.15;
-
-        el.style.transformStyle = 'preserve-3d';
-        el.style.willChange = 'transform';
-
-        let targetRotX = 0, targetRotY = 0;
-        let currentRotX = 0, currentRotY = 0;
-        let targetScale = 1, currentScale = 1;
-        let rafId = null;
-        let isHovering = false;
-
-        let glare = el.querySelector('.tilt-glare');
-        if (!glare && glareOpacity > 0) {
-            glare = document.createElement('div');
-            glare.className = 'tilt-glare';
-            glare.style.cssText = `
-                position: absolute;
-                inset: 0;
-                border-radius: inherit;
-                pointer-events: none;
-                opacity: 0;
-                transition: opacity .3s ease;
-                background: radial-gradient(circle at var(--glare-x, 50%) var(--glare-y, 50%),
-                            rgba(255,255,255,${glareOpacity}) 0%, transparent 60%);
-                z-index: 5;
-            `;
-            if (getComputedStyle(el).position === 'static') el.style.position = 'relative';
-            el.appendChild(glare);
         }
 
-        function tick() {
-            currentRotX += (targetRotX - currentRotX) * speed;
-            currentRotY += (targetRotY - currentRotY) * speed;
-            currentScale += (targetScale - currentScale) * speed;
-
-            el.style.transform = `perspective(${perspective}px) rotateX(${currentRotX.toFixed(2)}deg) rotateY(${currentRotY.toFixed(2)}deg) scale(${currentScale.toFixed(3)})`;
-
-            const done = Math.abs(targetRotX - currentRotX) < 0.05 &&
-                         Math.abs(targetRotY - currentRotY) < 0.05 &&
-                         Math.abs(targetScale - currentScale) < 0.001;
-
-            if (done && !isHovering) {
-                el.style.transform = '';
-                el.classList.remove('tilting');
-                if (glare) glare.style.opacity = '0';
-                rafId = null;
-            } else {
-                rafId = requestAnimationFrame(tick);
-            }
-        }
-
-        function start() { if (!rafId) rafId = requestAnimationFrame(tick); }
-
-        function onEnter() {
-            isHovering = true;
-            el.classList.add('tilting');
-            targetScale = scale;
-            if (glare) glare.style.opacity = '1';
-            start();
-        }
-
-        function onMove(e) {
-            const rect = el.getBoundingClientRect();
-            const px = (e.clientX - rect.left) / rect.width;
-            const py = (e.clientY - rect.top) / rect.height;
-
-            targetRotY = (px - 0.5) * maxTilt * 2;
-            targetRotX = -(py - 0.5) * maxTilt * 2;
-
-            if (glare) {
-                glare.style.setProperty('--glare-x', (px * 100) + '%');
-                glare.style.setProperty('--glare-y', (py * 100) + '%');
-            }
-            start();
-        }
-
-        function onLeave() {
-            isHovering = false;
-            targetRotX = 0;
-            targetRotY = 0;
-            targetScale = 1;
-            start();
-        }
-
-        el.addEventListener('mouseenter', onEnter);
-        el.addEventListener('mousemove', rafThrottle(onMove));
-        el.addEventListener('mouseleave', onLeave);
+        window.addEventListener('scroll', onScroll, { passive: true });
     }
 
-    // ========== SPOTLIGHT ==========
-    function attachSpotlight(el) {
-        if (!el) return;
-        el.classList.add('spotlight');
-        const onMove = (e) => {
-            const rect = el.getBoundingClientRect();
-            el.style.setProperty('--mouse-x', ((e.clientX - rect.left) / rect.width * 100) + '%');
-            el.style.setProperty('--mouse-y', ((e.clientY - rect.top) / rect.height * 100) + '%');
-        };
-        el.addEventListener('mousemove', rafThrottle(onMove));
-    }
-
-    // ========== MAGNETIC ==========
-    function attachMagnetic(el, options = {}) {
-        if (!el) return;
-        const strength = options.strength ?? 0.25;
-        const onMove = (e) => {
-            const rect = el.getBoundingClientRect();
-            const x = e.clientX - (rect.left + rect.width / 2);
-            const y = e.clientY - (rect.top + rect.height / 2);
-            el.style.transform = `translate(${(x * strength).toFixed(1)}px, ${(y * strength).toFixed(1)}px)`;
-            el.style.transition = 'transform .1s ease-out';
-        };
-        const onLeave = () => {
-            el.style.transform = '';
-            el.style.transition = 'transform .4s cubic-bezier(.22, 1, .36, 1)';
-        };
-        el.addEventListener('mousemove', rafThrottle(onMove));
-        el.addEventListener('mouseleave', onLeave);
-    }
-
-    // ========== STATS 3D REVEAL ==========
-    function initStats3D() {
-        const items = document.querySelectorAll('.stats > div');
-        if (!items.length) return;
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach((entry, i) => {
-                if (entry.isIntersecting) {
-                    setTimeout(() => entry.target.classList.add('stats-3d-enter'), i * 120);
-                    observer.unobserve(entry.target);
-                }
-            });
-        }, { threshold: 0.3 });
-        items.forEach(el => observer.observe(el));
-    }
-
-    // ============================================================
-    // APPLY ALL
-    // ============================================================
     function init() {
-        // PHASE B — Hero + Why
-        const heroMedia = document.querySelector('.hero-media');
-        if (heroMedia) {
-            attachTilt(heroMedia, { maxTilt: 6, scale: 1.03, perspective: 1200, speed: 0.28, glareOpacity: 0 });
-        }
-
-        document.querySelectorAll('.why-card').forEach((card) => {
-            attachTilt(card, { maxTilt: 10, scale: 1.03, perspective: 900, speed: 0.3, glareOpacity: 0.08 });
-            attachSpotlight(card);
-        });
-
-        const heroCta = document.querySelector('.hero-actions .btn-primary');
-        if (heroCta) attachMagnetic(heroCta, { strength: 0.15 });
-
-        // PHASE C — Sport + Member + Tournament
-        document.querySelectorAll('.sport-card').forEach((card) => {
-            attachTilt(card, { maxTilt: 8, scale: 1.02, perspective: 1000, speed: 0.3, glareOpacity: 0 });
-        });
-        document.querySelectorAll('.member-link').forEach((link) => {
-            attachTilt(link, { maxTilt: 6, scale: 1.02, perspective: 1200, speed: 0.25, glareOpacity: 0 });
-        });
-        document.querySelectorAll('.tournament-card').forEach((card) => {
-            attachTilt(card, { maxTilt: 6, scale: 1.02, perspective: 1200, speed: 0.3, glareOpacity: 0.05 });
-        });
-        document.querySelectorAll('.top-achievement-card').forEach((card) => {
-            attachTilt(card, { maxTilt: 4, scale: 1.01, perspective: 1400, speed: 0.3, glareOpacity: 0 });
-        });
-
-        // PHASE D — Stats + Gallery + Contact
-        initStats3D();
-
-        document.querySelectorAll('.gallery-card').forEach((card) => {
-            attachTilt(card, { maxTilt: 8, scale: 1.03, perspective: 1000, speed: 0.3, glareOpacity: 0.1 });
-        });
-        document.querySelectorAll('.gallery-hero-img').forEach((el) => {
-            attachTilt(el, { maxTilt: 5, scale: 1.02, perspective: 1400, speed: 0.28, glareOpacity: 0 });
-        });
-        document.querySelectorAll('.contact-card').forEach((card) => {
-            attachMagnetic(card, { strength: 0.1 });
-        });
-        document.querySelectorAll('.contact-cta .btn, .schedule-col .btn-dark, .center-actions .btn').forEach((btn) => {
-            attachMagnetic(btn, { strength: 0.15 });
-        });
-
-        // PHASE E — Admin
-        document.querySelectorAll('.admin-body .stat-card').forEach((card) => {
-            attachTilt(card, { maxTilt: 4, scale: 1.01, perspective: 1500, speed: 0.35, glareOpacity: 0 });
-        });
-        document.querySelectorAll('.admin-body .quick-action').forEach((el) => {
-            attachTilt(el, { maxTilt: 3, scale: 1.01, perspective: 1500, speed: 0.4, glareOpacity: 0 });
-        });
+        initParticles();
+        initTextReveal();
+        initTigerBreathing();
+        initBeamParallax();
     }
 
     if (document.readyState === 'loading') {
@@ -235,6 +207,4 @@
     } else {
         init();
     }
-
-    window.CLBVo3D = { attachTilt, attachSpotlight, attachMagnetic };
 })();

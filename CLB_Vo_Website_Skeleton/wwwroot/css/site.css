@@ -6589,4 +6589,99 @@ header.site-header nav.main-nav a.nav-link:active {
         transform: none !important;
         transition: none !important;
     }
+}/* ============================================================
+   MOBILE PERFORMANCE — Tắt hiệu ứng nặng
+   Áp dụng cho màn hình ≤ 768px (tablet/mobile)
+   ============================================================ */
+
+@media (max-width: 768px) {
+    /* 1. Tắt particle canvas */
+    .hero-particles {
+        display: none !important;
+    }
+
+    /* 2. Tắt light beams */
+    .hero-light-beam {
+        display: none !important;
+    }
+
+    /* 3. Tắt tiger breathing animation */
+    .hero-media img {
+        animation: none !important;
+        filter: drop-shadow(0 20px 60px rgba(230, 57, 70, 0.55))
+                drop-shadow(0 0 30px rgba(230, 57, 70, 0.35)) !important;
+    }
+
+    /* 4. Tắt glow pulse */
+    .hero-media-glow {
+        animation: none !important;
+        opacity: 0.9 !important;
+        background: radial-gradient(circle at center,
+            rgba(230, 57, 70, 0.28),
+            transparent 65%) !important;
+    }
+
+    /* 5. Tắt CTA pulse (giữ hiệu ứng tĩnh) */
+    .hero-actions .btn-primary {
+        animation: none !important;
+        box-shadow: 0 6px 20px rgba(230, 57, 70, 0.4) !important;
+    }
+
+    /* 6. Giảm backdrop-filter (tốn GPU) */
+    .hero-actions .btn-outline-red {
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+        background: rgba(255, 255, 255, 0.03) !important;
+    }
+
+    /* 7. Giảm hiệu ứng hero-brush (blur 60px rất tốn) */
+    .hero-brush {
+        filter: blur(40px) !important;
+        opacity: 0.08 !important;
+    }
+
+    /* 8. Text reveal — đơn giản hơn, nhanh hơn */
+    .hero-reveal {
+        transform: translateY(16px) !important;
+        transition: opacity 0.5s ease, transform 0.5s ease !important;
+    }
+}
+
+/* ============================================================
+   MÁY YẾU — Tắt toàn bộ animation hero
+   ============================================================ */
+
+@media (max-width: 480px) {
+    /* Giảm thêm cho điện thoại nhỏ */
+    .hero-brush {
+        display: none !important;
+    }
+
+    .hero {
+        background: radial-gradient(ellipse at 50% 20%, rgba(230, 57, 70, 0.15), transparent 60%),
+                    var(--black) !important;
+    }
+}
+
+/* ============================================================
+   PREFERS REDUCED MOTION — tắt hết
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+    .hero-particles,
+    .hero-light-beam {
+        display: none !important;
+    }
+
+    .hero-media img,
+    .hero-media-glow,
+    .hero-actions .btn-primary {
+        animation: none !important;
+    }
+
+    .hero-reveal {
+        opacity: 1 !important;
+        transform: none !important;
+        transition: none !important;
+    }
 }
