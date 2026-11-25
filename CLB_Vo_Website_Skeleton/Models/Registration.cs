@@ -1,3 +1,5 @@
+using CLBVo.Helpers;
+
 namespace CLBVo.Models;
 
 public enum RegistrationStatus
@@ -13,6 +15,7 @@ public enum RegistrationStatus
 public class Registration
 {
     public int Id { get; set; }
+    public string RegistrationCode { get; set; } = ""; // ⭐ THÊM DÒNG NÀY
     public string FullName { get; set; } = "";
     public string Phone { get; set; } = "";
     public string? Email { get; set; }
@@ -21,7 +24,7 @@ public class Registration
     public string? Experience { get; set; }        // Kinh nghiệm tập luyện
     public string? Message { get; set; }
 
-    public DateTime CreatedAt { get; set; } = DateTime.Now;
+    public DateTime CreatedAt { get; set; } = TimeHelper.NowVN();
     public RegistrationStatus Status { get; set; } = RegistrationStatus.New;
 
     // Ghi chú & lịch sử liên hệ

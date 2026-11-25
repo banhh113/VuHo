@@ -1,3 +1,5 @@
+using CLBVo.Helpers;
+
 namespace CLBVo.Models;
 
 public class Post
@@ -6,5 +8,5 @@ public class Post
     public string Title { get; set; } = "";
     public string Content { get; set; } = "";
     public string? ImageUrl { get; set; }
-    public DateTime CreatedAt { get; set; } = DateTime.Now;
+    public DateTime CreatedAt { get; set; } = TimeHelper.NowVN();
 }

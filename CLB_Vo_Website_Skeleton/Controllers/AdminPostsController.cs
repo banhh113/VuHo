@@ -1,4 +1,4 @@
-using CLBVo.Data;
+﻿using CLBVo.Data;
 using CLBVo.Models;
 using CLBVo.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CLBVo.Controllers;
 
-[Authorize]
+[Authorize(Roles = "Admin")]
 [Route("admin/posts")]
 public class AdminPostsController : Controller
 {
@@ -44,7 +44,7 @@ public class AdminPostsController : Controller
             // Nếu admin không chọn ngày → dùng ngày hiện tại
             if (post.CreatedAt == default(DateTime))
             {
-                post.CreatedAt = DateTime.Now;
+                post.CreatedAt = TimeHelper.NowVN();
             }
 
             post.ImageUrl = await _cloudinary.UploadAsync(imageFile, "clb-vo/posts");

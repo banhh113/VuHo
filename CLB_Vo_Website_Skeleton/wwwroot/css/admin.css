@@ -1,0 +1,61 @@
+/* ============================================================
+   ADMIN LIGHT THEME OVERRIDES
+   ============================================================ */
+body.admin-body {
+  background-color: var(--adm-bg);
+  color: var(--adm-text);
+}
+
+.admin-main-wrapper, .admin-topbar, .admin-sidebar {
+  background-color: var(--adm-surface) !important;
+  border-color: var(--adm-border) !important;
+}
+
+.admin-sidebar {
+  border-right: 1px solid var(--adm-border);
+  box-shadow: var(--shadow-sm);
+}
+
+.admin-brand span, .admin-nav-item, .panel-header h2, .admin-page-header h1, .list-title, .stat-info strong {
+  color: var(--adm-text) !important;
+}
+
+.admin-nav-item:hover {
+  background-color: var(--adm-surface-hover) !important;
+  color: var(--accent-red) !important;
+}
+
+.admin-nav-item.active {
+  background: linear-gradient(90deg, rgba(230,57,70,0.1), transparent) !important;
+  color: var(--accent-red) !important;
+  border-left-color: var(--accent-red) !important;
+}
+
+.admin-nav-sub { border-left-color: var(--adm-border); }
+
+.admin-panel, .stat-card, .admin-table, .quick-actions {
+  background: var(--adm-surface) !important;
+  border: 1px solid var(--adm-border) !important;
+  box-shadow: var(--shadow-sm);
+}
+
+.admin-table th {
+  background: var(--adm-surface-hover) !important;
+  color: var(--adm-text-muted) !important;
+  border-bottom: 1px solid var(--adm-border) !important;
+}
+
+.admin-table td { border-bottom-color: var(--adm-border) !important; color: var(--adm-text) !important; }
+.admin-table tbody tr:hover td { background: var(--adm-surface-hover) !important; }
+
+/* Buttons */
+.admin-table td.actions .btn-edit { background: #fef08a !important; color: #854d0e !important; border-color: #fde047 !important; }
+.admin-table td.actions .btn-delete { background: #fee2e2 !important; color: #991b1b !important; border-color: #fca5a5 !important; }
+
+/* Forms */
+.admin-form { background: var(--adm-surface); border: 1px solid var(--adm-border); }
+.form-group label { color: var(--adm-text-muted); }
+.form-group input, .form-group select, .form-group textarea {
+  background: var(--adm-surface); border: 1px solid var(--adm-border); color: var(--adm-text);
+}
+.form-group input:focus { border-color: var(--accent-red); box-shadow: 0 0 0 3px rgba(230,57,70,0.1); }

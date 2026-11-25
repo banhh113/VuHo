@@ -1,0 +1,32 @@
+/* Buttons */
+.btn-new {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 10px 20px; border-radius: var(--radius-sm); font-weight: 600; font-size: 0.9rem;
+  transition: all var(--transition-base); border: 1px solid transparent; cursor: pointer;
+}
+.btn-new-primary { background: var(--accent-red); color: #fff; }
+.btn-new-primary:hover { background: var(--accent-red-hover); }
+.btn-new-outline { background: transparent; border-color: var(--pub-border); color: var(--pub-text); }
+.btn-new-outline:hover { background: var(--pub-surface-hover); }
+
+/* Form Inputs */
+.form-control-new {
+  width: 100%; padding: 10px 14px; border-radius: var(--radius-sm);
+  border: 1px solid var(--pub-border); background: var(--pub-surface); color: var(--pub-text);
+  transition: border-color var(--transition-base); font-family: var(--font-base);
+}
+.form-control-new:focus { outline: none; border-color: var(--accent-red); box-shadow: 0 0 0 3px rgba(230,57,70,0.2); }
+
+/* Badge */
+.badge-new {
+  display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px;
+  border-radius: 99px; font-size: 0.75rem; font-weight: 600;
+}
+.badge-gold { background: rgba(245,197,24,0.15); color: var(--accent-gold); border: 1px solid rgba(245,197,24,0.3); }
+.badge-silver { background: rgba(192,192,192,0.15); color: #d1d5db; border: 1px solid rgba(192,192,192,0.3); }
+.badge-bronze { background: rgba(205,127,50,0.15); color: #cd7f32; border: 1px solid rgba(205,127,50,0.3); }
+
+/* Focus Visible */
+a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible {
+  outline: 2px solid var(--accent-red); outline-offset: 2px;
+}

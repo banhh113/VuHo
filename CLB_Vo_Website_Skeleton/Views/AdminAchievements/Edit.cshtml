@@ -6,10 +6,10 @@
 
 <div class="admin-page-header">
     <div>
-        <h1>✏️ Sửa thành tích</h1>
+        <h1><i data-lucide="edit" style="color:var(--accent-gold)"></i> Sửa thành tích</h1>
         <p class="admin-subtitle">@Model.Title</p>
     </div>
-    <a asp-action="Index" class="btn btn-secondary">← Quay lại</a>
+    <a asp-action="Index" class="btn btn-secondary"><i data-lucide="arrow-left"></i> Quay lại</a>
 </div>
 
 <form asp-action="Edit" asp-route-id="@Model.Id" method="post" class="admin-form">
@@ -27,27 +27,28 @@
         <input asp-for="Competition" required maxlength="255" />
     </div>
 
+    <!-- Đã xóa input Medal dư thừa -->
     <div class="form-group">
         <label>Huy chương *</label>
-        <input asp-for="Medal" required maxlength="50" />
+        <select asp-for="Medal" required>
+            <option value="">-- Chọn loại huy chương --</option>
+            <option value="Huy chương vàng">Huy chương vàng</option>
+            <option value="Huy chương bạc">Huy chương bạc</option>
+            <option value="Huy chương đồng">Huy chương đồng</option>
+            <option value="Giải nhất">Giải nhất</option>
+            <option value="Giải nhì">Giải nhì</option>
+            <option value="Giải ba">Giải ba</option>
+        </select>
     </div>
 
+    <!-- Đã thêm lại input Year bị thiếu -->
     <div class="form-group">
-    <label>Huy chương *</label>
-    <select asp-for="Medal" required>
-        <option value="">-- Chọn loại huy chương --</option>
-        <option value="🥇 Huy chương vàng">🥇 Huy chương vàng</option>
-        <option value="🥈 Huy chương bạc">🥈 Huy chương bạc</option>
-        <option value="🥉 Huy chương đồng">🥉 Huy chương đồng</option>
-        <option value="🏆 Giải nhất">🏆 Giải nhất</option>
-        <option value="🎖️ Giải nhì">🎖️ Giải nhì</option>
-        <option value="🏅 Giải ba">🏅 Giải ba</option>
-        
-    </select>
-</div>
+        <label>Năm *</label>
+        <input asp-for="Year" type="number" required min="1950" max="2100" />
+    </div>
 
     <div class="form-actions">
-        <button type="submit" class="btn">💾 Cập nhật</button>
+        <button type="submit" class="btn btn-primary"><i data-lucide="save"></i> Cập nhật</button>
         <a asp-action="Index" class="btn btn-secondary">Hủy</a>
     </div>
 </form>

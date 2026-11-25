@@ -1,0 +1,80 @@
+@model List<Microsoft.AspNetCore.Identity.IdentityUser>
+@{
+    ViewData["Title"] = "Quản lý Tài khoản";
+    Layout = "_AdminLayout";
+    
+    // ⭐ Thêm ?? new ... để fix lỗi CS8602
+    var roles = ViewBag.Roles as List<string> ?? new List<string>();
+    var userRoles = ViewBag.UserRoles as Dictionary<string, IList<string>> ?? new Dictionary<string, IList<string>>();
+}
+
+<div class="admin-page-header">
+    <div>
+        <h1>🔐 Quản lý Tài khoản</h1>
+        <p class="admin-subtitle">Phân quyền, cấp lại mật khẩu cho người dùng hệ thống</p>
+    </div>
+</div>
+
+@if (TempData["Success"] != null) { <div class="alert alert-success">@TempData["Success"]</div> }
+@if (TempData["Error"] != null) { <div class="alert alert-error">@TempData["Error"]</div> }
+
+<table class="admin-table">
+    <thead>
+        <tr>
+            <th>Email / Tài khoản</th>
+            <th>Trạng thái</th>
+            <th>Quyền hiện tại</th>
+            <th style="width:200px">Phân quyền</th>
+            <th>Hành động</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model)
+        {
+            // ⭐ Lấy quyền an toàn, nếu không có thì trả về list rỗng
+            var currentRoles = userRoles.ContainsKey(user.Id) && userRoles[user.Id] != null 
+                ? userRoles[user.Id] 
+                : new List<string>();
+                
+            var roleStr = currentRoles.Any() ? string.Join(", ", currentRoles) : "Chưa có quyền";
+
+            <tr>
+                <td><strong>@user.Email</strong></td>
+                <td>
+                    @if (user.LockoutEnd != null && user.LockoutEnd > DateTimeOffset.Now)
+                    {
+                        <span class="status-badge status-cancelled">Đang khóa</span>
+                    }
+                    else
+                    {
+                        <span class="status-badge status-confirmed">Hoạt động</span>
+                    }
+                </td>
+                <td>
+                    <span class="status-badge @(roleStr.Contains("Admin") ? "status-archived" : (roleStr.Contains("HLV") ? "status-new" : "status-contacted"))" style="font-size:0.85rem">
+                        @roleStr
+                    </span>
+                </td>
+                <td>
+                    <form asp-action="ChangeRole" method="post" style="display:flex; gap:5px;">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="userId" value="@user.Id" />
+                        <select name="newRole" class="form-control" style="padding:5px; font-size:0.85rem">
+                            @foreach (var r in roles)
+                            {
+                                <option value="@r" selected="@(currentRoles.Contains(r) ? "selected" : null)">@r</option>
+                            }
+                        </select>
+                        <button type="submit" class="btn-sm btn-edit">Lưu</button>
+                    </form>
+                </td>
+                <td class="actions">
+                    <form asp-action="ResetPassword" asp-route-id="@user.Id" method="post" onsubmit="return confirm('Reset mật khẩu về mặc định?');">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn-sm btn-delete">Reset Pass</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

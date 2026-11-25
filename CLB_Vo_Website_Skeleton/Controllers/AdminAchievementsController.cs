@@ -1,4 +1,4 @@
-using CLBVo.Data;
+﻿using CLBVo.Data;
 using CLBVo.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CLBVo.Controllers;
 
-[Authorize]
+[Authorize(Roles = "Admin")]
 [Route("admin/achievements")]
 public class AdminAchievementsController : Controller
 {
@@ -27,7 +27,7 @@ public class AdminAchievementsController : Controller
     [HttpGet("create")]
     public IActionResult Create()
     {
-        return View(new Achievement { Year = DateTime.Now.Year });
+        return View(new Achievement { Year = TimeHelper.NowVN().Year });
     }
 
     [HttpPost("create")]

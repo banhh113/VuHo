@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using CLBVo.Helpers;
 
 namespace CLBVo.Models;
 
@@ -26,7 +27,7 @@ public class Tournament
     [MaxLength(500)]
     public string? ImageUrl { get; set; }
 
-    public DateTime CreatedAt { get; set; } = DateTime.Now;
+    public DateTime CreatedAt { get; set; } = TimeHelper.NowVN();
 
     public List<TournamentResult> Results { get; set; } = new();
 }

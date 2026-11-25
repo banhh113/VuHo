@@ -1,5 +1,6 @@
 @{
     ViewData["Title"] = "Đăng ký thành công";
+    var code = ViewBag.RegistrationCode as string;
 }
 
 <section class="section" style="padding-top:140px">
@@ -11,15 +12,40 @@
                     <polyline points="22 4 12 14.01 9 11.01"/>
                 </svg>
             </div>
+            
             <h1>Cảm ơn bạn đã đăng ký!</h1>
+            
             <p class="thankyou-desc">
                 CLB Vũ Hổ đã nhận được thông tin đăng ký của bạn.
                 Chúng tôi sẽ liên hệ trong vòng <strong>24 giờ</strong> để tư vấn và sắp xếp buổi tập thử.
             </p>
 
-            <div class="thankyou-actions">
-                <a asp-controller="Home" asp-action="Index" class="btn btn-primary">← Về trang chủ</a>
-                <a href="/#contact" class="btn btn-outline-red">
+            @if (!string.IsNullOrEmpty(code))
+            {
+                <div style="margin: 24px 0; padding: 20px; background: rgba(245,197,24,0.05); border: 1px dashed rgba(245,197,24,0.5); border-radius: 12px;">
+                    <p style="color: var(--gray); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px;">
+                        Mã đăng ký của bạn
+                    </p>
+                    <div style="font-family: var(--font-head); font-size: 2rem; font-weight: 900; color: var(--gold); letter-spacing: 3px;">
+                        @code
+                    </div>
+                    <p style="color: var(--gray-dark); font-size: 0.8rem; margin-top: 10px; font-style: italic;">
+                        Vui lòng lưu lại mã này để tra cứu trạng thái tập thử sau này.
+                    </p>
+                </div>
+            }
+
+            <div class="thankyou-actions" style="flex-wrap: wrap; gap: 10px; justify-content: center;">
+                <a asp-controller="Home" asp-action="Index" class="btn btn-primary" style="flex: 1 1 100%; justify-content: center;">
+                    ← Về trang chủ
+                </a>
+                
+                <a asp-controller="Registration" asp-action="Lookup" class="btn btn-outline-red" style="flex: 1 1 100%; justify-content: center;">
+                    <svg class="ico ico-sm" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                    Tra cứu trạng thái
+                </a>
+                
+                <a href="/#contact" class="btn btn-outline-red" style="flex: 1 1 100%; justify-content: center;">
                     <svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
                     Xem liên hệ
                 </a>

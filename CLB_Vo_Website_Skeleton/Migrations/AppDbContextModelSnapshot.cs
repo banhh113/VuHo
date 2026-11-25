@@ -203,6 +203,9 @@ namespace CLBVo.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.ToTable("Members");
@@ -279,6 +282,10 @@ namespace CLBVo.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PreferredTime")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RegistrationCode")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Status")

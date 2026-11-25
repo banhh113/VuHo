@@ -1,0 +1,67 @@
+@model CLBVo.Models.Member
+@{
+    ViewData["Title"] = "Trang cá nhân";
+    bool isHLV = ViewBag.IsHLV ?? false;
+}
+
+<section class="section" style="padding-top:140px">
+    <div class="container" style="max-width:800px">
+        <div class="admin-panel" style="padding:40px; position:relative; overflow:hidden">
+            
+            <!-- Background mờ -->
+            <div style="position:absolute; top:-50px; right:-50px; opacity:0.05; pointer-events:none;">
+                <img src="~/images/logo.png" style="width:300px" />
+            </div>
+
+            <div style="display:flex; align-items:center; gap:24px; margin-bottom:30px; position:relative; z-index:1">
+                <img src="@(string.IsNullOrEmpty(Model.AvatarUrl) ? "/images/logo.png" : Model.AvatarUrl)" 
+                     style="width:120px; height:120px; border-radius:50%; object-fit:cover; border:4px solid var(--gold); box-shadow:0 8px 24px rgba(245,197,24,0.3)" />
+                <div>
+                    <h1 style="margin:0; font-size:2rem">Chào @Model.FullName!</h1>
+                    <p style="color:var(--gold); font-weight:800; margin:8px 0 0 0; text-transform:uppercase; letter-spacing:2px">
+                        @(isHLV ? "🎓 Huấn Luyện Viên" : "🥊 Võ Sinh")
+                    </p>
+                </div>
+            </div>
+
+            @if (isHLV)
+            {
+                <div class="alert alert-success" style="background:rgba(16,185,129,0.1); border-left:4px solid #10b981; color:#10b981; font-weight:600">
+                    <strong>Quyền HLV:</strong> Chào mừng Thầy/Cô. Các tính năng quản lý lớp học và điểm danh đang được cập nhật.
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-success" style="background:rgba(59,130,246,0.1); border-left:4px solid #3b82f6; color:#60a5fa; font-weight:600">
+                    <strong>Quyền Võ Sinh:</strong> Chào mừng bạn đến với CLB Vũ Hổ. Chúc bạn có những buổi tập hiệu quả!
+                </div>
+            }
+            
+            <div style="background:rgba(255,255,255,0.02); padding:20px; border-radius:10px; border:1px solid var(--border); margin-top:20px; position:relative; z-index:1">
+                <h3 style="color:var(--gold); font-size:1rem; margin-bottom:10px">Thông tin cá nhân</h3>
+                <p style="color:var(--gray); line-height:1.6; margin:0">@(string.IsNullOrEmpty(Model.Description) ? "Chưa có mô tả." : Model.Description)</p>
+            </div>
+
+            <!-- Thêm đoạn này vào bên dưới phần Thông tin cá nhân -->
+<div style="background:rgba(255,255,255,0.02); padding:20px; border-radius:10px; border:1px solid var(--border); margin-top:20px; position:relative; z-index:1">
+    <h3 style="color:var(--gold); font-size:1rem; margin-bottom:10px">Thông tin Tài khoản</h3>
+    <ul class="info-list" style="margin:0">
+        <li><strong>Tên đăng nhập (Email):</strong> @ViewBag.AccountEmail</li>
+        <li><strong>Mã ID:</strong> <code style="font-size:0.8rem;color:#888">@ViewBag.AccountId</code></li>
+        <li><strong>Quyền hạn:</strong> @(isHLV ? "Huấn luyện viên (HLV)" : "Võ sinh (Member)")</li>
+        <li><strong>Trạng thái:</strong> <span style="color:#10b981">Đang hoạt động</span></li>
+    </ul>
+</div>
+
+            <div style="margin-top:30px; display:flex; gap:12px; flex-wrap:wrap; position:relative; z-index:1">
+                <a href="/" class="btn btn-primary">← Về trang chủ</a>
+                <a asp-controller="Account" asp-action="ChangePassword" class="btn btn-secondary">🔐 Đổi mật khẩu</a>
+                
+                <form asp-controller="Account" asp-action="Logout" method="post" style="display:inline">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="btn btn-outline-red">Đăng xuất</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>

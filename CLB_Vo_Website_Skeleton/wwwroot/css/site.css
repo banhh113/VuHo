@@ -6685,3 +6685,14 @@ header.site-header nav.main-nav a.nav-link:active {
         transition: none !important;
     }
 }
+/* CSS cho Sidebar Dropdown */
+.admin-nav-group details { margin: 0; }
+.admin-nav-group summary { list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; }
+.admin-nav-group summary::-webkit-details-marker { display: none; }
+.admin-nav-group summary::after {
+    content: '▼'; font-size: 0.6rem; color: var(--gray); transition: transform 0.3s;
+}
+.admin-nav-group[open] summary::after { transform: rotate(180deg); }
+.admin-nav-sub { display: flex; flex-direction: column; gap: 4px; padding-left: 20px; margin-top: 4px; border-left: 1px solid rgba(255,255,255,0.1); margin-left: 24px; }
+.admin-nav-sub .admin-nav-item { padding: 8px 12px; font-size: 0.85rem; color: var(--gray); }
+.admin-nav-sub .admin-nav-item:hover { color: var(--gold); background: transparent; transform: translateX(4px); }

@@ -18,39 +18,40 @@
 
     <div class="form-group">
         <label>Họ tên *</label>
-        <input asp-for="FullName" required maxlength="150"
-               placeholder="VD: Nguyễn Văn A" />
+        <input asp-for="FullName" required maxlength="150" placeholder="VD: Nguyễn Văn A" />
     </div>
 
     <div class="form-group">
-    <label>Nhóm *</label>
-    <select asp-for="Category" required>
-        <option value="">-- Chọn nhóm --</option>
-        <option value="Boxing">🥊 Boxing</option>
-        <option value="Kickboxing">🦵 Kickboxing</option>
-        <option value="HLV">🎓 Huấn luyện viên</option>
-        <option value="Trợ giảng">📋 Trợ giảng</option>
-    </select>
-    <small>Chọn nhóm để phân loại thành viên trên trang chủ.</small>
-</div>
+        <label>Email (Dùng để tạo tài khoản đăng nhập)</label>
+        <input type="email" name="email" placeholder="VD: hlv.a@gmail.com" />
+        <small>Nếu nhập Email, hệ thống sẽ tự tạo tài khoản cho thành viên này. Bỏ trống nếu chỉ muốn hiển thị hình ảnh.</small>
+    </div>
+
+    <div class="form-group">
+        <label>Nhóm *</label>
+        <select asp-for="Category" required>
+            <option value="">-- Chọn nhóm --</option>
+            <option value="Boxing">🥊 Boxing</option>
+            <option value="Kickboxing">🦵 Kickboxing</option>
+            <option value="HLV">🎓 Huấn luyện viên</option>
+            <option value="Trợ giảng">📋 Trợ giảng</option>
+        </select>
+        <small>HLV và Trợ giảng sẽ được cấp quyền quản lý cao hơn Võ sinh.</small>
+    </div>
 
     <div class="form-group">
         <label>Vai trò *</label>
-        <input asp-for="Role" required maxlength="100"
-               placeholder="VD: Huấn luyện viên, Võ sinh..." />
-        <small>Gợi ý: Huấn luyện viên, Trợ giảng, Võ sinh...</small>
+        <input asp-for="Role" required maxlength="100" placeholder="VD: Huấn luyện viên, Võ sinh..." />
     </div>
 
     <div class="form-group">
         <label>Mô tả ngắn</label>
-        <textarea asp-for="Description" rows="4"
-                  placeholder="VD: HLV chính với 10 năm kinh nghiệm..."></textarea>
+        <textarea asp-for="Description" rows="4" placeholder="VD: HLV chính với 10 năm kinh nghiệm..."></textarea>
     </div>
 
     <div class="form-group">
         <label>Ảnh đại diện</label>
         <input type="file" name="imageFile" accept="image/*" />
-        <small>Chấp nhận jpg, png, gif, webp. Tối đa 5MB. Nên dùng ảnh vuông để hiển thị tròn đẹp.</small>
     </div>
 
     <div class="form-actions">

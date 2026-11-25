@@ -1,4 +1,4 @@
-using CLBVo.Data;
+﻿using CLBVo.Data;
 using CLBVo.Models;
 using CLBVo.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CLBVo.Controllers;
 
-[Authorize]
+[Authorize(Roles = "Admin")]
 [Route("admin/gallery")]
 public class AdminGalleryController : Controller
 {
@@ -57,7 +57,7 @@ public class AdminGalleryController : Controller
                 {
                     Title = title,
                     ImageUrl = url,
-                    CreatedAt = DateTime.Now
+                    CreatedAt = TimeHelper.NowVN()
                 });
                 count++;
             }

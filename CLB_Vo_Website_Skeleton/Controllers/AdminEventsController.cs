@@ -1,4 +1,4 @@
-using CLBVo.Data;
+﻿using CLBVo.Data;
 using CLBVo.Models;
 using CLBVo.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CLBVo.Controllers;
 
-[Authorize]
+[Authorize(Roles = "Admin")]
 [Route("admin/events")]
 public class AdminEventsController : Controller
 {
@@ -30,7 +30,7 @@ public class AdminEventsController : Controller
     [HttpGet("create")]
     public IActionResult Create()
     {
-        return View(new ClubEvent { EventDate = DateTime.Now.AddDays(7) });
+        return View(new ClubEvent { EventDate = TimeHelper.NowVN().AddDays(7) });
     }
 
     [HttpPost("create")]

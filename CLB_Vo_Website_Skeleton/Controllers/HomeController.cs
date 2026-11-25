@@ -1,4 +1,5 @@
 using CLBVo.Data;
+using CLBVo.Helpers;
 using CLBVo.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -18,45 +19,21 @@ public class HomeController : Controller
         var boxingMembers = allMembers.Where(m => m.Category == "Boxing").ToList();
         var kickboxingMembers = allMembers.Where(m => m.Category == "Kickboxing").ToList();
         var coaches = allMembers.Where(m => m.Category == "HLV").ToList();
-
-        // ⭐ Mới: Trợ giảng
         var assistantCoaches = allMembers.Where(m => m.Category == "Trợ giảng").ToList();
 
         var allResults = await _db.TournamentResults.ToListAsync();
 
-        var goldCount = allResults.Count(r =>
-            !string.IsNullOrEmpty(r.Medal) &&
-            (r.Medal.Contains("vàng", StringComparison.OrdinalIgnoreCase)
-             || r.Medal.Contains("nhất", StringComparison.OrdinalIgnoreCase)
-             || r.Medal.Contains("🥇")));
-
-        var silverCount = allResults.Count(r =>
-            !string.IsNullOrEmpty(r.Medal) &&
-            (r.Medal.Contains("bạc", StringComparison.OrdinalIgnoreCase)
-             || r.Medal.Contains("nhì", StringComparison.OrdinalIgnoreCase)
-             || r.Medal.Contains("🥈")));
-
-        var bronzeCount = allResults.Count(r =>
-            !string.IsNullOrEmpty(r.Medal) &&
-            (r.Medal.Contains("đồng", StringComparison.OrdinalIgnoreCase)
-             || r.Medal.Contains("ba", StringComparison.OrdinalIgnoreCase)
-             || r.Medal.Contains("🥉")));
+        // ⭐ Sử dụng MedalHelper
+        var goldCount = allResults.Count(r => MedalHelper.GetMedalType(r.Medal) == "gold");
+        var silverCount = allResults.Count(r => MedalHelper.GetMedalType(r.Medal) == "silver");
+        var bronzeCount = allResults.Count(r => MedalHelper.GetMedalType(r.Medal) == "bronze");
 
         if (!allResults.Any())
         {
             var achievements = await _db.Achievements.ToListAsync();
-            goldCount = achievements.Count(a => !string.IsNullOrEmpty(a.Medal) &&
-                (a.Medal.Contains("vàng", StringComparison.OrdinalIgnoreCase)
-                 || a.Medal.Contains("nhất", StringComparison.OrdinalIgnoreCase)
-                 || a.Medal.Contains("🥇")));
-            silverCount = achievements.Count(a => !string.IsNullOrEmpty(a.Medal) &&
-                (a.Medal.Contains("bạc", StringComparison.OrdinalIgnoreCase)
-                 || a.Medal.Contains("nhì", StringComparison.OrdinalIgnoreCase)
-                 || a.Medal.Contains("🥈")));
-            bronzeCount = achievements.Count(a => !string.IsNullOrEmpty(a.Medal) &&
-                (a.Medal.Contains("đồng", StringComparison.OrdinalIgnoreCase)
-                 || a.Medal.Contains("ba", StringComparison.OrdinalIgnoreCase)
-                 || a.Medal.Contains("🥉")));
+            goldCount = achievements.Count(a => MedalHelper.GetMedalType(a.Medal) == "gold");
+            silverCount = achievements.Count(a => MedalHelper.GetMedalType(a.Medal) == "silver");
+            bronzeCount = achievements.Count(a => MedalHelper.GetMedalType(a.Medal) == "bronze");
         }
 
         var tournamentCount = await _db.Tournaments.CountAsync();
@@ -76,7 +53,7 @@ public class HomeController : Controller
             KickboxingMembers = kickboxingMembers,
             Coaches = coaches,
             AssistantCoaches = assistantCoaches,
-            Events = await _db.Events.Where(e => e.EventDate >= DateTime.Now).OrderBy(e => e.EventDate).ToListAsync(),
+            Events = await _db.Events.Where(e => e.EventDate >= TimeHelper.NowVN()).OrderBy(e => e.EventDate).ToListAsync(),
             Gallery = await _db.GalleryImages.OrderByDescending(g => g.CreatedAt).ToListAsync(),
 
             GoldCount = goldCount,
@@ -193,39 +170,17 @@ public class HomeController : Controller
 
         var allResults = list.SelectMany(t => t.Results).ToList();
 
-        var goldCount = allResults.Count(r =>
-            !string.IsNullOrEmpty(r.Medal) &&
-            (r.Medal.Contains("vàng", StringComparison.OrdinalIgnoreCase) ||
-             r.Medal.Contains("nhất", StringComparison.OrdinalIgnoreCase) ||
-             r.Medal.Contains("🥇")));
-
-        var silverCount = allResults.Count(r =>
-            !string.IsNullOrEmpty(r.Medal) &&
-            (r.Medal.Contains("bạc", StringComparison.OrdinalIgnoreCase) ||
-             r.Medal.Contains("nhì", StringComparison.OrdinalIgnoreCase) ||
-             r.Medal.Contains("🥈")));
-
-        var bronzeCount = allResults.Count(r =>
-            !string.IsNullOrEmpty(r.Medal) &&
-            (r.Medal.Contains("đồng", StringComparison.OrdinalIgnoreCase) ||
-             r.Medal.Contains("ba", StringComparison.OrdinalIgnoreCase) ||
-             r.Medal.Contains("🥉")));
+        // ⭐ Sử dụng MedalHelper
+        var goldCount = allResults.Count(r => MedalHelper.GetMedalType(r.Medal) == "gold");
+        var silverCount = allResults.Count(r => MedalHelper.GetMedalType(r.Medal) == "silver");
+        var bronzeCount = allResults.Count(r => MedalHelper.GetMedalType(r.Medal) == "bronze");
 
         if (!list.Any())
         {
             var achievements = await _db.Achievements.ToListAsync();
-            goldCount = achievements.Count(a => !string.IsNullOrEmpty(a.Medal) &&
-                (a.Medal.Contains("vàng", StringComparison.OrdinalIgnoreCase) ||
-                 a.Medal.Contains("nhất", StringComparison.OrdinalIgnoreCase) ||
-                 a.Medal.Contains("🥇")));
-            silverCount = achievements.Count(a => !string.IsNullOrEmpty(a.Medal) &&
-                (a.Medal.Contains("bạc", StringComparison.OrdinalIgnoreCase) ||
-                 a.Medal.Contains("nhì", StringComparison.OrdinalIgnoreCase) ||
-                 a.Medal.Contains("🥈")));
-            bronzeCount = achievements.Count(a => !string.IsNullOrEmpty(a.Medal) &&
-                (a.Medal.Contains("đồng", StringComparison.OrdinalIgnoreCase) ||
-                 a.Medal.Contains("ba", StringComparison.OrdinalIgnoreCase) ||
-                 a.Medal.Contains("🥉")));
+            goldCount = achievements.Count(a => MedalHelper.GetMedalType(a.Medal) == "gold");
+            silverCount = achievements.Count(a => MedalHelper.GetMedalType(a.Medal) == "silver");
+            bronzeCount = achievements.Count(a => MedalHelper.GetMedalType(a.Medal) == "bronze");
         }
 
         var vm = new TournamentsViewModel

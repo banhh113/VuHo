@@ -5,8 +5,8 @@
 }
 
 <div class="admin-page-header">
-    <h1>📝 Quản lý bài viết</h1>
-    <a asp-action="Create" class="btn btn-primary">+ Thêm bài viết</a>
+    <h1><i data-lucide="newspaper" style="color:var(--accent-red)"></i> Quản lý bài viết</h1>
+    <a asp-action="Create" class="btn btn-primary"><i data-lucide="plus"></i> Thêm bài viết</a>
 </div>
 
 @if (TempData["Success"] != null)
@@ -38,20 +38,24 @@
                     }
                     else
                     {
-                        <div class="thumb thumb-empty">—</div>
+                        <div class="thumb thumb-empty"><i data-lucide="image" style="width:20px;height:20px;opacity:0.5;"></i></div>
                     }
                 </td>
                 <td>
                     <strong>@p.Title</strong><br />
-                    <small>@(p.Content.Length > 80 ? p.Content.Substring(0, 80) + "..." : p.Content)</small>
+                    <small style="color:var(--adm-text-muted)">@(p.Content.Length > 80 ? p.Content.Substring(0, 80) + "..." : p.Content)</small>
                 </td>
                 <td>@p.CreatedAt.ToString("dd/MM/yyyy HH:mm")</td>
                 <td class="actions">
-                    <a asp-action="Edit" asp-route-id="@p.Id" class="btn-sm btn-edit">Sửa</a>
+                    <a asp-action="Edit" asp-route-id="@p.Id" class="btn-sm btn-edit">
+                        <i data-lucide="edit-3" style="width:14px;height:14px;"></i> Sửa
+                    </a>
                     <form asp-action="Delete" asp-route-id="@p.Id" method="post" style="display:inline"
                           onsubmit="return confirm('Xóa bài viết này?');">
                         @Html.AntiForgeryToken()
-                        <button type="submit" class="btn-sm btn-delete">Xóa</button>
+                        <button type="submit" class="btn-sm btn-delete">
+                            <i data-lucide="trash-2" style="width:14px;height:14px;"></i> Xóa
+                        </button>
                     </form>
                 </td>
             </tr>

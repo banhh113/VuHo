@@ -2,9 +2,16 @@
 // CLB VŨ HỔ — Site Scripts
 // ============================================================
 
-console.log('%c🐯 CLB Vũ Hổ loaded', 'color:#e63946;font-size:14px;font-weight:bold');
+console.log('%c CLB Vũ Hổ loaded', 'color:#e63946;font-size:14px;font-weight:bold');
 
-// ==================== 1. Header scroll effect ====================
+// ==================== 1. Khởi tạo Lucide Icons ====================
+document.addEventListener('DOMContentLoaded', function () {
+    if (typeof lucide !== 'undefined') {
+        lucide.createIcons();
+    }
+});
+
+// ==================== 2. Header scroll effect ====================
 (function () {
     const header = document.querySelector('.site-header');
     const scrollTop = document.getElementById('scrollTop');
@@ -20,7 +27,7 @@ console.log('%c🐯 CLB Vũ Hổ loaded', 'color:#e63946;font-size:14px;font-wei
     onScroll();
 })();
 
-// ==================== 2. Mobile menu toggle ====================
+// ==================== 3. Mobile menu toggle ====================
 (function () {
     const toggle = document.getElementById('menuToggle');
     const menu = document.getElementById('mobileMenu');
@@ -31,7 +38,6 @@ console.log('%c🐯 CLB Vũ Hổ loaded', 'color:#e63946;font-size:14px;font-wei
         menu.classList.toggle('open');
     });
 
-    // Đóng khi click link
     menu.querySelectorAll('a').forEach(a => {
         a.addEventListener('click', () => {
             toggle.classList.remove('active');
@@ -40,7 +46,7 @@ console.log('%c🐯 CLB Vũ Hổ loaded', 'color:#e63946;font-size:14px;font-wei
     });
 })();
 
-// ==================== 3. Scroll to top ====================
+// ==================== 4. Scroll to top ====================
 (function () {
     const btn = document.getElementById('scrollTop');
     if (!btn) return;
@@ -49,7 +55,7 @@ console.log('%c🐯 CLB Vũ Hổ loaded', 'color:#e63946;font-size:14px;font-wei
     });
 })();
 
-// ==================== 4. Reveal on scroll ====================
+// ==================== 5. Reveal on scroll ====================
 (function () {
     const els = document.querySelectorAll('.reveal');
     if (!els.length || !('IntersectionObserver' in window)) {
@@ -69,7 +75,7 @@ console.log('%c🐯 CLB Vũ Hổ loaded', 'color:#e63946;font-size:14px;font-wei
     els.forEach(el => observer.observe(el));
 })();
 
-// ==================== 5. Counter animation ====================
+// ==================== 6. Counter animation ====================
 (function () {
     if (!('IntersectionObserver' in window)) return;
 
@@ -107,7 +113,7 @@ console.log('%c🐯 CLB Vũ Hổ loaded', 'color:#e63946;font-size:14px;font-wei
     document.querySelectorAll('.stats > div').forEach(el => statObserver.observe(el));
 })();
 
-// ==================== 6. Smooth scroll for hash links ====================
+// ==================== 7. Smooth scroll for hash links ====================
 (function () {
     document.querySelectorAll('a[href*="#"]').forEach(link => {
         link.addEventListener('click', (e) => {
@@ -131,7 +137,7 @@ console.log('%c🐯 CLB Vũ Hổ loaded', 'color:#e63946;font-size:14px;font-wei
     });
 })();
 
-// ==================== 7. Admin sidebar active state ====================
+// ==================== 8. Admin sidebar active state ====================
 (function () {
     const items = document.querySelectorAll('.admin-nav-item');
     if (!items.length) return;
@@ -155,10 +161,14 @@ console.log('%c🐯 CLB Vũ Hổ loaded', 'color:#e63946;font-size:14px;font-wei
         }
     });
 
-    if (bestMatch) bestMatch.classList.add('active');
+    if (bestMatch) {
+        bestMatch.classList.add('active');
+        const parentDetails = bestMatch.closest('details');
+        if (parentDetails) parentDetails.setAttribute('open', 'true');
+    }
 })();
 
-// ==================== 8. GLightbox ====================
+// ==================== 9. GLightbox ====================
 document.addEventListener('DOMContentLoaded', function () {
     if (typeof GLightbox !== 'undefined') {
         GLightbox({
@@ -175,13 +185,14 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 });
 
-// ==================== 9. Confirm delete (admin) ====================
+// ==================== 10. Confirm delete (admin) ====================
 document.querySelectorAll('form[data-confirm]').forEach(form => {
     form.addEventListener('submit', (e) => {
         if (!confirm(form.dataset.confirm)) e.preventDefault();
     });
 });
-// ==================== 10. Gallery scroll navigation (infinite loop) ====================
+
+// ==================== 11. Gallery scroll navigation ====================
 (function () {
     const scroll = document.getElementById('galleryScroll');
     const prevBtn = document.getElementById('galleryPrev');
@@ -189,7 +200,6 @@ document.querySelectorAll('form[data-confirm]').forEach(form => {
 
     if (!scroll || !prevBtn || !nextBtn) return;
 
-    // Tính pixel để scroll 1 card (bao gồm gap)
     function getScrollStep() {
         const firstCard = scroll.querySelector('.gallery-card');
         if (!firstCard) return 300;
@@ -198,27 +208,17 @@ document.querySelectorAll('form[data-confirm]').forEach(form => {
         return cardWidth + gap;
     }
 
-    // Đang ở đầu?
-    function isAtStart() {
-        return scroll.scrollLeft <= 4;
-    }
-
-    // Đang ở cuối?
+    function isAtStart() { return scroll.scrollLeft <= 4; }
     function isAtEnd() {
         const maxScroll = scroll.scrollWidth - scroll.clientWidth;
         return scroll.scrollLeft >= maxScroll - 4;
     }
 
-    // Nút Next: nếu ở cuối → quay về đầu, ngược lại scroll tới
     nextBtn.addEventListener('click', () => {
-        if (isAtEnd()) {
-            scroll.scrollTo({ left: 0, behavior: 'smooth' });
-        } else {
-            scroll.scrollBy({ left: getScrollStep(), behavior: 'smooth' });
-        }
+        if (isAtEnd()) scroll.scrollTo({ left: 0, behavior: 'smooth' });
+        else scroll.scrollBy({ left: getScrollStep(), behavior: 'smooth' });
     });
 
-    // Nút Prev: nếu ở đầu → nhảy tới cuối, ngược lại scroll lui
     prevBtn.addEventListener('click', () => {
         if (isAtStart()) {
             const maxScroll = scroll.scrollWidth - scroll.clientWidth;
@@ -227,6 +227,4 @@ document.querySelectorAll('form[data-confirm]').forEach(form => {
             scroll.scrollBy({ left: -getScrollStep(), behavior: 'smooth' });
         }
     });
-
-    // Swipe cảm ứng trên mobile đã tự hỗ trợ bởi overflow-x + -webkit-overflow-scrolling
 })();

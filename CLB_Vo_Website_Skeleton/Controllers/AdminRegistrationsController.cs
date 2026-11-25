@@ -1,18 +1,25 @@
-using CLBVo.Data;
+﻿using CLBVo.Data;
 using CLBVo.Helpers;
 using CLBVo.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace CLBVo.Controllers;
 
-[Authorize]
+[Authorize(Roles = "Admin,Staff")]
 [Route("admin/registrations")]
 public class AdminRegistrationsController : Controller
 {
     private readonly AppDbContext _db;
-    public AdminRegistrationsController(AppDbContext db) => _db = db;
+    private readonly UserManager<IdentityUser> _userManager;
+
+    public AdminRegistrationsController(AppDbContext db, UserManager<IdentityUser> userManager)
+    {
+        _db = db;
+        _userManager = userManager;
+    }
 
     [HttpGet("")]
     public async Task<IActionResult> Index(string? status, string? keyword, DateTime? fromDate, DateTime? toDate)
@@ -20,18 +27,15 @@ public class AdminRegistrationsController : Controller
         var query = _db.Registrations.AsQueryable();
 
         if (!string.IsNullOrEmpty(status) && Enum.TryParse<RegistrationStatus>(status, out var st))
-        {
             query = query.Where(r => r.Status == st);
-        }
 
         if (!string.IsNullOrWhiteSpace(keyword))
         {
             var kw = keyword.Trim();
-            query = query.Where(r => r.FullName.Contains(kw) || r.Phone.Contains(kw));
+            query = query.Where(r => r.FullName.Contains(kw) || r.Phone.Contains(kw) || (r.RegistrationCode != null && r.RegistrationCode.Contains(kw)));
         }
 
-        if (fromDate.HasValue)
-            query = query.Where(r => r.CreatedAt >= fromDate.Value);
+        if (fromDate.HasValue) query = query.Where(r => r.CreatedAt >= fromDate.Value);
         if (toDate.HasValue)
         {
             var endOfDay = toDate.Value.Date.AddDays(1).AddSeconds(-1);
@@ -63,6 +67,57 @@ public class AdminRegistrationsController : Controller
         return View(reg);
     }
 
+    [HttpPost("approve-member/{id}")]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> ApproveMember(int id)
+    {
+        var reg = await _db.Registrations.FindAsync(id);
+        if (reg == null) return NotFound();
+
+        string email = string.IsNullOrWhiteSpace(reg.Email) ? $"{reg.Phone}@vuhoclb.vn" : reg.Email.Trim();
+        // ⭐ Sử dụng helper sinh mật khẩu ngẫu nhiên
+        string defaultPassword = PasswordHelper.GenerateRandomPassword();
+
+        var existingUser = await _userManager.FindByEmailAsync(email);
+        if (existingUser != null)
+        {
+            TempData["Error"] = $"Tài khoản với email/sđt {email} đã tồn tại trên hệ thống!";
+            return RedirectToAction(nameof(Detail), new { id });
+        }
+
+        var user = new IdentityUser { UserName = email, Email = email, EmailConfirmed = true };
+        var result = await _userManager.CreateAsync(user, defaultPassword);
+
+        if (result.Succeeded)
+        {
+            await _userManager.AddToRoleAsync(user, "Member");
+
+            var newMember = new Member
+            {
+                FullName = reg.FullName,
+                UserId = user.Id,
+                Category = "Boxing",
+                Role = "Võ sinh",
+                Description = $"Kinh nghiệm: {reg.Experience ?? "Chưa có"}. Lời nhắn: {reg.Message}"
+            };
+            _db.Members.Add(newMember);
+
+            reg.Status = RegistrationStatus.Joined;
+            reg.UpdatedAt = TimeHelper.NowVN();
+            // ⭐ Đã bỏ mật khẩu khỏi AdminNote
+            reg.AdminNote += $"\n[{TimeHelper.NowVN():dd/MM/yyyy}] Đã tạo tài khoản: {email}";
+            
+            await _db.SaveChangesAsync();
+            TempData["Success"] = $"Thành công! Tài khoản: {email} | Mật khẩu: {defaultPassword}";
+        }
+        else
+        {
+            TempData["Error"] = "Lỗi tạo tài khoản: " + string.Join(", ", result.Errors.Select(e => e.Description));
+        }
+
+        return RedirectToAction(nameof(Detail), new { id });
+    }
+
     [HttpPost("update-status/{id}")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> UpdateStatus(int id, RegistrationStatus status, DateTime? trialDate)
@@ -73,16 +128,9 @@ public class AdminRegistrationsController : Controller
         reg.Status = status;
         reg.UpdatedAt = TimeHelper.NowVN();
 
-        if (status == RegistrationStatus.Contacting && !reg.ContactedAt.HasValue)
-            reg.ContactedAt = TimeHelper.NowVN();
-
-        if (status == RegistrationStatus.Confirmed)
-            reg.ConfirmedAt = TimeHelper.NowVN();
-
-        if (trialDate.HasValue)
-        {
-            reg.TrialDate = trialDate;
-        }
+        if (status == RegistrationStatus.Contacting && !reg.ContactedAt.HasValue) reg.ContactedAt = TimeHelper.NowVN();
+        if (status == RegistrationStatus.Confirmed) reg.ConfirmedAt = TimeHelper.NowVN();
+        if (trialDate.HasValue) reg.TrialDate = trialDate;
 
         await _db.SaveChangesAsync();
         TempData["Success"] = "Đã cập nhật trạng thái.";

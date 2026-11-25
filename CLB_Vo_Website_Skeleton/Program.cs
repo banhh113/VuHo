@@ -1,8 +1,12 @@
 using CLBVo.Data;
+using CLBVo.Helpers;
 using CLBVo.Models;
 using CLBVo.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.RateLimiting;
+using System.Threading.RateLimiting;
+using Microsoft.AspNetCore.HttpOverrides;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +15,25 @@ if (!string.IsNullOrEmpty(port))
 {
     builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
 }
+
+// Kiểm tra cấu hình môi trường Production
+if (!builder.Environment.IsDevelopment())
+{
+    var connStr = builder.Configuration.GetConnectionString("DefaultConnection");
+    var cloudName = builder.Configuration["CloudinarySettings:CloudName"];
+    if (string.IsNullOrEmpty(connStr))
+        throw new InvalidOperationException("LỖI BẢO MẬT: Chưa cấu hình ConnectionStrings__DefaultConnection trong biến môi trường.");
+    if (string.IsNullOrEmpty(cloudName))
+        throw new InvalidOperationException("LỖI BẢO MẬT: Chưa cấu hình CloudinarySettings__CloudName trong biến môi trường.");
+}
+
+// Cấu hình ForwardedHeaders
+builder.Services.Configure<ForwardedHeadersOptions>(options =>
+{
+    options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+    options.KnownIPNetworks.Clear(); // ⭐ Sửa từ KnownNetworks thành KnownIPNetworks
+    options.KnownProxies.Clear();
+});
 
 builder.Services.AddControllersWithViews(options =>
 {
@@ -28,10 +51,31 @@ builder.Services.AddSession(options =>
     options.Cookie.Name = ".CLBVo.Session";
 });
 
+// ⭐ RATE LIMITING (Phân vùng theo IP)
+builder.Services.AddRateLimiter(options =>
+{
+    options.AddPolicy("RegistrationPolicy", context =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            partitionKey: context.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+            factory: _ => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 5,
+                Window = TimeSpan.FromMinutes(1),
+                QueueLimit = 0,
+                QueueProcessingOrder = QueueProcessingOrder.OldestFirst
+            })
+    );
+
+    options.OnRejected = async (context, token) =>
+    {
+        context.HttpContext.Response.StatusCode = 429;
+        await context.HttpContext.Response.WriteAsync("Bạn thao tác quá nhanh. Vui lòng thử lại sau 1 phút.", token);
+    };
+});
+
 builder.Services.Configure<CloudinarySettings>(
     builder.Configuration.GetSection("CloudinarySettings"));
 builder.Services.AddScoped<CloudinaryService>();
-
 builder.Services.AddScoped<FileUploadService>();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
@@ -39,11 +83,17 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
 {
-    options.Password.RequireDigit = false;
+    options.Password.RequireDigit = true;
     options.Password.RequiredLength = 6;
-    options.Password.RequireNonAlphanumeric = false;
-    options.Password.RequireUppercase = false;
+    options.Password.RequireNonAlphanumeric = true;
+    options.Password.RequireUppercase = true;
+    options.Password.RequireLowercase = true;
     options.SignIn.RequireConfirmedAccount = false;
+
+    // ⭐ LOCKOUT: Sai 5 lần khóa 10 phút
+    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(10);
+    options.Lockout.MaxFailedAccessAttempts = 5;
+    options.Lockout.AllowedForNewUsers = true;
 })
 .AddEntityFrameworkStores<AppDbContext>()
 .AddDefaultTokenProviders();
@@ -56,6 +106,9 @@ builder.Services.ConfigureApplicationCookie(options =>
 });
 
 var app = builder.Build();
+
+// ⭐ Gọi UseForwardedHeaders NGAY ĐẦU pipeline
+app.UseForwardedHeaders();
 
 app.Use(async (ctx, next) =>
 {
@@ -79,9 +132,8 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 
-// ⭐ Session phải nằm giữa Routing và Authentication
+app.UseRateLimiter();
 app.UseSession();
-
 app.UseAuthentication();
 app.UseAuthorization();
 
@@ -89,33 +141,86 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
-// ==================== SEED ADMIN ====================
+// ==================== SEED ROLES & ADMIN ====================
 try
 {
     using (var scope = app.Services.CreateScope())
     {
+        var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
         var userManager = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
+
+        string[] roleNames = { "Admin", "Staff", "HLV", "Member" };
+        foreach (var roleName in roleNames)
+        {
+            if (!await roleManager.RoleExistsAsync(roleName))
+                await roleManager.CreateAsync(new IdentityRole(roleName));
+        }
+
+        // 2. Tạo tài khoản Admin mặc định
         var adminEmail = "admin@vuhoclb.vn";
         var admin = await userManager.FindByEmailAsync(adminEmail);
         if (admin == null)
         {
             admin = new IdentityUser { UserName = adminEmail, Email = adminEmail, EmailConfirmed = true };
-            await userManager.CreateAsync(admin, "admin123");
+            var adminPass = builder.Configuration["Seed:AdminPassword"];
+            bool isRandomPass = false;
+            
+            if (string.IsNullOrEmpty(adminPass))
+            {
+                adminPass = PasswordHelper.GenerateRandomPassword();
+                isRandomPass = true;
+            }
+
+            var res = await userManager.CreateAsync(admin, adminPass);
+            if (res.Succeeded)
+            {
+                await userManager.AddToRoleAsync(admin, "Admin");
+                if (isRandomPass)
+                    Console.WriteLine($"[INFO] Đã tạo Admin với mật khẩu ngẫu nhiên: {adminPass}");
+            }
+        }
+        else
+        {
+            if (!await userManager.IsInRoleAsync(admin, "Admin"))
+                await userManager.AddToRoleAsync(admin, "Admin");
+        }
+
+        // 3. Tạo tài khoản Staff mẫu
+        var staffEmail = "staff@vuhoclb.vn";
+        var staff = await userManager.FindByEmailAsync(staffEmail);
+        if (staff == null)
+        {
+            staff = new IdentityUser { UserName = staffEmail, Email = staffEmail, EmailConfirmed = true };
+            var staffPass = builder.Configuration["Seed:StaffPassword"];
+            bool isRandomPass = false;
+            
+            if (string.IsNullOrEmpty(staffPass))
+            {
+                staffPass = PasswordHelper.GenerateRandomPassword();
+                isRandomPass = true;
+            }
+
+            var res = await userManager.CreateAsync(staff, staffPass);
+            if (res.Succeeded)
+            {
+                await userManager.AddToRoleAsync(staff, "Staff");
+                if (isRandomPass)
+                    Console.WriteLine($"[INFO] Đã tạo Staff với mật khẩu ngẫu nhiên: {staffPass}");
+            }
         }
     }
 }
 catch (Exception ex)
 {
-    Console.WriteLine($"[WARN] Không thể tạo admin lúc khởi động: {ex.Message}");
+    Console.WriteLine($"[WARN] Lỗi khởi tạo Roles/Admin: {ex.Message}");
 }
 
-// ==================== SEED SOCIAL LINKS ====================
+// SEED SOCIAL LINKS ...
 try
 {
     using (var scope = app.Services.CreateScope())
     {
         var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-
         if (!db.SocialLinks.Any())
         {
             db.SocialLinks.AddRange(
@@ -124,13 +229,9 @@ try
                 new SocialLink { Platform = "tiktok", Url = "https://tiktok.com", DisplayName = "TikTok CLB Vũ Hổ", SortOrder = 3, IsActive = true }
             );
             db.SaveChanges();
-            Console.WriteLine("[INFO] Đã seed 3 SocialLinks mặc định.");
         }
     }
 }
-catch (Exception ex)
-{
-    Console.WriteLine($"[WARN] Seed SocialLinks lỗi: {ex.Message}");
-}
+catch { }
 
 app.Run();

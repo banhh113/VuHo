@@ -6,6 +6,9 @@ public class Member
 {
     public int Id { get; set; }
 
+    // ⭐ THÊM DÒNG NÀY ĐỂ LIÊN KẾT VỚI TÀI KHOẢN ĐĂNG NHẬP
+    public string? UserId { get; set; } 
+
     [Required(ErrorMessage = "Vui lòng nhập họ tên")]
     [MaxLength(150)]
     public string FullName { get; set; } = "";

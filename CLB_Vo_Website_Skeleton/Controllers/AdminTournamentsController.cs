@@ -1,4 +1,4 @@
-using CLBVo.Data;
+﻿using CLBVo.Data;
 using CLBVo.Models;
 using CLBVo.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CLBVo.Controllers;
 
-[Authorize]
+[Authorize(Roles = "Admin")]
 [Route("admin/tournaments")]
 public class AdminTournamentsController : Controller
 {
@@ -32,7 +32,7 @@ public class AdminTournamentsController : Controller
     }
 
     [HttpGet("create")]
-    public IActionResult Create() => View(new Tournament { Year = DateTime.Now.Year });
+    public IActionResult Create() => View(new Tournament { Year = TimeHelper.NowVN().Year });
 
     [HttpPost("create")]
     [ValidateAntiForgeryToken]
@@ -63,7 +63,7 @@ public class AdminTournamentsController : Controller
                 model.ImageUrl = await _cloudinary.UploadAsync(imageFile, "clb-vo/tournaments");
             }
 
-            model.CreatedAt = DateTime.Now;
+            model.CreatedAt = TimeHelper.NowVN();
             _db.Tournaments.Add(model);
             await _db.SaveChangesAsync();
             TempData["Success"] = "Đã thêm giải đấu.";

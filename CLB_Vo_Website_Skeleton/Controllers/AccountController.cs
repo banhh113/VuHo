@@ -16,8 +16,6 @@ public class AccountController : Controller
         _users = users;
     }
 
-    // ==================== ĐĂNG NHẬP ====================
-
     [HttpGet("/account/login")]
     public IActionResult Login(string? returnUrl = null)
     {
@@ -32,18 +30,35 @@ public class AccountController : Controller
         ViewData["ReturnUrl"] = returnUrl;
         if (!ModelState.IsValid) return View(model);
 
-        var result = await _signIn.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, false);
+        // ⭐ Bật lockoutOnFailure: true
+        var result = await _signIn.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: true);
+        
         if (result.Succeeded)
         {
             if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
                 return Redirect(returnUrl);
-            return RedirectToAction("Index", "Admin");
+
+            var user = await _users.FindByEmailAsync(model.Email);
+            if (user != null)
+            {
+                if (await _users.IsInRoleAsync(user, "Admin") || await _users.IsInRoleAsync(user, "Staff"))
+                    return RedirectToAction("Index", "Admin");
+                
+                if (await _users.IsInRoleAsync(user, "HLV") || await _users.IsInRoleAsync(user, "Member"))
+                    return RedirectToAction("Index", "MemberPortal");
+            }
+            return RedirectToAction("Index", "Home");
         }
+
+        if (result.IsLockedOut)
+        {
+            ModelState.AddModelError("", "Tài khoản đã bị khóa do đăng nhập sai quá 5 lần. Vui lòng thử lại sau 10 phút.");
+            return View(model);
+        }
+
         ModelState.AddModelError("", "Email hoặc mật khẩu không đúng.");
         return View(model);
     }
-
-    // ==================== ĐĂNG XUẤT ====================
 
     [HttpPost("/account/logout")]
     [ValidateAntiForgeryToken]
@@ -52,8 +67,6 @@ public class AccountController : Controller
         await _signIn.SignOutAsync();
         return RedirectToAction("Index", "Home");
     }
-
-    // ==================== ĐỔI MẬT KHẨU ====================
 
     [HttpGet("/account/change-password")]
     [Authorize]
@@ -76,11 +89,15 @@ public class AccountController : Controller
 
         if (result.Succeeded)
         {
-            // Refresh lại session để không bị logout sau khi đổi mật khẩu
             await _signIn.RefreshSignInAsync(user);
-
             TempData["Success"] = "Đổi mật khẩu thành công!";
-            return RedirectToAction("Index", "Admin");
+            
+            if (User.IsInRole("Admin") || User.IsInRole("Staff"))
+                return RedirectToAction("Index", "Admin");
+            if (User.IsInRole("HLV") || User.IsInRole("Member"))
+                return RedirectToAction("Index", "MemberPortal");
+                
+            return RedirectToAction("Index", "Home");
         }
 
         foreach (var error in result.Errors)

@@ -1,4 +1,4 @@
-using CLBVo.Data;
+﻿using CLBVo.Data;
 using CLBVo.Models;
 using CLBVo.ViewModels;
 using Microsoft.AspNetCore.Authorization;
@@ -7,7 +7,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CLBVo.Controllers;
 
-[Authorize]
+// ⭐ Cập nhật quyền: Cho phép Staff vào xem Dashboard
+[Authorize(Roles = "Admin,Staff")]
 [Route("admin")]
 public class AdminController : Controller
 {
@@ -18,7 +19,7 @@ public class AdminController : Controller
     [HttpGet("")]
     public async Task<IActionResult> Index()
     {
-        var now = DateTime.Now;
+        var now = TimeHelper.NowVN();
         var sixMonthsAgo = new DateTime(now.Year, now.Month, 1).AddMonths(-5);
         var posts = await _db.Posts
             .Where(p => p.CreatedAt >= sixMonthsAgo)
@@ -56,7 +57,7 @@ public class AdminController : Controller
                 .ToListAsync(),
 
             UpcomingEvents = await _db.Events
-                .Where(e => e.EventDate >= DateTime.Now)
+                .Where(e => e.EventDate >= TimeHelper.NowVN())
                 .OrderBy(e => e.EventDate)
                 .Take(3)
                 .ToListAsync(),
@@ -65,7 +66,7 @@ public class AdminController : Controller
             ChartPostCounts = counts,
 
             AdminName = User.Identity?.Name?.Split('@')[0] ?? "Admin",
-            CurrentDate = DateTime.Now.ToString("dddd, dd/MM/yyyy",
+            CurrentDate = TimeHelper.NowVN().ToString("dddd, dd/MM/yyyy",
                 new System.Globalization.CultureInfo("vi-VN"))
         };
 

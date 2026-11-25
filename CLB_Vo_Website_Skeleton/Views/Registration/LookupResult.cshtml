@@ -1,0 +1,44 @@
+@model CLBVo.Models.Registration
+@{
+    ViewData["Title"] = "Kết quả tra cứu";
+    
+    // Map trạng thái sang tiếng Việt
+    var statusText = Model.Status switch {
+        CLBVo.Models.RegistrationStatus.New => "🆕 Mới đăng ký (Đang chờ liên hệ)",
+        CLBVo.Models.RegistrationStatus.Contacting => "📞 Đang liên hệ",
+        CLBVo.Models.RegistrationStatus.Confirmed => "✅ Đã xác nhận tham gia",
+        CLBVo.Models.RegistrationStatus.Joined => "🥋 Đã vào tập",
+        CLBVo.Models.RegistrationStatus.Archived => "🗄️ Đã lưu trữ (Không có nhu cầu)",
+        CLBVo.Models.RegistrationStatus.Cancelled => "❌ Đã hủy",
+        _ => "Không xác định"
+    };
+}
+
+<section class="section" style="padding-top:140px">
+    <div class="container" style="max-width:500px">
+        <div class="register-box">
+            <h2 class="section-title" style="font-size:1.5rem;margin-bottom:20px">Kết quả tra cứu</h2>
+            
+            <ul class="info-list" style="margin-bottom:20px">
+                <li><strong>Họ tên:</strong> @Model.FullName</li>
+                <li><strong>SĐT:</strong> @Model.Phone</li>
+                <li><strong>Mã ĐK:</strong> <span style="color:var(--gold);font-weight:bold">@Model.RegistrationCode</span></li>
+                <li><strong>Ngày ĐK:</strong> @Model.CreatedAt.ToString("dd/MM/yyyy HH:mm")</li>
+                <li><strong>Trạng thái:</strong> @statusText</li>
+                @if (Model.TrialDate.HasValue)
+                {
+                    <li><strong>Ngày tập thử:</strong> <span style="color:#10b981;font-weight:bold">@Model.TrialDate.Value.ToString("dd/MM/yyyy")</span></li>
+                }
+            </ul>
+
+            @if (Model.Status == CLBVo.Models.RegistrationStatus.New)
+            {
+                <div class="alert" style="background:rgba(245,197,24,0.1); color:var(--gold); border-left-color:var(--gold)">
+                    Vui lòng chờ CLB liên hệ. Hoặc gọi trực tiếp: <strong>0948 660 111</strong>
+                </div>
+            }
+
+            <a href="/" class="btn btn-secondary btn-block">← Về trang chủ</a>
+        </div>
+    </div>
+</section>

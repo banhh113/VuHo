@@ -1,0 +1,32 @@
+@{
+    ViewData["Title"] = "Tra cứu đăng ký";
+}
+
+<section class="section" style="padding-top:140px">
+    <div class="container" style="max-width:500px">
+        <div class="register-box">
+            <div class="register-header">
+                <h1 class="section-title" style="font-size:1.8rem">Tra cứu đăng ký</h1>
+                <p class="register-desc">Nhập SĐT và Mã đăng ký để xem trạng thái.</p>
+            </div>
+
+            @if (ViewBag.Error != null)
+            {
+                <div class="alert alert-error" style="margin-bottom:20px">@ViewBag.Error</div>
+            }
+
+            <form asp-action="Lookup" method="post" class="register-form">
+                @Html.AntiForgeryToken()
+                <div class="form-group">
+                    <label>Số điện thoại</label>
+                    <input type="text" name="phone" required placeholder="VD: 0948660111" />
+                </div>
+                <div class="form-group">
+                    <label>Mã đăng ký (VH-XXXXXX)</label>
+                    <input type="text" name="code" required placeholder="VD: VH-A1B2C3" style="text-transform:uppercase" />
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">🔍 Tra cứu</button>
+            </form>
+        </div>
+    </div>
+</section>
